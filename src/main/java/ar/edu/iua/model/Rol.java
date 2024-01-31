@@ -10,49 +10,51 @@ import javax.persistence.Table;
 @Entity
 @Table(name="roles")
 public class Rol {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
-	@Column(length = 50, nullable = false, unique = true)
-	private String rol;
-	
-	@Column(length = 250, nullable = true)
-	private String descripcion;
-	
-	public Rol() {
-		super();
-	}
 
-	public Rol(Integer id, String rol, String descripcion) {
-		super();
-		this.id = id;
-		this.rol = rol;
-		this.descripcion = descripcion;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	public Integer getId() {
-		return id;
-	}
+    @Column(length = 50, nullable = false, unique = true)
+    private String rol;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Column(length = 250, nullable = true)
+    private String descripcion;
 
-	public String getRol() {
-		return rol;
-	}
+    // Constructors
+    public Rol() {
+        super();
+    }
 
-	public void setRol(String rol) {
-		this.rol = rol;
-	}
+    public Rol(Integer id, String rol, String descripcion) {
+        super();
+        this.id = id;
+        this.rol = rol;
+        this.descripcion = descripcion;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    // Getters and Setters
+    public Integer getId() {
+        return id;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-	
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }
