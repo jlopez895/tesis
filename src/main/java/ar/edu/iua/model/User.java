@@ -50,7 +50,7 @@ public class User implements Serializable, UserDetails {
     private String password;
 
     @Column(length = 8)
-    private String dni;
+    private String legajo;
 
     @ManyToOne
     @JoinColumn(name = "id_rol_principal")
@@ -83,7 +83,7 @@ public class User implements Serializable, UserDetails {
 
     // Constructor
     public User(int id, String nombre, String apellido, String email, String password, Rol rolPrincipal, boolean enabled,
-            String dni) {
+            String legajo, String username) {
         super();
         this.id = id;
         this.nombre = nombre;
@@ -93,7 +93,7 @@ public class User implements Serializable, UserDetails {
         this.username = username;
         this.rolPrincipal = rolPrincipal;
         this.enabled = enabled;
-        this.dni = dni;
+        this.legajo = legajo;
     }
 
     // Empty Constructor
@@ -158,12 +158,12 @@ public class User implements Serializable, UserDetails {
         this.password = password;
     }
 
-    public String getDni() {
-        return dni;
+    public String getlegajo() {
+        return legajo;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setlegajo(String legajo) {
+        this.legajo = legajo;
     }
 
     public Set<Rol> getRoles() {
