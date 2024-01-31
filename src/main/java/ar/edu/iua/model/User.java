@@ -27,111 +27,138 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Entity
 @Table(name = "users")
 public class User implements Serializable, UserDetails {
-	
-	private static final long serialVersionUID = 4647570640764087147L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    private static final long serialVersionUID = 4647570640764087147L;
 
-	@Column(length = 80, nullable = false)
-	private String nombre;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@Column(length = 300, nullable = false, unique = true)
-	private String email;
+    @Column(length = 80, nullable = false)
+    private String nombre;
 
-	@Column(length = 80, nullable = false)
-	private String apellido;
+    @Column(length = 300, nullable = false, unique = true)
+    private String email;
 
-	@Column(length = 30, nullable = false, unique = true)
-	private String username;
+    @Column(length = 80, nullable = false)
+    private String apellido;
 
-	@Column(length = 100)
-	private String password;
-	
-	@Column(length = 8)
-	private String dni; 
+    @Column(length = 30, nullable = false, unique = true)
+    private String username;
 
-	@ManyToOne
-	@JoinColumn(name = "id_rol_principal")
-	private Rol rolPrincipal;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "users_roles", joinColumns = {
-			@JoinColumn(name = "id_user", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "id_rol", referencedColumnName = "id") })
-	private Set<Rol> roles;
+    @Column(length = 100)
+    private String password;
 
-	@Column(columnDefinition = "tinyint default 1")
-	private boolean accountNonExpired = true;
+    @Column(length = 8)
+    private String dni;
 
-	@Column(columnDefinition = "tinyint default 1")
-	private boolean accountNonLocked = true;
+    @ManyToOne
+    @JoinColumn(name = "id_rol_principal")
+    private Rol rolPrincipal;
 
-	@Column(columnDefinition = "tinyint default 1")
-	private boolean credentialsNonExpired = true;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles", joinColumns = {
+            @JoinColumn(name = "id_user", referencedColumnName = "id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "id_rol", referencedColumnName = "id") })
 
-	@Column(columnDefinition = "tinyint default 1")
-	private boolean enabled;
+    private Set<Rol> roles;
 
-	
-	public Rol getRolPrincipal() {
-		return rolPrincipal;
-	}
+    @Column(columnDefinition = "tinyint default 1")
+    private boolean accountNonExpired = true;
 
-	public void setRolPrincipal(Rol rolPrincipal) {
-		this.rolPrincipal = rolPrincipal;
-	}
+    @Column(columnDefinition = "tinyint default 1")
+    private boolean accountNonLocked = true;
 
-	public Integer getId() {
-		return id;
-	}
+    @Column(columnDefinition = "tinyint default 1")
+    private boolean credentialsNonExpired = true;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Column(columnDefinition = "tinyint default 1")
+    private boolean enabled;
 
-	public String getNombre() {
-		return nombre;
-	}
+    @Transient
+    private String sessionToken;
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    @Column(columnDefinition = "int default 360")
+    private int sessionTimeout;
 
-	public String getEmail() {
-		return email;
-	}
+    // Constructor
+    public User(int id, String nombre, String apellido, String email, String password, Rol rolPrincipal, boolean enabled,
+            String dni) {
+        super();
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.rolPrincipal = rolPrincipal;
+        this.enabled = enabled;
+        this.dni = dni;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    // Empty Constructor
+    public User() {
 
-	public String getApellido() {
-		return apellido;
-	}
+    }
 
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
-	}
+    // Getters and Setters
+    public Rol getRolPrincipal() {
+        return rolPrincipal;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public void setRolPrincipal(Rol rolPrincipal) {
+        this.rolPrincipal = rolPrincipal;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public String getDni() {
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getDni() {
         return dni;
     }
 
@@ -139,121 +166,88 @@ public class User implements Serializable, UserDetails {
         this.dni = dni;
     }
 
-	
-	
-	public Set<Rol> getRoles() {
-		return roles;
-	}
+    public Set<Rol> getRoles() {
+        return roles;
+    }
 
-	public void setRoles(Set<Rol> roles) {
-		this.roles = roles;
-	}
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
+    }
 
-	
-	public boolean isAccountNonExpired() {
-		return accountNonExpired;
-	}
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
 
-	public void setAccountNonExpired(boolean accountNonExpired) {
-		this.accountNonExpired = accountNonExpired;
-	}
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
 
-	public boolean isAccountNonLocked() {
-		return accountNonLocked;
-	}
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
 
-	public void setAccountNonLocked(boolean accountNonLocked) {
-		this.accountNonLocked = accountNonLocked;
-	}
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
 
-	public boolean isCredentialsNonExpired() {
-		return credentialsNonExpired;
-	}
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
 
-	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-		this.credentialsNonExpired = credentialsNonExpired;
-	}
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	@Transient
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
-		//Programacion funcional
-		//stream convierte en una fila
-		//collect convierte de nuevo en una lista
-		List<GrantedAuthority> authorities = getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRol()))
-				.collect(Collectors.toList());
+    @Transient
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRol()))
+                .collect(Collectors.toList());
 
-		return authorities;
-	}
+        return authorities;
+    }
 
-	@Transient //Con esto hacemos que este dato calculado no se transforme en un atributo almacenable
-	public String getNombreCompleto() {
-		return String.format("%s, %s", getApellido(), getNombre());
-	}
+    @Transient
+    public String getNombreCompleto() {
+        return String.format("%s, %s", getApellido(), getNombre());
+    }
 
-	//Se chequean los datos de la cuenta
-	public String checkAccount(PasswordEncoder passwordEncoder, String password) {
-		if (!passwordEncoder.matches(password, getPassword()))
-			return "BAD_PASSWORD";
-		if (!isEnabled())
-			return "ACCOUNT_NOT_ENABLED";
-		if (!isAccountNonLocked())
-			return "ACCOUNT_LOCKED";
-		if (!isCredentialsNonExpired())
-			return "CREDENTIALS_EXPIRED";
-		if (!isAccountNonExpired())
-			return "ACCOUNT_EXPIRED";
+    public String checkAccount(PasswordEncoder passwordEncoder, String password) {
+        if (!passwordEncoder.matches(password, getPassword()))
+            return "BAD_PASSWORD";
+        if (!isEnabled())
+            return "ACCOUNT_NOT_ENABLED";
+        if (!isAccountNonLocked())
+            return "ACCOUNT_LOCKED";
+        if (!isCredentialsNonExpired())
+            return "CREDENTIALS_EXPIRED";
+        if (!isAccountNonExpired())
+            return "ACCOUNT_EXPIRED";
 
-		return null;
-	}
+        return null;
+    }
 
-	@Transient
-	private String sessionToken;
+    public String getSessionToken() {
+        return sessionToken;
+    }
 
-	public String getSessionToken() {
-		return sessionToken;
-	}
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
+    }
 
-	public void setSessionToken(String sessionToken) {
-		this.sessionToken = sessionToken;
-	}
+    public int getSessionTimeout() {
+        return sessionTimeout;
+    }
 
-	@Column(columnDefinition = "int default 360")
-	private int sessionTimeout;
-
-	public int getSessionTimeout() {
-		return sessionTimeout;
-	}
-
-	public void setSessionTimeout(int sessionTimeout) {
-		this.sessionTimeout = sessionTimeout;
-	}
-	
-	public User(int id, String nombre, String apellido, String email, String password,
-			Rol rolPrincipal, boolean enabled, String dni) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.email = email;
-		this.password = password;
-		this.username = username;
-		this.rolPrincipal = rolPrincipal;
-		this.enabled = enabled;
-		this.dni = dni;
-	}
-	
-	public User() {
-		
-	}
-
+    public void setSessionTimeout(int sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
 }
