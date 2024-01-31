@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>LIQUIGAS</title>
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+        <script src="ui/modules/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="ui/modules/angular-sweetalert/SweetAlert.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
+        <script src="ui/login.js"></script>
+
+        
+    </head>
+
+    <body style="font-family: serif; background-color:#e2e2e2;" ng-app='iw3'>
+        <div style="background-color: #3ab2e3;">
+            <img src="ui/logo.png"/>  <b>Escuela de Aviación Militar</b>
+        </div>
+        <div class="card text-center" style="width: 18rem; position: absolute; top: 50%; left: 50%; margin-left:-150px; height:300px; margin-top:-200px;">
+			<div class="card-header">
+              <H3>INICIAR SESIÓN</H3> 
+            </div>
+            <div class="card-body">
+              <div id="login-form" ng-controller="loginController">
+            	<div class="form-group">
+                	<input type="text" class="form-control" placeholder="Legajo" required="required" ng-model="dni">
+            	</div>
+            	<div class="form-group">
+                	<input type="password" class="form-control" placeholder="Contraseña" required="required" ng-model="claveUsuario">
+            	</div>
+            	<div class="form-group">
+                	<input class="btn btn-primary btn-block btn-lg"  value="Ingresar" ng-click="validar()">
+            	</div>
+                <div class="form-group">
+                	<input class="btn btn-link" value="Recuperar contraseña" ng-click="recuperar()">
+            	</div>
+        	</div>
+                   
+    	</div>
+        
+    </body>
+
+    
+</html>

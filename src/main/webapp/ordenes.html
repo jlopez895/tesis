@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="ui/favicon.png">
+	<script type="text/javascript" src="bower_components/angular/angular.min.js">
+	</script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+	</script>
+	<script src="ui/modules/sockjs-client/dist/sockjs-1.1.1.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="ui/ordenes.js"></script>
+	<script src="ui/modules/ng-stomp/dist/ng-stomp.standalone.min.js"></script>
+
+</head>
+
+<body ng-app='iw3' style="font-family: Arial;" ng-controller='verOrdenes'>
+	<div class="container-fluid" style="background-color: rgb(94, 204, 247);">
+
+		<div class="dropdown">
+			<img src="ui/logo.png" />
+			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Cuenta
+				<span class="caret"></span></button>
+
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" ng-click='cerrarSesion()'>Cerrar sesion</a></li>
+			</ul>
+			<button class="btn btn-link" ng-click='inicio()' style="color: white;" type="button">Inicio
+
+		</div>
+	</div>
+	<i class="bi bi-person-circle"></i>
+
+	<div class="container-fluid" style="font-size: 12px;">
+		<p style=" font-size: 20px;">Total de ordenes: {{total}} </p>
+		<img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
+		<input class="form-control form-control-sm mr-3" style="width: 200px;" type="text" placeholder="Buscar" aria-label="Search"
+			ng-model="Filtro.valor">
+		<table id="tabla1" class="table table-dark table-striped">
+			<thead>
+				<tr>
+					<th scope="col">
+						<button type="button" class="btn btn-success btn-mini" id="num " ng-click="ordenarporOrdenAscendente()"><img src="ui/sort-numeric-down.svg" style="width: 20px; height: 20px;">
+						</button>
+						Numero de orden
+						<button type="button" class="btn btn-success btn-mini" ng-click="ordenarporOrdenDescendente()"><img src="ui/sort-numeric-down-alt.svg" style="width: 20px; height: 20px;">
+						</button>
+					</th>
+					<th scope="col">
+					<button type="button" id="num " class="btn btn-success btn-mini" ng-click="ordenarporEstadoAscendente()"><img src="ui/sort-numeric-down.svg"  style="width: 20px; height: 20px;">
+						</button>
+						Estado
+					<button type="button" class="btn btn-success btn-mini" ng-click="ordenarporEstadoDescendiente()"><img src="ui/sort-numeric-down-alt.svg" style="width: 20px; height: 20px;">
+						</button>
+					</th>
+					<th scope="col">Preset</th>
+					<th scope="col">Pesaje inicial</th>
+					<th scope="col">pesaje final</th>
+					<th scope="col">Temp final</th>
+					<th scope="col">Masa acumulada final</th>
+					<th scope="col">Dens final</th>
+					<th scope="col">Caudal final</th>
+					<th scope="col"></th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='o in Ordenes | filter:Filtro.valor track by $index'>
+					<td>
+						{{ o.numeroOrden }}
+					</td>
+					<td>
+						{{o.estado}}
+					</td>
+					<td>
+						{{o.preset}}
+					</td>
+					<td>
+						{{o.pesajeInicial}}
+					</td>
+					<td>
+						{{o.pesajeFinal}}
+					</td>
+					<td>
+						{{o.ultimaTemperatura}}
+					</td>
+					<td>
+						{{o.ultimaMasaAcumulada}}
+					</td>
+					<td>
+						{{o.ultimaDensidad}}
+					</td>
+					<td>
+						{{o.ultimoCaudal}}
+					</td>
+					<td>
+						<button class="btn btn-link" ng-click="verConciliacion($index);"
+							style=" color:white; font-size: 12px;" id="conciliacion">Ver Conciliacion</button>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="container">
+
+		<div class="modal fade" id="dialogo1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<!-- cabecera del diálogo -->
+					<div class="modal-header">
+						<h4 class="modal-title">Conciliacion</h4>
+						<button type="button" class="close" data-dismiss="modal">X</button>
+					</div>
+
+					<!-- cuerpo del diálogo -->
+					<div class="modal-body">
+						Pesaje inicial: {{pesajeInicial}} <br>
+						Pesaje final: {{pesajeFinal}} <br>
+						Ultimo valor de masa acumulada: {{masa}} <br>
+						Neto por balanza: {{pesajeFinal- pesajeInicial}} <br>
+						Diferencia entre balanza y caudalimentro: {{pesajeFinal- pesajeInicial - masa}} <br>
+						Promedio de temperatura:{{promedioTemp}} <br>
+						Promedio del caudal: {{promedioCaudal}}<br>
+					</div>
+
+					<!-- pie del diálogo -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<!-- <div ng-controller='controller1'>
+            {{titulo}}
+
+            <input type="number" ng-model='fontSize'>
+            <label style="font-size: {{fontSize}}px;">texto de ejemplo </label>
+        </div> -->
+
+</body>
+
+
+</html>
