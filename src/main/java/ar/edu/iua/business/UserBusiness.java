@@ -59,7 +59,7 @@ public class UserBusiness implements IUserBusiness {
 	 @Override
 	    public User load(String legajo) throws NotFoundException, BusinessException {
 	        try {
-	            User user = userDAO.findByLegajo(legajo);
+	            User user = userDAO.findBylegajo(legajo);
 
 	            if (user == null) {
 	                throw new NotFoundException("No se encuentra el usuario con legajo " + legajo);
