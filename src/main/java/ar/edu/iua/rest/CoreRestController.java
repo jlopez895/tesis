@@ -1,5 +1,8 @@
 package ar.edu.iua.rest;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import ar.edu.iua.authtoken.IAuthTokenBusiness;
 import ar.edu.iua.business.UserBusiness;
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
+import ar.edu.iua.model.Rol;
 import ar.edu.iua.model.User;
 
 @RestController
@@ -94,9 +98,26 @@ public class CoreRestController extends BaseRestController {
         }
     }
 
+    @GetMapping(value = "/user-roles", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<Rol>> getUserRolesByLegajo(@RequestParam(value = "legajo") String legajo) {
+        try {
+            User user = userBusiness.load(legajo);
+            if (user != null) {
+                Set<Rol> roles = user.getRoles();
+                return new ResponseEntity<>(roles, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     private void authenticateUser(User user) {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null,
                 user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
+    
 }

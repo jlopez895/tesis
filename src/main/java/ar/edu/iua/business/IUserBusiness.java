@@ -18,4 +18,5 @@ public interface IUserBusiness {
 
 	public User load(String legajo) throws NotFoundException, BusinessException;
 
+
 }
