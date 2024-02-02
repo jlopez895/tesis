@@ -13,12 +13,12 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
 
     //Valido cuando se presiona el botón para iniciar sesión
     $scope.validar = function (){
-      if($scope.dni.length>=4 && $scope.claveUsuario.length>=2){
-         let user={dni:$scope.dni,password:$scope.claveUsuario};
+      if($scope.legajo.length>=4 && $scope.claveUsuario.length>=2){
+         let user={legajo:$scope.legajo,password:$scope.claveUsuario};
 
          let req = {
               method: 'POST',
-              url: 'http://localhost:8080/login-user?dni='+user.dni+'&password='+user.password,
+              url: 'http://localhost:8080/login-user?legajo='+user.legajo+'&password='+user.password,
               headers : { 'Content-Type': 'form-data' }
           };
 

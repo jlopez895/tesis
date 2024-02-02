@@ -1,6 +1,7 @@
 package ar.edu.iua.rest;
 
-import java.io.Console;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,88 +21,103 @@ import ar.edu.iua.authtoken.IAuthTokenBusiness;
 import ar.edu.iua.business.UserBusiness;
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
+import ar.edu.iua.model.Rol;
 import ar.edu.iua.model.User;
-
-
 
 @RestController
 public class CoreRestController extends BaseRestController {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	private UserBusiness userBusiness;
+    @Autowired
+    private UserBusiness userBusiness;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private IAuthTokenBusiness authTokenBusiness;
 
-	@PostMapping(value = "/login-token", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> loginToken(@RequestParam(value = "dni") String dni,
+    @PostMapping(value = "/login-token", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> loginToken(@RequestParam(value = "legajo") String legajo,
                                              @RequestParam(value = "password") String password) {
         try {
-            User u = userBusiness.load(dni);  // Utiliza el método load que busca por DNI o email
+            User u = userBusiness.load(legajo);
             String msg = u.checkAccount(passwordEncoder, password);
             if (msg != null) {
-                return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(msg, HttpStatus.UNAUTHORIZED);
             } else {
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(u, null,
-                        u.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(auth);
-                return new ResponseEntity<String>(userToJson(getUserLogged()).get("authtoken").toString(),
+                authenticateUser(u);
+                return new ResponseEntity<>(userToJson(getUserLogged()).get("authtoken").toString(),
                         HttpStatus.OK);
             }
         } catch (BusinessException e) {
             log.error(e.getMessage());
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NotFoundException e) {
-            return new ResponseEntity<String>("BAD_ACCOUNT_DNI", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("BAD_ACCOUNT_LEGAJO", HttpStatus.UNAUTHORIZED);
         }
     }
 
     @PostMapping(value = "/login-user", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> loginUser(@RequestParam(value = "dni") String dni,
+    public ResponseEntity<String> loginUser(@RequestParam(value = "legajo") String legajo,
                                             @RequestParam(value = "password") String password) {
         try {
-            User u = userBusiness.load(dni);  // Utiliza el método load que busca por DNI o email
+            User u = userBusiness.load(legajo);
             String msg = u.checkAccount(passwordEncoder, password);
             if (msg != null) {
-                return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(msg, HttpStatus.UNAUTHORIZED);
             } else {
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(u, null,
-                        u.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(auth);
-                return new ResponseEntity<String>(userToJson(getUserLogged()).toString(),
+                authenticateUser(u);
+                return new ResponseEntity<>(userToJson(getUserLogged()).toString(),
                         HttpStatus.OK);
             }
         } catch (BusinessException e) {
             log.error(e.getMessage());
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NotFoundException e) {
-            return new ResponseEntity<String>("BAD_ACCOUNT_DNI", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("BAD_ACCOUNT_LEGAJO", HttpStatus.UNAUTHORIZED);
         }
     }
 
+    @GetMapping(value = Constantes.URL_AUTH_INFO)
+    public ResponseEntity<String> authInfo() {
+        return new ResponseEntity<>(userToJson(getUserLogged()).toString(), HttpStatus.OK);
+    }
 
-	@GetMapping(value = Constantes.URL_AUTH_INFO)
-	public ResponseEntity<String> authInfo() {
-		return new ResponseEntity<String>(userToJson(getUserLogged()).toString(), HttpStatus.OK);
-	}
+    @GetMapping(value = Constantes.URL_LOGOUT)
+    public ResponseEntity<String> logout() {
+        try {
+            User u = getUserLogged();
+            if (u != null) {
+                authTokenBusiness.delete(u.getSessionToken());
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@Autowired
-	private IAuthTokenBusiness authTokenBusiness;
-
-	@GetMapping(value = Constantes.URL_LOGOUT)
-	public ResponseEntity<String> logout() {
-		try {
-			User u = getUserLogged();
-			if (u != null) {
-				authTokenBusiness.delete(u.getSessionToken());
-			}
-			return new ResponseEntity<String>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-	}
+    @GetMapping(value = "/user-roles", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<Rol>> getUserRolesByLegajo(@RequestParam(value = "legajo") String legajo) {
+        try {
+            User user = userBusiness.load(legajo);
+            if (user != null) {
+                Set<Rol> roles = user.getRoles();
+                return new ResponseEntity<>(roles, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    private void authenticateUser(User user) {
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null,
+                user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+    
 }

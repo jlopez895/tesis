@@ -57,12 +57,12 @@ public class UserBusiness implements IUserBusiness {
 	}
 
 	 @Override
-	    public User load(String dniOrEmail) throws NotFoundException, BusinessException {
+	    public User load(String legajo) throws NotFoundException, BusinessException {
 	        try {
-	            User user = userDAO.findByDniOrEmail(dniOrEmail, dniOrEmail);
+	            User user = userDAO.findBylegajo(legajo);
 
 	            if (user == null) {
-	                throw new NotFoundException("No se encuentra el usuario con DNI o email = " + dniOrEmail);
+	                throw new NotFoundException("No se encuentra el usuario con legajo " + legajo);
 	            }
 
 	            return user;
@@ -70,5 +70,7 @@ public class UserBusiness implements IUserBusiness {
 	            throw new BusinessException(e);
 	        }
 	    }
+
+
 
 }
