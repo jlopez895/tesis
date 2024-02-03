@@ -1,9 +1,12 @@
 package ar.edu.iua.rest;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,7 @@ import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.DetalleOrden;
 import ar.edu.iua.model.Documento;
+import ar.edu.iua.model.Orden;
 import ar.edu.iua.model.dto.MensajeRespuesta;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,6 +63,41 @@ public class DocumentoRestController {
 			return new ResponseEntity<MensajeRespuesta>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NotFoundException e) {
 			return new ResponseEntity<MensajeRespuesta>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@ApiOperation(value = "Obtener listado de documetnos", response = Documento.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+
+	@GetMapping(value = "/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Documento>> list(@ApiParam(value = "El numero del estimulo") @PathVariable("idEstimulo") int idEstimulo) {
+		try {
+
+			return new ResponseEntity<List<Documento>>(documentoBusiness.list(idEstimulo), HttpStatus.OK);
+
+		} catch (BusinessException e) {
+			return new ResponseEntity<List<Documento>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@ApiOperation(value = "Obtener una orden por numero de orden", response = Orden.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 404, message = "Orden no encontrada"),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+
+	@GetMapping(value = "/{idDocumento}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Documento> load(
+			@ApiParam(value = "El numero del documento que se desea obtener") @PathVariable("idDocumento") int idDocumento) {
+
+		try {
+			return new ResponseEntity<Documento>(documentoBusiness.load(idDocumento), HttpStatus.OK);
+		} catch (BusinessException e) {
+			return new ResponseEntity<Documento>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<Documento>(HttpStatus.NOT_FOUND);
 		}
 	}
 

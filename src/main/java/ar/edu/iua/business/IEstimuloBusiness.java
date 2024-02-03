@@ -1,5 +1,7 @@
 package ar.edu.iua.business;
 
+import java.util.List;
+
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Estimulo;
@@ -11,4 +13,6 @@ public interface IEstimuloBusiness {
 	public RespuestaGenerica<Estimulo> nuevoEstimulo(Estimulo estimulo) throws BusinessException;
 
 	public Estimulo load(int nro) throws BusinessException, NotFoundException;
+	
+	public List<Estimulo> list() throws BusinessException;
 }

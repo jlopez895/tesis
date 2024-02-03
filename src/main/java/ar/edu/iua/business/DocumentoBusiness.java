@@ -1,6 +1,8 @@
 package ar.edu.iua.business;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +67,37 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 		}
 
 		return rg;
+	}
+	@Override
+	public List<Documento> list(int idEstimulo) throws BusinessException {
+		List<Documento> list=null;
+		try {
+
+			list=documentoDAO.findByIdEstimulo(idEstimulo);
+
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+		
+		if(list!=null&&list.size()>0)
+			return list;
+		else
+			return null;
+	}
+	@Override
+	public Documento load(int nro) throws BusinessException, NotFoundException {
+		Optional<Documento> doc = null;
+		try {
+
+			doc = documentoDAO.findById(nro);
+
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+		if (!doc.isPresent())
+			throw new NotFoundException("El documento no se encuentra en la BD");
+
+		return doc.get();
 	}
 
 }

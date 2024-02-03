@@ -1,5 +1,6 @@
 package ar.edu.iua.business;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,24 @@ public class EstimuloBusiness implements IEstimuloBusiness{
 
 		return estimulo.get();
 	}
+
+	@Override
+	public List<Estimulo> list() throws BusinessException {
+		List<Estimulo> list=null;
+		try {
+
+			list=estimuloDAO.findByEstado();
+
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+		
+		if(list!=null&&list.size()>0)
+			return list;
+		else
+			return null;
+	}
+
 	
 
 }
