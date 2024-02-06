@@ -71,7 +71,7 @@ public class DocumentoRestController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
-	@GetMapping(value = "/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/documentos/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Documento>> list(@ApiParam(value = "El numero del estimulo") @PathVariable("idEstimulo") int idEstimulo) {
 		try {
 
@@ -82,13 +82,13 @@ public class DocumentoRestController {
 		}
 	}
 	
-	@ApiOperation(value = "Obtener una orden por numero de orden", response = Orden.class)
+	@ApiOperation(value = "Obtener una orden por numero de orden", response = Documento.class)
 
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
 			@ApiResponse(code = 404, message = "Orden no encontrada"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
-	@GetMapping(value = "/{idDocumento}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/obtenerDoc/{idDocumento}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Documento> load(
 			@ApiParam(value = "El numero del documento que se desea obtener") @PathVariable("idDocumento") int idDocumento) {
 
