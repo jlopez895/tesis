@@ -28,8 +28,8 @@ public class Rol {
     private String descripcion;
     
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "roles_permisions", joinColumns = {
-            @JoinColumn(name = "id_role", referencedColumnName = "id") }, inverseJoinColumns = {
+    @JoinTable(name = "roles_permisos", joinColumns = {
+            @JoinColumn(name = "id_rol", referencedColumnName = "id") }, inverseJoinColumns = {
                     @JoinColumn(name = "id_permiso", referencedColumnName = "id") })
     private Set<Permiso> permisos;
 
