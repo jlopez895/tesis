@@ -1,10 +1,16 @@
 package ar.edu.iua.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +26,12 @@ public class Rol {
 
     @Column(length = 250, nullable = true)
     private String descripcion;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "roles_permisions", joinColumns = {
+            @JoinColumn(name = "id_role", referencedColumnName = "id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "id_permiso", referencedColumnName = "id") })
+    private Set<Permiso> permisos;
 
     // Constructors
     public Rol() {
@@ -57,4 +69,14 @@ public class Rol {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+	public Set<Permiso> getPermisos() {
+		return permisos;
+	}
+
+	public void setPermisos(Set<Permiso> permisos) {
+		this.permisos = permisos;
+	}
+    
+    
 }
