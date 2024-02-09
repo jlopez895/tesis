@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.edu.iua.business.IDetalleOrdenBusiness;
+
 import ar.edu.iua.business.IDocumentoBusiness;
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
-import ar.edu.iua.model.DetalleOrden;
 import ar.edu.iua.model.Documento;
-import ar.edu.iua.model.Orden;
 import ar.edu.iua.model.dto.MensajeRespuesta;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

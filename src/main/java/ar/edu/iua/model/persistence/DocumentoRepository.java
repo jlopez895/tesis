@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.iua.model.Documento;
 import ar.edu.iua.model.Estimulo;
-import ar.edu.iua.model.Orden;
 
 @Repository
 public interface DocumentoRepository extends JpaRepository<Documento, Integer>{
