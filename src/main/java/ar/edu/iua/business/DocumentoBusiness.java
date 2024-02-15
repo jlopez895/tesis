@@ -87,7 +87,7 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 		Optional<Documento> doc = null;
 		try {
 
-			doc = documentoDAO.findById(nro);
+			doc = documentoDAO.obtenerPorId(nro);
 
 		} catch (Exception e) {
 			throw new BusinessException(e);
