@@ -13,6 +13,6 @@ import ar.edu.iua.model.User;
 @Repository
 public interface PermisoRepository extends JpaRepository<Permiso, Integer>{
 	@Query(value = "select p.* from users as u inner join roles as r on u.id_rol_principal=r.id inner join roles_permisos as rp "
-			+ "on u.id_rol_principal=rp.id_rol inner join permisos as p on rp.id_permiso=p.id where u.id=?1", nativeQuery = true)
+			+ "on u.id_rol_principal=rp.id_rol inner join permiso as p on rp.id_permiso=p.id where u.id=?1", nativeQuery = true)
 	public List<Permiso> findByUser(int idUser);
 }

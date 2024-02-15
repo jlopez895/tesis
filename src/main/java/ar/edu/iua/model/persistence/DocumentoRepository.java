@@ -18,5 +18,5 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer>{
 	
 	@Query(value = "SELECT * FROM DOCUMENTO WHERE ID=?1", nativeQuery = true)
 	Optional<Documento> obtenerPorId(int idDocumento);
-	
+
 }

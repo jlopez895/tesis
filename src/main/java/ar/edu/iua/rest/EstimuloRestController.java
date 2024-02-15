@@ -1,5 +1,6 @@
 package ar.edu.iua.rest;
 
+import java.io.Console;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class EstimuloRestController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
-	@GetMapping(value = "/estimulos", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Estimulo>> list() {
 		try {
 
@@ -74,16 +75,15 @@ public class EstimuloRestController {
 		}
 	}
 	
-	@ApiOperation(value = "Obtener una orden por numero de orden", response = Estimulo.class)
+	@ApiOperation(value = "Obtener un estimulo por su id", response = Estimulo.class)
 
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
-			@ApiResponse(code = 404, message = "Orden no encontrada"),
+			@ApiResponse(code = 404, message = "Estimulo no encontrado"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
 	@GetMapping(value = "/obtenerEstimulo/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Estimulo> load(
-			@ApiParam(value = "El numero del estimulo que se desea obtener") @PathVariable("idEstimulo") int idEstimulo) {
-
+	public ResponseEntity<Estimulo> get(@ApiParam(value = "El numero del estimulo que se desea obtener") @PathVariable("idEstimulo") int idEstimulo) 
+	{
 		try {
 			return new ResponseEntity<Estimulo>(estimuloBusiness.load(idEstimulo), HttpStatus.OK);
 		} catch (BusinessException e) {

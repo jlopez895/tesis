@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiResponses;
 public class PermisoRestController {
 	@Autowired
 	private IPermisoBusiness permisoBusiness;
-	@ApiOperation(value = "Obtener listado de documetnos", response = Permiso.class)
+	@ApiOperation(value = "Obtener listado de permisos del usuario", response = Permiso.class)
 
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })

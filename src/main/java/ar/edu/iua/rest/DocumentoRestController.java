@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping(value = Constantes.URL_DETALLE_ORDEN)
+@RequestMapping(value = Constantes.URL_DOCUMENTOS)
 
 @Api(value = "Documentos", description = "Operaciones relacionadas con los Documentos", tags = {
 		"Documentos" })
@@ -43,7 +43,7 @@ public class DocumentoRestController {
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 	
 	@PostMapping(value = "/nuevoDocumento/{nroEstimulo}/{nroUsuario}/{nroRol}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MensajeRespuesta> cargarCamion(@RequestBody Documento documento,
+	public ResponseEntity<MensajeRespuesta> cargarDocumento(@RequestBody Documento documento,
 			@ApiParam(value = "Numero de estimulo") @PathVariable("nroEstimulo") int nroEstimulo,
 			@ApiParam(value = "Numero de usuario") @PathVariable("nroUsuario") int nroUsuario,
 			@ApiParam(value = "Numero de rol") @PathVariable("nroRol") int nroRol)
@@ -64,12 +64,12 @@ public class DocumentoRestController {
 		}
 	}
 	
-	@ApiOperation(value = "Obtener listado de documetnos", response = Documento.class)
+	@ApiOperation(value = "Obtener listado de documentos por estimulo", response = Documento.class)
 
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
-	@GetMapping(value = "/documentos/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/list/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Documento>> list(@ApiParam(value = "El numero del estimulo") @PathVariable("idEstimulo") int idEstimulo) {
 		try {
 
@@ -80,10 +80,10 @@ public class DocumentoRestController {
 		}
 	}
 	
-	@ApiOperation(value = "Obtener una orden por numero de orden", response = Documento.class)
+	@ApiOperation(value = "Obtener un documento en particular", response = Documento.class)
 
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
-			@ApiResponse(code = 404, message = "Orden no encontrada"),
+			@ApiResponse(code = 404, message = "Documento no encontrado"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
 	@GetMapping(value = "/obtenerDoc/{idDocumento}", produces = MediaType.APPLICATION_JSON_VALUE)

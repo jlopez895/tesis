@@ -24,21 +24,18 @@ public class EstimuloBusiness implements IEstimuloBusiness{
 
 	@Override
 	public RespuestaGenerica<Estimulo> nuevoEstimulo(Estimulo estimulo) throws BusinessException {
-	
 		MensajeRespuesta m = new MensajeRespuesta();
 		RespuestaGenerica<Estimulo> rg = new RespuestaGenerica<Estimulo>(estimulo, m);
 
 		String mensajeCheck = estimulo.checkBasicInfo();
 
-		if (mensajeCheck != "Ok") {
+		if (mensajeCheck != "OK") {
 			m.setCodigo(-1);
 			m.setMensaje(mensajeCheck);
-			System.out.println("estoy en un error");
 			return rg;
 		}
 
 		try {
-			System.out.println("estoy aca");
 			estimulo.setDescripcion(estimulo.getDescripcion());
 			estimulo.setEstado(1);
 			estimulo.setTiempoEstmado(estimulo.getTiempoEstmado());
