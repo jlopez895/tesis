@@ -99,17 +99,17 @@ public class CoreRestController extends BaseRestController {
     }
 
     @GetMapping(value = "/user-roles", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Rol>> getUserRolesByLegajo(@RequestParam(value = "legajo") String legajo) {
+    public ResponseEntity<String> getUserRolesByLegajo(@RequestParam(value = "legajo") String legajo) {
         try {
             User user = userBusiness.load(legajo);
             if (user != null) {
-                Set<Rol> roles = user.getRoles();
-                return new ResponseEntity<>(roles, HttpStatus.OK);
+                //Set<Rol> roles = user.getRoles();
+                return new ResponseEntity<>("este usuario tiene este rol", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("esto no funciona");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

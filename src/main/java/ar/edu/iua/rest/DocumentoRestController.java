@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping(value = Constantes.URL_DETALLE_ORDEN)
+@RequestMapping(value = Constantes.URL_DOCUMENTOS)
 
 @Api(value = "Documentos", description = "Operaciones relacionadas con los Documentos", tags = {
 		"Documentos" })
