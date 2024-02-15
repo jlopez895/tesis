@@ -1,6 +1,7 @@
 package ar.edu.iua.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -55,13 +56,6 @@ public class User implements Serializable, UserDetails {
     @ManyToOne
     @JoinColumn(name = "id_rol_principal")
     private Rol rolPrincipal;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", joinColumns = {
-            @JoinColumn(name = "id_user", referencedColumnName = "id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "id_rol", referencedColumnName = "id") })
-
-    private Set<Rol> roles;
 
     @Column(columnDefinition = "tinyint default 1")
     private boolean accountNonExpired = true;
@@ -166,14 +160,6 @@ public class User implements Serializable, UserDetails {
         this.legajo = legajo;
     }
 
-    public Set<Rol> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Rol> roles) {
-        this.roles = roles;
-    }
-
     public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
@@ -209,8 +195,10 @@ public class User implements Serializable, UserDetails {
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRol()))
-                .collect(Collectors.toList());
+    	SimpleGrantedAuthority s=new SimpleGrantedAuthority(getRolPrincipal().getRol());
+    	
+        List<GrantedAuthority> authorities=new ArrayList<>();
+        authorities.add(s);
 
         return authorities;
     }

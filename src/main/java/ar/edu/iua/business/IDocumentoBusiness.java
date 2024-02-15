@@ -6,7 +6,6 @@ import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Documento;
 import ar.edu.iua.model.Estimulo;
-import ar.edu.iua.model.Orden;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 
 public interface IDocumentoBusiness {

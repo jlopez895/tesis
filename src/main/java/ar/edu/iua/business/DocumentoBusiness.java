@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
-import ar.edu.iua.model.DetalleOrden;
 import ar.edu.iua.model.Documento;
 import ar.edu.iua.model.Estimulo;
-import ar.edu.iua.model.Orden;
 import ar.edu.iua.model.Rol;
 import ar.edu.iua.model.User;
 import ar.edu.iua.model.dto.MensajeRespuesta;
@@ -89,7 +87,7 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 		Optional<Documento> doc = null;
 		try {
 
-			doc = documentoDAO.findById(nro);
+			doc = documentoDAO.obtenerPorId(nro);
 
 		} catch (Exception e) {
 			throw new BusinessException(e);

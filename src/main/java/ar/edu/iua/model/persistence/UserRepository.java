@@ -12,4 +12,5 @@ import ar.edu.iua.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>{
 	public User findBylegajo(String legajo);
+	public User findByusername(String username);
 }

@@ -9,11 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.iua.model.Documento;
 import ar.edu.iua.model.Estimulo;
-import ar.edu.iua.model.Orden;
 
 @Repository
 public interface DocumentoRepository extends JpaRepository<Documento, Integer>{
 	
 	@Query(value = "SELECT * FROM DOCUMENTO WHERE ID_ESTIMULO=?1", nativeQuery = true)
 	public List<Documento> findByIdEstimulo(int idEstimulo);
+	
+	@Query(value = "SELECT * FROM DOCUMENTO WHERE ID=?1", nativeQuery = true)
+	Optional<Documento> obtenerPorId(int idDocumento);
 }

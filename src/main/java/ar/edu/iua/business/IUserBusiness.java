@@ -17,6 +17,9 @@ public interface IUserBusiness {
 	public User update(User user) throws NotFoundException, BusinessException;
 
 	public User load(String legajo) throws NotFoundException, BusinessException;
+	
+	public User loadUserName(String userName) throws NotFoundException, BusinessException;
+
 
 
 }

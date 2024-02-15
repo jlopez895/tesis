@@ -71,6 +71,20 @@ public class UserBusiness implements IUserBusiness {
 	        }
 	    }
 
+	 @Override
+	    public User loadUserName(String userName) throws NotFoundException, BusinessException {
+	        try {
+	            User user = userDAO.findByusername(userName);
+
+	            if (user == null) {
+	                throw new NotFoundException("No se encuentra el usuario con username " + userName);
+	            }
+
+	            return user;
+	        } catch (Exception e) {
+	            throw new BusinessException(e);
+	        }
+	    }
 
 
 }

@@ -131,7 +131,7 @@ public class CustomTokenAuthenticationFilter extends OncePerRequestFilter {
 			String username = authToken.getUsername();
 			User u = null;
 			try {
-				u = userBusiness.load(username);
+				u = userBusiness.loadUserName(username);
 				u.setSessionToken(token);
 				log.trace("Token para usuario {} ({}) [{}]", u.getUsername(), token, request.getRequestURI());
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(u, null,

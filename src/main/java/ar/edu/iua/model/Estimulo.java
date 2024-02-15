@@ -1,6 +1,5 @@
 package ar.edu.iua.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -8,9 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -50,6 +47,14 @@ public class Estimulo implements Serializable {
 	@ApiModelProperty(notes="Fecha fin", required=false)
 	@Column()
 	private int estado;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_usuario_creador")
+	private User usuarioCreador;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_usuario_finalizador")
+	private User usuarioFinalizador;
 
 	public int getId() {
 		return id;
@@ -100,9 +105,6 @@ public class Estimulo implements Serializable {
 		this.estado = estado;
 	}
 	
-	
-
-
 	public String getTitulo() {
 		return titulo;
 	}
@@ -113,13 +115,29 @@ public class Estimulo implements Serializable {
 	
 	
 
+	public User getUsuarioCreador() {
+		return usuarioCreador;
+	}
+
+	public void setUsuarioCreador(User usuarioCreador) {
+		this.usuarioCreador = usuarioCreador;
+	}
+
+	public User getUsuarioFinalizador() {
+		return usuarioFinalizador;
+	}
+
+	public void setUsuarioFinalizador(User usuarioFinalizador) {
+		this.usuarioFinalizador = usuarioFinalizador;
+	}
+
 	public Estimulo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public Estimulo(int id, String titulo, String descripcion, int tiempoEstmado, Date fechaInicio, Date fechaFin,
-			int estado) {
+			int estado, User usuarioCreador, User usuarioFinalizador) {
 		super();
 		this.id = id;
 		this.titulo = titulo;
@@ -128,10 +146,11 @@ public class Estimulo implements Serializable {
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.estado = estado;
+		this.usuarioCreador = usuarioCreador;
+		this.usuarioFinalizador = usuarioFinalizador;
 	}
 
 	public String checkBasicInfo() {
-
 		if ((getTitulo() ==null))
 			return "Debe ingresar el titulo del estímulo";
 		if ((getDescripcion() ==null))
@@ -139,31 +158,10 @@ public class Estimulo implements Serializable {
 		if (getTiempoEstmado() == 0)
 			return "Debe ingresar el tiempo estimado de resolución";
 
-
+		
 		return "OK";
 	}
 	
-	/*
-	 * public String checkBasicDataStatusTwo(int estado, Date turno) {
-	 * 
-	 * String fechaActual = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-	 * String horaActual = new SimpleDateFormat("HH-00-00").format(new Date());
-	 * String fechaTurno = new SimpleDateFormat("dd-MM-yyyy").format(turno); String
-	 * horaTurno = new SimpleDateFormat("HH-00-00").format(turno);
-	 * 
-	 * if (!fechaActual.equals(fechaTurno)) return
-	 * "El dia de carga no corresponde a la fecha del turno"; if
-	 * (!horaActual.equals(horaTurno)) return
-	 * "La hora de carga no corresponde a la hora del turno"; if (estado != 1)
-	 * return "Para realizar el pesaje inicial la orden debe estar en estado 1"; if
-	 * (getPesajeInicial() <= 0) return "El atributo pesaje es obligatorio";
-	 * if(getPassword()==0 || String.valueOf(getPassword()).length()!=5) return
-	 * "El atributo password es obligatorio";
-	 * 
-	 * return "Ok para estado 2";
-	 * 
-	 * }
-	 */
 
 	
 
