@@ -14,4 +14,6 @@ public interface IEstimuloBusiness {
 	public Estimulo load(int nro) throws BusinessException, NotFoundException;
 	
 	public List<Estimulo> list() throws BusinessException;
+	
+	public Estimulo cerrarEstimulo(int id) throws BusinessException, NotFoundException;
 }
