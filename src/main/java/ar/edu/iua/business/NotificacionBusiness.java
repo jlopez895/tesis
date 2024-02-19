@@ -1,5 +1,7 @@
 package ar.edu.iua.business;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,14 @@ public class NotificacionBusiness implements INotificacionBusiness{
 		try {
 
 			notificacionDAO.save(not);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	}
+	@Override
+	public List<Notificacion> list(int idRol) throws BusinessException {
+		try {
+			return notificacionDAO.findByUser(idRol);
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
