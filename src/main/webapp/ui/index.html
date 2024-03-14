@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="ui/favicon.png">
+    <script type="text/javascript" src="bower_components/angular/angular.min.js">
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
+    <script src="ui/modules/sockjs-client/dist/sockjs-1.1.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="ui/app.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+	<script src="ui/modules/ng-stomp/dist/ng-stomp.standalone.min.js"></script>
+
+</head>
+
+<body ng-app='iw3' style="font-family: Arial;" ng-controller='controllerPedidos'>
+    <div class="container-fluid" style="background-color: rgb(94, 204, 247);">
+
+        <div class="dropdown">
+            <img src="ui/logo.png" />
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Cuenta
+                <span class="caret"></span></button>
+             
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" ng-click='cerrarSesion()'>Cerrar sesion</a></li>
+            </ul>
+            <button class="btn btn-link" ng-click='verOrdenes()' style="color: white;" type="button">Ver Ordenes
+            
+        </div>
+    </div>
+    <i class="bi bi-person-circle"></i>
+
+
+    <div class="card ">
+        <div class="card-header">
+            Carga de la orden
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0"
+                    aria-valuemax="100" id="bar"> {{progreso}}</div>
+            </div>
+
+
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"> Estado: {{estado}} </h5>
+            <hr>
+            <p>Numero de orden:<input type="text" ng-model='orden' id="orden">
+
+            </p>
+            <p>
+                <h5 style="color: rgb(20, 101, 133);">CAMION</h5> 
+                Código externo:<input type="text" ng-model='codExternoCamion' id="codExternoCamion">&nbsp&nbsp&nbsp
+                Patente:<input type="text" ng-model='patente' id="patente">&nbsp&nbsp&nbsp
+                Cisternado:<input type="text" placeholder="cisterna 1" ng-model='cist1' id="cist1">
+                <input type="text" placeholder="cisterna 2" ng-model='cist2' id="cist2">
+            </p>
+            <p>
+                <h5 style="color: rgb(20, 101, 133);">CHOFER</h5> 
+                Código externo:<input type="text" ng-model='codExternoChofer' id="codExternoChofer">&nbsp&nbsp&nbsp
+                DNI:<input type="text" ng-model='dniChofer' id="dniChofer">
+
+            </p>
+            <p>
+                <h5 style="color: rgb(20, 101, 133);">CLIENTE</h5> 
+                Código externo:<input type="text" ng-model='codExternoCliente' id="codExternoCliente">&nbsp&nbsp&nbsp
+                Razón Social:<input type="text" ng-model='cliente' id="cliente">
+            </p>
+            <p>
+                <h5 style="color: rgb(20, 101, 133);">PRODUCTO</h5> 
+                Código externo:<input type="text" ng-model='codExternoProducto' id="codExternoProducto">&nbsp&nbsp&nbsp
+                Nombre:<input type="text" ng-model='producto' id="producto">
+                
+            </p>
+
+            <p>
+                Fecha prevista de carga: <input type="text" ng-model='dia' id="dia" maxlength="2" size="1"
+                    placeholder="dd"> /
+                <input type="text" ng-model='mes' id="mes" maxlength="2" size="1" placeholder="mm"> /
+                <input type="text" ng-model='anio' id="anio" maxlength="4" size="2" placeholder="yyyy"> -
+                <input type="text" ng-model='hora' id="hora" maxlength="2" size="1" placeholder="hh"> :
+                <input type="text" ng-model='min' id="min" maxlength="2" size="1" placeholder="mm">&nbsp&nbsp&nbsp
+                Preset:<input type="text" ng-model='preset' id="preset">
+                <button class="btn btn-primary" ng-click='cambiarEstado1()' id="estado1">Guardar</button>
+            </p>
+
+            <hr>
+
+            <p>Pesaje inicial:<input type="text" ng-model='pesajeInicial' id="pesajeInicial" disabled>
+                Password:<input type="text" ng-model='password' id="password" disabled>
+
+
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Frecuencia de almacenamiento (seg.)</label>
+                <select class="form-select" id="inputGroupSelect01" disabled>
+                    <option selected>Elegir...</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" ng-click='cambiarEstado2()' id="estado2" disabled>Guardar</button>
+
+            </p>
+
+            <hr>
+
+
+
+            <p>Masa acumulada:<input type="text" ng-model='masa' id="masa" disabled>
+                Densidad del producto:<input type="text" ng-model='densidad' id="densidad" disabled>
+                Temperatura:<input type="text" ng-model='temp' id="temp" disabled>
+                Caudal:<input type="text" ng-model='caudal' id="caudal" disabled></p>
+            <div class="crono_wrapper" style="color: red;">
+                Tiempo transcurrido <h6 id='crono'>00:00:00</h6>
+            </div>
+           
+            <p>ETA:{{eta}} hs.</p>
+
+            <br>
+            <button class="btn btn-primary" ng-click='cargarCamion()' id="estado3" disabled>Guardar</button>
+            <button class="btn btn-warning" style="display: none;" ng-click='cerrarOrden()' id="btnCerrar">Cerrar Orden</button>
+            <hr>
+            <p>Pesaje final:<input type="text" ng-model='pesajeFinal' id="pesajeFinal" disabled>
+                <button class="btn btn-primary" ng-click='cambiarEstado4()' id="estado4" disabled>Guardar</button>
+                <button type="button" class="btn btn-link" ng-click='verConciliacion()'
+                    style="display: none;" id="conciliacion">Ver conciliacion
+                </button>
+            </p>
+
+
+
+
+
+            <div class="container">
+
+                <div class="modal fade" id="dialogo1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- cabecera del diálogo -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Conciliacion</h4>
+                                <button type="button" class="close" data-dismiss="modal">X</button>
+                            </div>
+
+                            <!-- cuerpo del diálogo -->
+                            <div class="modal-body">
+                                Pesaje inicial: {{pesajeInicial}} <br>
+                                Pesaje final: {{pesajeFinal}} <br>
+                                Ultimo valor de masa acumulada: {{masa}} <br>
+                                Neto por Balanza: {{pesajeFinal- pesajeInicial}} <br>
+                                Diferencia entre balanza y caudalimentro: {{pesajeFinal- pesajeInicial - masa}} <br>
+                                Promedio de temperatura: {{promedioTemp}}<br>
+                                Promedio del caudal: {{promedioCaudal}} <br>
+                            </div>
+
+                            <!-- pie del diálogo -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <p style="font-size: 20px;">Numero de orden: {{orden}} </p>
+        <table class="table table-bordered border-primary">
+            <thead>
+                <tr>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Camion</th>
+                    <th scope="col">Preset</th>
+                    <th scope="col">Carga actual</th>
+                    <th scope="col">Ultima temp</th>
+                    <th scope="col">Ultima dens</th>
+                    <th scope="col">Ultimo caudal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ estado }}
+                    </td>
+                    <td>
+                        {{ patente}}
+                    </td>
+                    <td>
+                        {{preset}}
+                    </td>
+                    <td>
+                        {{masa}}
+                    </td>
+                    <td>
+                        {{temp}}
+                    </td>
+                    <td>
+                        {{densidad}}
+                    </td>
+                    <td>
+                        {{caudal}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- <div ng-controller='controller1'>
+            {{titulo}}
+
+            <input type="number" ng-model='fontSize'>
+            <label style="font-size: {{fontSize}}px;">texto de ejemplo </label>
+        </div> -->
+
+</body>
+
+
+</html>
