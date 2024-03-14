@@ -3,17 +3,23 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
 
     <script src="ui/app.js"></script>
 
-    
     <style>
         .animated:hover {
             animation: shakeX;
@@ -110,7 +116,7 @@
             transform: rotate(0deg);
         }
     </style>
- 
+
 </head>
 
 <body ng-app='iw3' style="font-family:sans-serif;">
@@ -137,7 +143,7 @@
         <div id="divPrinc" class="container-fluid" style="display: inline; flex: 1;height: 100%;text-align: center; ">
             <div class="row">
                 <div class="col-xl-4 xs-12">
-                    <button style="border-style: none; background-color: transparent;" ng-click="problematica()">
+                    <button data-toggle="modal" data-target="#modalProb" style="border-style: none; background-color: transparent;" ng-click="problematica()">
                         <div class="card" id="card1"
                             style="width: 100%; height: 250px; margin-left: 20px; text-align: center;">
                             <img src="ui/argentina.png" style="width: 35%;align-self: center; margin-top: 10px;"
@@ -150,7 +156,8 @@
                         </a>
                 </div>
                 <div class="col-xl-4 xs-12">
-                    <button style="border-style: none; background-color: transparent;" ng-click="estimulos()">
+                    <button data-toggle="modal" data-target="#modalEstimulos" ng-click="estimulos()"
+                        style="border-style: none; background-color: transparent;">
                         <div class="card" id="card2"
                             style="width: 100%; height: 250px; margin-left: 20px; text-align: center;">
                             <img src="ui/estimulo.png" style="width: 35%;align-self: center; margin-top: 10px;"
@@ -193,7 +200,7 @@
                     </button>
                 </div>
                 <div class="col-xl-4 xs-12">
-                    <button style="border-style: none; background-color: transparent;" ng-click="notificaciones()">
+                    <button data-toggle="modal" data-target="#modalNotif" style="border-style: none; background-color: transparent;" ng-click="notificaciones()">
                         <div class="card"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
                             <img src="ui/notificaciones.png" style="width: 35%;align-self: center; margin-top: 10px;"
@@ -242,9 +249,9 @@
 
                             <div class="row">
                                 <div class="col l4">
-                                    <label for="tipo" class="form-label">Estímulo asociado</label>
+                                    <label for="estimulo" class="form-label">Estímulo asociado</label>
 
-                                    <select id="tipo" class="form-control" aria-label="Default select example" required>
+                                    <select id="estimulo" class="form-control" aria-label="Default select example" required>
 
                                         <option value="1">1234</option>
                                         <option value="2">5987</option>
@@ -256,7 +263,8 @@
                                 <div class="col l4">
 
                                     <label for="destinatario" class="form-label">Destinatario</label>
-                                    <select id="destinatario" class="form-control" aria-label="Default select example" required>
+                                    <select id="destinatario" class="form-control" aria-label="Default select example"
+                                        required>
 
                                         <option value="1">Ministerio de salud</option>
                                         <option value="2">Ministerio de economia</option>
@@ -272,7 +280,7 @@
                                 <div class="col l4">
                                     <label for="tipo" class="form-label">Tipo de documento</label>
                                     <select id="tipo" class="form-control" aria-label="Default select example" required>
-                                   
+
                                         <option value="1">Decreto</option>
                                         <option value="2">Informe</option>
                                         <option value="3">Solicitud</option>
@@ -283,7 +291,7 @@
                                     <div class="form-check">
 
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault" style="margin-top: 2px;">
+                                        <label id="final" class="form-check-label" for="flexCheckDefault" style="margin-top: 2px;">
                                             Final
                                         </label>
                                     </div>
@@ -299,10 +307,10 @@
                             </div>
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l12">
-                                    <label for="exampleFormControlTextarea1" class="form-label">Cuerpo del
+                                    <label for="cuerpo" class="form-label">Cuerpo del
                                         documento</label>
                                     <textarea class="form-control" placeholder="Cuerpo del documento"
-                                        id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                        id="cuerpo" rows="3" required></textarea>
                                 </div>
                             </div>
 
@@ -361,7 +369,7 @@
                                 <div class="col l2">
                                     <label for="datepicker" class="form-label">Fecha estimada de finalización</label>
                                     <div class="input-group date" data-provide="datepicker">
-                                        
+
                                         <input type="text" class="form-control" id="datepicker" required>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
@@ -370,18 +378,169 @@
                                 </div>
                                 <div class="col l2">
                                     <label for="timePicker" class="form-label">Hora estimada de finalización</label>
-                                    <input type="time" class="form-control" value="10:05 AM" required/>
+                                    <input type="time" class="form-control" value="10:05 AM" required />
                                 </div>
                             </div>
 
                         </div>
                         <br />
                         <div class="mb-3 form-check">
-                            <button class="btn btn-primary" ng-click='nuevoDoc()' id="estado1">Enviar</button>
+                            <button class="btn btn-primary" ng-click='nuevoEst()' id="estado1">Enviar</button>
 
                         </div>
 
 
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalEstimulos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8ac8ff">
+                    <h5 class="modal-title" id="H1">ESTIMULOS ABIERTOS</h5>
+                    <button type="button" onclick="cerrarModaEstimulos()"
+                        style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
+                        aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></button>
+                </div>
+                <div class="modal-body" style="background-color: #ffffff; font-size: small;">
+                    <form>
+                        <div class="container-fluid" style="font-size: 12px;">
+                            <p style=" font-size: 20px;">Total de estimulos: {{total}} </p>
+                            <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
+                            <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
+                                placeholder="Buscar" aria-label="Search" ng-model="Filtro.valor">
+                            <table id="tabla1" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+
+                                            Número de estímulo
+
+                                        </th>
+                                        <th scope="col">
+
+                                            Título
+
+                                        </th>
+                                        <th scope="col">Fceha inicio</th>
+                                        <th scope="col">Fecha estimada de finalización</th>
+                                        <th scope="col"></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat='e in Estimulos | filter:Filtro.valor track by $index'>
+                                        <td>
+                                            {{ o.id }}
+                                        </td>
+                                        <td>
+                                            {{o.titulo}}
+                                        </td>
+                                        <td>
+                                            {{o.fecInicio}}
+                                        </td>
+                                        <td>
+                                            {{o.fecFinal}}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-link" ng-click="verDocumentos($index);"
+                                                style=" color:#8ac8ff; font-size: 12px;" id="conciliacion">Ver
+                                                Docs.</button>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+
+
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalNotif" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8ac8ff">
+                    <h5 class="modal-title" id="H1">NOTIFICACIONES</h5>
+                    <button type="button" onclick="cerrarModalNotif()"
+                        style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
+                        aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></button>
+                </div>
+                <div class="modal-body" style="background-color: #ffffff; font-size: small;">
+                    <form>
+                        <div class="container-fluid" style="font-size: 12px;">
+                            
+                            <table id="tabla1" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+
+                                            Descripción
+
+                                        </th>
+                                        <th scope="col">
+
+                                            Fecha
+
+                                        </th>
+                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat='n in Notificaciones'>
+                                        <td>
+                                            {{ n.descripcion }}
+                                        </td>
+                                        <td>
+                                            {{n.fecha}}
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalProb" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8ac8ff">
+                    <h5 class="modal-title" id="H1">DESCRIPCIÓN DE LA PROBLEMÁTICA</h5>
+                    <button type="button" onclick="cerrarModalNotif()"
+                        style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
+                        aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></button>
+                </div>
+                <div class="modal-body" style="background-color: #ffffff; font-size: small;">
+                    <form>
+                        <div class="container-fluid" style="font-size: 12px;">
+                            <textarea class="form-control" id="exampleFormControlTextarea1" disabled="true" rows="20"></textarea>
+                        </div>
+                        <br />
                     </form>
                 </div>
 

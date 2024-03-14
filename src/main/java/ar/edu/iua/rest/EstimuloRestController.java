@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,6 +87,25 @@ public class EstimuloRestController {
 	{
 		try {
 			return new ResponseEntity<Estimulo>(estimuloBusiness.load(idEstimulo), HttpStatus.OK);
+		} catch (BusinessException e) {
+			return new ResponseEntity<Estimulo>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<Estimulo>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+	@ApiOperation(value = "cambiar estado", response = Estimulo.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 201, message = "estimulo cerrado"),
+			@ApiResponse(code = 400, message = "El servidor no procesará la solicitud porque no puede o no debe debido  a un error del usuario "),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+	@PutMapping(value = "/cambiarEstado/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Estimulo> cambiarEstado(@ApiParam(value = "El numero del estimulo que se desea cerrar") @PathVariable("idEstimulo") int idEstimulo) {
+
+		try {
+			return new ResponseEntity<Estimulo>(estimuloBusiness.cerrarEstimulo(idEstimulo), HttpStatus.OK);
 		} catch (BusinessException e) {
 			return new ResponseEntity<Estimulo>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NotFoundException e) {
