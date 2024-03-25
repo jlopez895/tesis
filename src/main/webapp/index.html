@@ -349,7 +349,7 @@
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l12">
                                     <label for="titulo" class="form-label">Título del estímulo</label>
-                                    <input class="form-control" id="titulo" type="text"
+                                    <input class="form-control" id="tituloEstimulo" type="text"
                                         placeholder="Título del documento" aria-label="default input example" required>
 
                                 </div>
@@ -357,25 +357,25 @@
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l12">
 
-                                    <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
+                                    <label for="descripcionEstimulo" class="form-label">Descripción</label>
                                     <textarea class="form-control" placeholder="Descricpión"
-                                        id="exampleFormControlTextarea1" rows="7" required></textarea>
+                                        id="descripcionEstimulo" rows="7" required></textarea>
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l2">
-                                    <label for="datepicker" class="form-label">Fecha estimada de finalización</label>
-                                    <div class="input-group date" data-provide="datepicker">
+                                    <label for="fechaEstFinEstimulo" class="form-label">Fecha estimada de finalización</label>
+                                    <div class="input-group date" data-provide="fechaEstFinEstimulo">
 
-                                        <input type="text" class="form-control" id="datepicker" required>
+                                        <input type="text" class="form-control" id="fechaEstFinEstimulo" required>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col l2">
-                                    <label for="timePicker" class="form-label">Hora estimada de finalización</label>
-                                    <input type="time" class="form-control" value="10:05 AM" required />
+                                    <label for="horaEstFinEstimulo" class="form-label">Hora estimada de finalización</label>
+                                    <input type="time" class="form-control" id="horaEstFinEstimulo" value="10:05 AM" required />
                                 </div>
                             </div>
 
@@ -433,7 +433,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat='e in Estimulos | filter:Filtro.valor track by $index'>
+                                    <tr ng-repeat='e in Estimulos | filter:FiltroEstimulos.valor track by $index'>
                                         <td>
                                             {{ o.id }}
                                         </td>
@@ -441,10 +441,10 @@
                                             {{o.titulo}}
                                         </td>
                                         <td>
-                                            {{o.fecInicio}}
+                                            {{o.fechaInicio}}
                                         </td>
                                         <td>
-                                            {{o.fecFinal}}
+                                            {{o.fechaFin}}
                                         </td>
                                         <td>
                                             <button class="btn btn-link" ng-click="verDocumentos($index);"

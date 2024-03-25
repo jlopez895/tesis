@@ -52,7 +52,8 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 			estimulo.setEstado(1);
 			estimulo.setTiempoEstmado(estimulo.getTiempoEstmado());
 			estimulo.setTitulo(estimulo.getTitulo());
-
+			estimulo.setFechaInicio(new Date());
+			estimulo.setUsuarioCreador(estimulo.getUsuarioCreador());
 			estimuloDAO.save(estimulo);
 			
 			//creando notificacion
