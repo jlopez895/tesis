@@ -155,7 +155,7 @@ public class Estimulo implements Serializable {
 			return "Debe ingresar el titulo del estímulo";
 		if ((getDescripcion() ==null))
 			return "Debe ingresar la descripción del estímulo";
-		if (getTiempoEstmado() == 0)
+		if (getTiempoEstmado() < 0)
 			return "Debe ingresar el tiempo estimado de resolución";
 
 		
