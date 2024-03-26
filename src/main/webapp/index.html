@@ -335,10 +335,7 @@
 
                                     <select id="estimulo" class="form-control" aria-label="Default select example" required>
 
-                                        <option value="1">1234</option>
-                                        <option value="2">5987</option>
-                                        <option value="3">3478</option>
-                                        <option value="4">8597</option>
+                                         <option *ngFor="let est of Estimulos" [value]="est">{{ est.titulo }}</option>
                                     </select>
                                 </div>
 
@@ -360,8 +357,8 @@
                             </div>
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l4">
-                                    <label for="tipo" class="form-label">Tipo de documento</label>
-                                    <select id="tipo" class="form-control" aria-label="Default select example" required>
+                                    <label for="tipoDoc" class="form-label">Tipo de documento</label>
+                                    <select id="tipoDoc" (change)="cambiarVisibilidadDiv()" class="form-control" aria-label="Default select example" required>
 
                                         <option value="1">Decreto</option>
                                         <option value="2">Informe</option>
@@ -369,7 +366,7 @@
                                         <option value="4">Volante</option>
                                     </select>
                                 </div>
-                                <div class="col l4" style="margin-top: 35px;">
+                                <div class="col l4" style="margin-top: 35px;" *ngIf="mostrarDiv">
                                     <div class="form-check">
 
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -500,7 +497,7 @@
                             <p style=" font-size: 20px;">Total de estimulos: {{total}} </p>
                             <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
                             <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
-                                placeholder="Buscar" aria-label="Search" ng-model="Filtro.valor">
+                                placeholder="Buscar" aria-label="Search" ng-model="FiltroEstimulos.valor">
                             <table id="tabla1" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -612,7 +609,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #8ac8ff">
                     <h5 class="modal-title" id="H1">DESCRIPCIÓN DE LA PROBLEMÁTICA</h5>
-                    <button type="button" onclick="cerrarModalNotif()"
+                    <button type="button" onclick="cerrarModalProb()"
                         style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
                         aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                             fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
@@ -623,7 +620,7 @@
                 <div class="modal-body" style="background-color: #ffffff; font-size: small;">
                     <form>
                         <div class="container-fluid" style="font-size: 12px;">
-                            <textarea class="form-control" id="exampleFormControlTextarea1" disabled="true" rows="20"></textarea>
+                            <textarea class="form-control" id="descripcionProblematica" disabled="true" rows="20"></textarea>
                         </div>
                         <br />
                     </form>
