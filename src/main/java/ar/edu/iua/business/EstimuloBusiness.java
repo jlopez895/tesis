@@ -18,7 +18,7 @@ import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 import ar.edu.iua.model.persistence.EstimuloRepository;
 import ar.edu.iua.model.persistence.RolRepository;
-
+import ar.edu.iua.model.User;
 @Service
 public class EstimuloBusiness implements IEstimuloBusiness {
 
@@ -30,6 +30,9 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 	
 	@Autowired
 	private RolRepository rolDAO;
+	
+	@Autowired
+	private IUserBusiness userService;
 	
 	@Autowired
 	private INotificacionBusiness notificacionService;
@@ -53,7 +56,8 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 			estimulo.setTiempoEstmado(estimulo.getTiempoEstmado());
 			estimulo.setTitulo(estimulo.getTitulo());
 			estimulo.setFechaInicio(new Date());
-			estimulo.setUsuarioCreador(estimulo.getUsuarioCreador());
+			User u=userService.load(estimulo.getUsuarioCreador().getId());
+			estimulo.setUsuarioCreador(u);
 			estimuloDAO.save(estimulo);
 			
 			//creando notificacion
