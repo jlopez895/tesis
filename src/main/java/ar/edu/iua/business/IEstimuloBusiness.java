@@ -2,6 +2,9 @@ package ar.edu.iua.business;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Estimulo;
@@ -13,7 +16,7 @@ public interface IEstimuloBusiness {
 
 	public Estimulo load(int nro) throws BusinessException, NotFoundException;
 	
-	public List<Estimulo> list() throws BusinessException;
+	public Page<Estimulo> list(Pageable pageable) throws BusinessException;
 	
 	public Estimulo cerrarEstimulo(int id) throws BusinessException, NotFoundException;
 }

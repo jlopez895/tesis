@@ -185,6 +185,10 @@
 		    text-align: center;
 		    font-size: 0.9em;  /* Reducir el tamaño de la fuente */
 		}
+		
+		.pagination-arrow {
+		    font-size: 2.5em; /* Puedes ajustar este valor según tu preferencia */
+		}	
 
     </style>
     
@@ -492,62 +496,64 @@
                         </svg></button>
                 </div>
                 <div class="modal-body" style="background-color: #ffffff; font-size: small;">
-                    <form>
-                        <div class="container-fluid" style="font-size: 12px;">
-                            <p style=" font-size: 20px;">Total de estimulos: {{total}} </p>
-                            <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
-                            <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
-                                placeholder="Buscar" aria-label="Search" ng-model="FiltroEstimulos.valor">
-                            <table id="tabla1" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">
-
-                                            Número de estímulo
-
-                                        </th>
-                                        <th scope="col">
-
-                                            Título
-
-                                        </th>
-                                        <th scope="col">Fceha inicio</th>
-                                        <th scope="col">Fecha estimada de finalización</th>
-                                        <th scope="col"></th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat='o in Estimulos | filter:FiltroEstimulos.valor track by $index'>
-                                        <td>
-                                            {{ o.id }}
-                                        </td>
-                                        <td>
-                                            {{o.titulo}}
-                                        </td>
-                                        <td>
-                                            {{o.fechaInicio}}
-                                        </td>
-                                        <td>
-                                            {{o.fechaFin}}
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-link" ng-click="verDocumentos($index);"
-                                                style=" color:#8ac8ff; font-size: 12px;" id="conciliacion">Ver
-                                                Docs.</button>
-
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br />
-
-
-
-                    </form>
-                </div>
-
+				    <form>
+				        <div class="container-fluid" style="font-size: 12px;">
+				            <p style=" font-size: 20px;">Total de estimulos: {{totalItems}} </p>
+				            <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
+				            <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
+				                placeholder="Buscar" aria-label="Search" ng-model="FiltroEstimulos.valor">
+				            <table id="tabla1" class="table table-bordered">
+				                <thead>
+				                    <tr>
+				                        <th scope="col">
+				                            Número de estímulo
+				                        </th>
+				                        <th scope="col">
+				                            Título
+				                        </th>
+				                        <th scope="col">Fecha inicio</th>
+				                        <th scope="col">Fecha estimada de finalización</th>
+				                        <th scope="col"></th>
+				                    </tr>
+				                </thead>
+				                <tbody>
+				                    <tr ng-repeat='o in Estimulos | filter:FiltroEstimulos.valor track by $index'>
+				                        <td>
+				                            {{ o.id }}
+				                        </td>
+				                        <td>
+				                            {{o.titulo}}
+				                        </td>
+				                        <td>
+				                            {{o.fechaInicio}}
+				                        </td>
+				                        <td>
+				                            {{o.fechaFin}}
+				                        </td>
+				                        <td>
+				                            <button class="btn btn-link" ng-click="verDocumentos($index);"
+				                                style=" color:#8ac8ff; font-size: 12px;" id="conciliacion">Ver Docs.</button>
+				                        </td>
+				                    </tr>
+				                </tbody>
+				            </table>
+				            <ul class="pagination justify-content-center">
+						        <li ng-class="{disabled: currentPage == 1}" style="margin-right: 10px;">
+						            <a ng-click="setPage(currentPage - 1)" aria-label="Anterior">
+						                <span aria-hidden="true" class="pagination-arrow">&lsaquo;</span>
+						            </a>
+						        </li>
+						        
+						        <li ng-class="{disabled: currentPage == totalPages}" style="margin-left: 10px;">
+						            <a ng-click="setPage(currentPage + 1)" aria-label="Siguiente">
+						                <span aria-hidden="true" class="pagination-arrow">&rsaquo;</span>
+						            </a>
+						        </li>
+    					</ul>
+				        </div>
+				        <br />
+				    </form>
+				</div>
             </div>
         </div>
     </div>

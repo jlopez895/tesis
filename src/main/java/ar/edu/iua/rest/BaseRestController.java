@@ -49,6 +49,8 @@ public class BaseRestController {
 		o.put("idUser", u.getId());
 		o.put("email", u.getEmail());
 		o.put("rolPrinc",u.getRolPrincipal().getId());
+		o.put("nombre", u.getNombre());
+		o.put("apellido", u.getApellido());
 		JSONArray r = new JSONArray();
 		for (GrantedAuthority g : u.getAuthorities()) {
 			r.put(g.getAuthority());

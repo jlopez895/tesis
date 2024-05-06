@@ -18,6 +18,8 @@ import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 import ar.edu.iua.model.persistence.EstimuloRepository;
 import ar.edu.iua.model.persistence.RolRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class EstimuloBusiness implements IEstimuloBusiness {
@@ -89,20 +91,12 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 	}
 
 	@Override
-	public List<Estimulo> list() throws BusinessException {
-		List<Estimulo> list = null;
-		try {
-
-			list = estimuloDAO.findByEstado();
-
-		} catch (Exception e) {
-			throw new BusinessException(e);
-		}
-
-		if (list != null && list.size() > 0)
-			return list;
-		else
-			return null;
+	public Page<Estimulo> list(Pageable pageable) throws BusinessException {
+	    try {
+	        return estimuloDAO.findByEstado(pageable);
+	    } catch (Exception e) {
+	        throw new BusinessException("Error al obtener los estímulos", e);
+	    }
 	}
 
 	@Override

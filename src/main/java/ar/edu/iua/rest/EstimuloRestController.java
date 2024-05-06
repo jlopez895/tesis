@@ -4,6 +4,8 @@ import java.io.Console;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,21 +62,21 @@ public class EstimuloRestController {
 		}
 	}
 	
-	@ApiOperation(value = "Obtener listado de estimulos", response = Documento.class)
-
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
-			@ApiResponse(code = 500, message = "Error interno del servidor") })
-
-	@GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Estimulo>> list() {
-		try {
-
-			return new ResponseEntity<List<Estimulo>>(estimuloBusiness.list(), HttpStatus.OK);
-
-		} catch (BusinessException e) {
-			return new ResponseEntity<List<Estimulo>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	@ApiOperation(value = "Obtener listado de estimulos", response = Estimulo.class)
+	@ApiResponses(value = { 
+	    @ApiResponse(code = 200, message = "Operación exitosa"),
+	    @ApiResponse(code = 500, message = "Error interno del servidor") 
+	})
+	@GetMapping("/list")
+	public ResponseEntity<?> list(Pageable pageable) {
+	    try {
+	        Page<Estimulo> estimulos = estimuloBusiness.list(pageable); 
+	        return new ResponseEntity<>(estimulos, HttpStatus.OK);
+	    } catch (BusinessException e) {
+	        return new ResponseEntity<>("Error al obtener los estímulos: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
+
 	
 	@ApiOperation(value = "Obtener un estimulo por su id", response = Estimulo.class)
 
