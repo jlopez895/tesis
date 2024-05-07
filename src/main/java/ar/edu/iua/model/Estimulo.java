@@ -48,13 +48,15 @@ public class Estimulo implements Serializable {
 	@Column()
 	private int estado;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_usuario_creador")
-	private User usuarioCreador;
+	@ApiModelProperty(notes="Usuario creador", required=false)
+	@Column()
+	private int usuarioCreador;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_usuario_finalizador")
-	private User usuarioFinalizador;
+	@ApiModelProperty(notes="Usuario finalizador", required=false)
+	@Column()
+	private int usuarioFinalizador;
+	
+
 
 	public int getId() {
 		return id;
@@ -115,19 +117,19 @@ public class Estimulo implements Serializable {
 	
 	
 
-	public User getUsuarioCreador() {
+	public int getUsuarioCreador() {
 		return usuarioCreador;
 	}
 
-	public void setUsuarioCreador(User usuarioCreador) {
+	public void setUsuarioCreador(int usuarioCreador) {
 		this.usuarioCreador = usuarioCreador;
 	}
 
-	public User getUsuarioFinalizador() {
+	public int getUsuarioFinalizador() {
 		return usuarioFinalizador;
 	}
 
-	public void setUsuarioFinalizador(User usuarioFinalizador) {
+	public void setUsuarioFinalizador(int usuarioFinalizador) {
 		this.usuarioFinalizador = usuarioFinalizador;
 	}
 
@@ -137,7 +139,7 @@ public class Estimulo implements Serializable {
 	}
 
 	public Estimulo(int id, String titulo, String descripcion, int tiempoEstmado, Date fechaInicio, Date fechaFin,
-			int estado, User usuarioCreador, User usuarioFinalizador) {
+			int estado, int usuarioCreador, int usuarioFinalizador) {
 		super();
 		this.id = id;
 		this.titulo = titulo;

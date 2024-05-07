@@ -1,7 +1,7 @@
 let app = angular.module('iw3', []);
 
-$(window).on('load', function () {
-	setTimeout(function () {
+$(window).on('load', function() {
+	setTimeout(function() {
 		$(".loader-page").css({ visibility: "hidden", opacity: "0" })
 	}, 2000);
 
@@ -9,15 +9,14 @@ $(window).on('load', function () {
 
 // Función para llenar un textarea con el contenido de un archivo de texto
 function llenarTextareaDesdeArchivo(rutaArchivo) {
-	$.get(rutaArchivo, function (data) {
+	$.get(rutaArchivo, function(data) {
 		// Asigna el contenido del archivo al textarea
 		$('#descripcionProblematica').val(data);
 	});
 }
 
-
 // Llama a la función para llenar el textarea con el contenido del archivo
-//llenarTextareaDesdeArchivo('random.txt');
+llenarTextareaDesdeArchivo('random.txt');
 
 function cerrarModalNuevoDocumento() {
 	$("#modalNuevoDocumento").modal('hide');
@@ -42,9 +41,9 @@ function cerrarModalProb() {
 	$("#modalProb").modal('hide');
 }
 
-app.controller('controllerPedidos', function ($scope, $http) {
-	// if (localStorage.getItem("logged") != "true")
-	// 	window.location.replace("/login.html");
+app.controller('controllerPedidos', function($scope, $http) {
+	if (localStorage.getItem("logged") != "true")
+		window.location.replace("/login.html");
 
 	let userDataFromLocalStorage = JSON.parse(localStorage.getItem("ngStorage-userdata"));
 	let fullName = userDataFromLocalStorage.fullname;
@@ -59,7 +58,7 @@ app.controller('controllerPedidos', function ($scope, $http) {
 		rol: "Administrador"  // Puedes obtener estos valores desde localStorage o cualquier otra fuente
 	};
 
-	$scope.cerrarSesion = function () {
+	$scope.cerrarSesion = function() {
 		console.log("Función cerrarSesion llamada");
 		localStorage.setItem("logged", "false");
 		localStorage.setItem("token", "");
@@ -79,6 +78,23 @@ app.controller('controllerPedidos', function ($scope, $http) {
 	$scope.Estimulos = [];
 	$scope.Data = [];
 	$scope.FiltroEstimulos = { valor: '' };
+	
+	$http(reqEstimulos).then(
+		function(resp) {
+			if (resp.status === 200) {
+				$scope.Estimulos = resp.data;
+				$scope.totalEstimulos = $scope.Estimulos.length;
+
+			} else {
+				console.log(reqEstimulos);
+				alert("No se pueden obtener los estimulos");
+			}
+		},
+		function(respErr) {
+
+			alert("No se pueden obtener los estimulos");
+		}
+	);
 
 	var reqNotificaciones = {
 		method: 'GET',
@@ -95,17 +111,17 @@ app.controller('controllerPedidos', function ($scope, $http) {
 
 
 	$http(reqNotificaciones).then(
-		function (resp) {
+		function(resp) {
 			if (resp.status === 200) {
 				$scope.Notificaciones = resp.data;
 				$scope.totalNotificaciones = $scope.Notificaciones.length;
 
 			} else {
-				console.log(reqEstimulos);
+				console.log(reqNotificaciones);
 				alert("No se pueden obtener las notificaciones");
 			}
 		},
-		function (respErr) {
+		function(respErr) {
 
 			alert("No se pueden obtener las notificaciones");
 		}
@@ -118,25 +134,14 @@ app.controller('controllerPedidos', function ($scope, $http) {
 		document.getElementById('descripcionEstimulo').value = '';
 		document.getElementById('fechaEstFinEstimulo').value = '';
 		document.getElementById('horaEstFinEstimulo').value = '';
-
-		document.getElementById('tituloDoc').value = '';
-		document.getElementById('cuerpoDoc').value = '';
-		document.getElementById('estimulo').value = '';
-		document.getElementById('destinatario').value = '';
-		document.getElementById('tipoDoc').value = '';
-		document.getElementById('final').value = '';
 	}
 
-	$('#modalNuevoEstimulo').on('shown.bs.modal', function () {
-		limpiarCampos(); // Limpia los campos cada vez que se abre el modal
-	});
-
-	$('#modalNuevoDocumento').on('shown.bs.modal', function () {
+	$('#modalNuevoEstimulo').on('shown.bs.modal', function() {
 		limpiarCampos(); // Limpia los campos cada vez que se abre el modal
 	});
 
 	var tituloEstimulo, descripcionEstimulo, fechaEstFinEstimulo, horaEstFinEstimulo;
-	$scope.nuevoEst = function () {
+	$scope.nuevoEst = function() {
 
 		tituloEstimulo = document.getElementById('tituloEstimulo').value;
 		descripcionEstimulo = document.getElementById('descripcionEstimulo').value;
@@ -184,28 +189,8 @@ app.controller('controllerPedidos', function ($scope, $http) {
 			'fechaInicio': fechaHoraActualSQL,
 			'tiempoEstmado': tiempoEstimado,
 			'titulo': tituloEstimulo,
-			'usuarioCreador': {
-				"id": userDataFromLocalStorage.idUser,
-				"nombre": "",
-				"email": "",
-				"apellido": "",
-				"username": "",
-				"password": "",
-				"legajo": "",
-				"rolPrincipal": {
-					"id": null,
-					"nombre": ""
-				},
-				"accountNonExpired": true,
-				"accountNonLocked": true,
-				"credentialsNonExpired": true,
-				"enabled": true,
-				"sessionToken": null,
-				"sessionTimeout": 360
-			}
-
+			'usuarioCreador':userDataFromLocalStorage.idUser
 		};
-
 
 		var req = {
 			method: 'POST',
@@ -220,12 +205,12 @@ app.controller('controllerPedidos', function ($scope, $http) {
 		};
 
 		$scope.Ejecutar(req).
-			then(function (resp) {
+			then(function(resp) {
 				limpiarCampos();
 				swal("¡Estímulo registrado exitosamente!", "", "success");
 				$('#modalNuevoEstimulo').modal('hide');
 
-			}).catch(function (error) {
+			}).catch(function(error) {
 
 				console.error('Error al registrar el estímulo:', error);
 				swal("Error", "Hubo un problema al registrar el estímulo.", "error");
@@ -234,58 +219,9 @@ app.controller('controllerPedidos', function ($scope, $http) {
 
 	}
 
-	var tituloDoc, cuerpoDoc, estimulo, destinatario, tipoDoc, esFinal;
-	$scope.nuevoDoc = function () {
-
-		tituloDoc = document.getElementById('tituloDoc').value;
-		cuerpoDoc = document.getElementById('cuerpoDoc').value;
-		estimulo = document.getElementById('estimulo').value;
-		destinatario = document.getElementById('destinatario').value;
-		tipoDoc = document.getElementById('tipoDoc').value;
-		esFinal = document.getElementById('final').value;
-		//FechaHoraInicio
-		let fechaHoraActual = new Date();
-		let fechaHoraActualSQL = fechaHoraActual.toISOString();
-
-		var data = {
-			'tipo': tipoDoc,
-			'fecha': fechaHoraActualSQL,
-			'titulo': tituloDoc,
-			'descripcion': cuerpoDoc,
-			'esFinal': esFinal,
-
-		};
-
-		var req = {
-			method: 'POST',
-			url: 'http://localhost:8080/api/final/documentos/nuevoDocumento/' + estimulo + '/' + userDataFromLocalStorage.idUser + '/' + userDataFromLocalStorage.rolPrinc,
-			headers: {
-				'Content-Type': 'application/json',
-				'xauthtoken': userDataFromLocalStorage.authtoken
-			},
-			data: data
-
-
-		};
-
-		$scope.Ejecutar(req).
-			then(function (resp) {
-				limpiarCampos();
-				swal("¡Documento registrado exitosamente!", "", "success");
-				$('#modalNuevoDocumento').modal('hide');
-
-			}).catch(function (error) {
-
-				console.error('Error al registrar el documento:', error);
-				swal("Error", "Hubo un problema al registrar el documento.", "error");
-			});
-
-
-	}
-
-	$scope.Ejecutar = function (req) {
+	$scope.Ejecutar = function(req) {
 		return $http(req).then(
-			function (resp) {
+			function(resp) {
 				if (resp.status === 200) {
 					return resp.data;
 				} else {
@@ -293,21 +229,19 @@ app.controller('controllerPedidos', function ($scope, $http) {
 					return $q.reject("Error en la respuesta");
 				}
 			},
-			function (respErr) {
+			function(respErr) {
 				console.log(req);
 				return $q.reject(respErr);
 			}
 		);
 	}
 
-	$scope.cambiarVisibilidadDiv = function () {
-		var selectedValue = $scope.tipoDoc; // Obtener el valor seleccionado del modelo
-
+	$scope.cambiarVisibilidadDiv = function() {
 		// Lógica para determinar si el div debe mostrarse u ocultarse según la opción seleccionada
-		if (selectedValue == "1") {
+		if (document.getElementById('tipoDoc').value == "1") { // Cambia 'opcionMostrar' por el valor de la opción que quieres mostrar
 			$scope.mostrarDiv = true;
 		} else {
 			$scope.mostrarDiv = false;
 		}
-	};
+	}
 });

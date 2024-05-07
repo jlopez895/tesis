@@ -114,23 +114,6 @@ public class CoreRestController extends BaseRestController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-  
-  @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-
-  public ResponseEntity<User> getUserById(@RequestParam(value = "idUser") String idUser) {
-      try {
-          User user = userBusiness.load(idUser);
-          if (user != null) {
-
-              return new ResponseEntity<>(user, HttpStatus.OK);
-          } else {
-              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-          }
-      } catch (Exception e) {
-          log.error("esto no funciona");
-          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-  }
     
     private void authenticateUser(User user) {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null,
