@@ -333,9 +333,8 @@
                                 <div class="col l4">
                                     <label for="estimulo" class="form-label">Estímulo asociado</label>
 
-                                    <select id="estimulo" class="form-control" aria-label="Default select example" required>
-
-                                         <option *ngFor="let est of Estimulos" [value]="est">{{ est.titulo }}</option>
+                                    <select id="estimulo"  ng-model="selectedEstimulo" ng-options="estimulo.titulo for estimulo in Estimulos" class="form-control" aria-label="Default select example" required>
+                                        <option value="" disabled selected>Selecciona un estimulo</option>
                                     </select>
                                 </div>
 
@@ -344,7 +343,7 @@
                                     <label for="destinatario" class="form-label">Destinatario</label>
                                     <select id="destinatario" class="form-control" aria-label="Default select example"
                                         required>
-
+                                        <option value="" disabled selected>Selecciona un destinatario</option>
                                         <option value="1">Ministerio de salud</option>
                                         <option value="2">Ministerio de economia</option>
                                         <option value="3">Ministerio de educación</option>
@@ -358,15 +357,15 @@
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l4">
                                     <label for="tipoDoc" class="form-label">Tipo de documento</label>
-                                    <select id="tipoDoc" (change)="cambiarVisibilidadDiv()" class="form-control" aria-label="Default select example" required>
-
+                                    <select id="tipoDoc" ng-model="selectedTipoDoc" ng-change="cambiarVisibilidadDiv()" class="form-control" aria-label="Default select example" required>
+                                        <option value="" disabled selected>Selecciona un documento</option>
                                         <option value="1">Decreto</option>
                                         <option value="2">Informe</option>
                                         <option value="3">Solicitud</option>
                                         <option value="4">Volante</option>
                                     </select>
                                 </div>
-                                <div class="col l4" style="margin-top: 35px;" *ngIf="mostrarDiv">
+                                <div class="col l4" style="margin-top: 35px;" ng-show="mostrarDiv">
                                     <div class="form-check">
 
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -378,8 +377,8 @@
                             </div>
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l12">
-                                    <label for="titulo" class="form-label">Título del documento</label>
-                                    <input class="form-control" id="titulo" type="text"
+                                    <label for="tituloDocumento" class="form-label">Título del documento</label>
+                                    <input class="form-control" id="tituloDocumento" type="text"
                                         placeholder="Título del documento" aria-label="default input example" required>
 
                                 </div>

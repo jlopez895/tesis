@@ -42,15 +42,12 @@ public class DocumentoRestController {
 			@ApiResponse(code = 400, message = "El servidor no procesará la solicitud porque no puede o no debe debido  a un error del usuario "),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 	
-	@PostMapping(value = "/nuevoDocumento/{nroEstimulo}/{nroUsuario}/{nroRol}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MensajeRespuesta> cargarDocumento(@RequestBody Documento documento,
-			@ApiParam(value = "Numero de estimulo") @PathVariable("nroEstimulo") int nroEstimulo,
-			@ApiParam(value = "Numero de usuario") @PathVariable("nroUsuario") int nroUsuario,
-			@ApiParam(value = "Numero de rol") @PathVariable("nroRol") int nroRol)
+	@PostMapping(value = "/nuevoDocumento", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<MensajeRespuesta> cargarDocumento(@RequestBody Documento documento)
 			throws NotFoundException {
 
 		try {
-			MensajeRespuesta m = documentoBusiness.nuevoDocumento(documento, nroEstimulo,nroUsuario,nroRol).getMensaje();
+			MensajeRespuesta m = documentoBusiness.nuevoDocumento(documento).getMensaje();
 			if (m.getCodigo() == 0) {
 				return new ResponseEntity<MensajeRespuesta>(m, HttpStatus.OK);
 			} else {

@@ -32,19 +32,15 @@ public class Documento implements Serializable {
 	private String descripcion;
 	@Column()
 	private boolean esFinal;
+	@Column()
+	private int estimulo;
 
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_estimulo")
-	private Estimulo estimulo;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_usuario_creador")
-	private User usuario;
+	@Column()
+	private int usuario;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_rol_destinatario")
-	private Rol rol;
+	@Column()
+	private int rol;
 	
 
 	public long getId() {
@@ -92,30 +88,30 @@ public class Documento implements Serializable {
 		this.esFinal = esFinal;
 	}
 
-	public Estimulo getEstimulo() {
+	public int getEstimulo() {
 		return estimulo;
 	}
 
-	public void setEstimulo(Estimulo estimulo) {
+	public void setEstimulo(int estimulo) {
 		this.estimulo = estimulo;
 	}
 
 
-	public User getUsuario() {
+	public int getUsuario() {
 		return usuario;
 	}
 
 
-	public void setUsuario(User usuario) {
+	public void setUsuario(int usuario) {
 		this.usuario = usuario;
 	}
 
 
-	public Rol getRol() {
+	public int getRol() {
 		return rol;
 	}
 
-	public void setRol(Rol rol) {
+	public void setRol(int rol) {
 		this.rol = rol;
 	}
 	
@@ -131,7 +127,7 @@ public class Documento implements Serializable {
 	
 
 	public Documento(long id, int tipo, Date fecha, String titulo, String descripcion, boolean esFinal,
-			Estimulo estimulo, User usuario, Rol rol) {
+			int estimulo, int usuario, int rol) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
