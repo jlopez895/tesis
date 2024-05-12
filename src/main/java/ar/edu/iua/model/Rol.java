@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,6 +28,7 @@ public class Rol {
     @Column(length = 250, nullable = true)
     private String descripcion;
     
+    
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "roles_permisos", joinColumns = {
             @JoinColumn(name = "id_rol", referencedColumnName = "id") }, inverseJoinColumns = {
@@ -38,14 +40,22 @@ public class Rol {
         super();
     }
 
-    public Rol(Integer id, String rol, String descripcion) {
-        super();
-        this.id = id;
-        this.rol = rol;
-        this.descripcion = descripcion;
-    }
 
-    // Getters and Setters
+
+
+
+	public Rol(Integer id, String rol, String descripcion, Set<Permiso> permisos) {
+		super();
+		this.id = id;
+		this.rol = rol;
+		this.descripcion = descripcion;
+		this.permisos = permisos;
+
+	}
+
+
+
+	// Getters and Setters
     public Integer getId() {
         return id;
     }

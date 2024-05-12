@@ -1,4 +1,9 @@
-let app = angular.module('iw3', []);
+let app = angular.module('iw3', ['ngStomp'])
+
+
+	.constant('URL_API_BASE', 'http://localhost:8080/api/final/')
+	.constant('URL_BASE', 'http://localhost:8080/')
+	.constant('URL_WS', '/api/final/ws');
 
 $(window).on('load', function () {
 	setTimeout(function () {
@@ -8,15 +13,17 @@ $(window).on('load', function () {
 });
 
 // Función para llenar un textarea con el contenido de un archivo de texto
+fetch('ui/random.txt')
+	.then(response => response.text())
+	.then(data => {
+		document.getElementById('descripcionProblematica').value = data;
+	});
 function llenarTextareaDesdeArchivo(rutaArchivo) {
 	$.get(rutaArchivo, function (data) {
 		// Asigna el contenido del archivo al textarea
 		$('#descripcionProblematica').val(data);
 	});
 }
-
-// Llama a la función para llenar el textarea con el contenido del archivo
-llenarTextareaDesdeArchivo('random.txt');
 
 function cerrarModalNuevoDocumento() {
 	$("#modalNuevoDocumento").modal('hide');
@@ -41,10 +48,11 @@ function cerrarModalProb() {
 	$("#modalProb").modal('hide');
 }
 
-app.controller('controllerPedidos', function ($scope, $http) {
+app.controller('controllerPedidos', function ($scope, $http, $rootScope, $stomp, URL_WS) {
 	if (localStorage.getItem("logged") != "true")
 		window.location.replace("/login.html");
 
+	$rootScope.stomp = $stomp;
 	let userDataFromLocalStorage = JSON.parse(localStorage.getItem("ngStorage-userdata"));
 	let fullName = userDataFromLocalStorage.fullname;
 	let initials = fullName.split(',')
@@ -64,7 +72,8 @@ app.controller('controllerPedidos', function ($scope, $http) {
 		localStorage.setItem("token", "");
 		window.location.replace("/login.html");
 	};
-
+	
+	
 	var reqEstimulos = {
 		method: 'GET',
 		url: 'http://localhost:8080/api/final/estimulos/list',
@@ -73,29 +82,33 @@ app.controller('controllerPedidos', function ($scope, $http) {
 			'xauthtoken': userDataFromLocalStorage.authtoken
 		},
 	};
-
 	$scope.selectedEstimulo = {};
+	$scope.selectedMinisterio = {};
 	$scope.Estimulos = [];
 	$scope.Data = [];
 	$scope.FiltroEstimulos = { valor: '' };
 
-	$http(reqEstimulos).then(
-		function (resp) {
-			if (resp.status === 200) {
-				$scope.Estimulos = resp.data;
-				$scope.totalEstimulos = $scope.Estimulos.length;
+	$scope.cargarEstimulos = function () {
+		$http(reqEstimulos).then(
+			function (resp) {
+				if (resp.status === 200) {
+					$scope.Estimulos = resp.data;
+					$scope.totalEstimulos = $scope.Estimulos.length;
 
-			} else {
-				console.log(reqEstimulos);
+				} else {
+					console.log(reqEstimulos);
+					alert("No se pueden obtener los estimulos");
+				}
+			},
+			function (respErr) {
+
 				alert("No se pueden obtener los estimulos");
 			}
-		},
-		function (respErr) {
+		);
 
-			alert("No se pueden obtener los estimulos");
-		}
-	);
+	}
 
+	$scope.cargarEstimulos();
 	var reqNotificaciones = {
 		method: 'GET',
 		url: 'http://localhost:8080/api/final/notificaciones/list/' + userDataFromLocalStorage.rolPrinc,
@@ -104,26 +117,70 @@ app.controller('controllerPedidos', function ($scope, $http) {
 			'xauthtoken': userDataFromLocalStorage.authtoken
 		},
 	};
-
 	$scope.Notificacion = {};
 	$scope.Notificaciones = [];
 	$scope.FiltroNotificaciones = { valor: '' };
+	$scope.cargarNotificaciones = function () {
+
+		$http(reqNotificaciones).then(
+			function (resp) {
+				if (resp.status === 200) {
+					$scope.Notificaciones = resp.data;
+					$scope.totalNotificaciones = $scope.Notificaciones.length;
+
+				} else {
+					console.log(reqNotificaciones);
+					alert("No se pueden obtener las notificaciones");
+				}
+			},
+			function (respErr) {
+
+				alert("No se pueden obtener las notificaciones");
+			}
+		);
+	}
+
+	
+	$stomp.connect(URL_WS + "?xauthtoken=" + localStorage.getItem("token")).then(function (frame) {
+        console.log('WebSocket connected:', frame);
+        // Una vez conectado, puedes suscribirte a un canal específico
+		debugger;
+        $stomp.subscribe('/iw3/data', function (payload, headers, res) {
+            console.log('Received data from WebSocket:', payload);
+            // Aquí puedes hacer cualquier acción necesaria con los datos recibidos
+        });
+    }).catch(function (error) {
+		debugger;
+        console.error('WebSocket connection failed:', error);
+    });
 
 
-	$http(reqNotificaciones).then(
+	var reqRoles = {
+		method: 'GET',
+		url: 'http://localhost:8080/api/final/ministerios/list',
+		headers: {
+			'Content-Type': 'application/json',
+			'xauthtoken': userDataFromLocalStorage.authtoken
+		},
+	};
+
+	$scope.Ministerio = {};
+	$scope.Ministerios = [];
+
+	$http(reqRoles).then(
 		function (resp) {
 			if (resp.status === 200) {
-				$scope.Notificaciones = resp.data;
-				$scope.totalNotificaciones = $scope.Notificaciones.length;
+				$scope.Ministerios = resp.data;
+				$scope.totalMinisterios = $scope.Ministerios.length;
 
 			} else {
 				console.log(reqNotificaciones);
-				alert("No se pueden obtener las notificaciones");
+				alert("No se pueden obtener los ministerios");
 			}
 		},
 		function (respErr) {
 
-			alert("No se pueden obtener las notificaciones");
+			alert("No se pueden obtener los ministerios");
 		}
 	);
 
@@ -222,30 +279,31 @@ app.controller('controllerPedidos', function ($scope, $http) {
 	$scope.nuevoDoc = function () {
 
 		tipoDocumento = document.getElementById('tipoDoc').value;
-		idEstimulo= $scope.selectedEstimulo.id;
+		idEstimulo = $scope.selectedEstimulo.id;
+		idMinisterio = $scope.selectedMinisterio.id;
 		tituloDocumento = document.getElementById('tituloDocumento').value;
 		descripcionDocumento = document.getElementById('cuerpo').value;
-		if($scope.mostrarDiv == true&&document.getElementById('final').checked)
+		if ($scope.mostrarDiv == true && document.getElementById('final').checked)
 			esFinalDocumento = true;
 		else
 			esFinalDocumento = false;
-	
+
 		//FechaHoraInicio
 		let fechaHoraActual = new Date();
-		
+
 		let fechaDocumentoSQL = fechaHoraActual.toISOString();
-	
+
 		var data = {
 			'tipo': tipoDocumento,
 			'fecha': fechaDocumentoSQL,
 			'titulo': tituloDocumento,
 			'descripcion': descripcionDocumento,
 			'esFinal': esFinalDocumento,
-			'estimulo': $scope.selectedEstimulo.id, // replace with the selected estimulo id
-			'usuario':userDataFromLocalStorage.idUser,
-			'rol': userDataFromLocalStorage.rolPrinc// replace with the selected rol id
+			'estimulo': $scope.selectedEstimulo.id,
+			'usuario': userDataFromLocalStorage.idUser,
+			'ministerio': idMinisterio
 		};
-	
+
 		var req = {
 			method: 'POST',
 			url: 'http://localhost:8080/api/final/documentos/nuevoDocumento',
@@ -255,15 +313,15 @@ app.controller('controllerPedidos', function ($scope, $http) {
 			},
 			data: data
 		};
-	
+
 		$scope.Ejecutar(req).
 			then(function (resp) {
 				limpiarCampos();
 				swal("¡Documento registrado exitosamente!", "", "success");
 				$('#modalNuevoDocumento').modal('hide');
-	
+
 			}).catch(function (error) {
-	
+
 				console.error('Error al registrar el documento:', error);
 				swal("Error", "Hubo un problema al registrar el documento.", "error");
 			});
@@ -276,12 +334,12 @@ app.controller('controllerPedidos', function ($scope, $http) {
 					return resp.data;
 				} else {
 					console.log(req);
-					return $q.reject("Error en la respuesta");
+					return $req.reject("Error en la respuesta");
 				}
 			},
 			function (respErr) {
 				console.log(req);
-				return $q.reject(respErr);
+				return $req.reject(respErr);
 			}
 		);
 	}
@@ -290,9 +348,10 @@ app.controller('controllerPedidos', function ($scope, $http) {
 	$scope.mostrarDiv = false;
 
 	$scope.cambiarVisibilidadDiv = function () {
-		if($scope.selectedTipoDoc === "1")
+		if ($scope.selectedTipoDoc === "1")
 			$scope.mostrarDiv = true;
 		else
 			$scope.mostrarDiv = false;
 	};
+
 });

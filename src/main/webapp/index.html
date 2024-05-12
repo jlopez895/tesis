@@ -341,16 +341,9 @@
                                 <div class="col l4">
 
                                     <label for="destinatario" class="form-label">Destinatario</label>
-                                    <select id="destinatario" class="form-control" aria-label="Default select example"
-                                        required>
+                                    <select id="ministerio"  ng-model="selectedMinisterio" ng-options="ministerio.nombre for ministerio in Ministerios" class="form-control" aria-label="Default select example" required>
                                         <option value="" disabled selected>Selecciona un destinatario</option>
-                                        <option value="1">Ministerio de salud</option>
-                                        <option value="2">Ministerio de economia</option>
-                                        <option value="3">Ministerio de educación</option>
-                                        <option value="4">Ministerio de seguridad</option>
                                     </select>
-
-
                                 </div>
 
                             </div>

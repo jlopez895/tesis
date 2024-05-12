@@ -40,7 +40,7 @@ public class Documento implements Serializable {
 	private int usuario;
 	
 	@Column()
-	private int rol;
+	private int ministerio;
 	
 
 	public long getId() {
@@ -107,14 +107,14 @@ public class Documento implements Serializable {
 	}
 
 
-	public int getRol() {
-		return rol;
+
+	public int getMinisterio() {
+		return ministerio;
 	}
 
-	public void setRol(int rol) {
-		this.rol = rol;
+	public void setMinisterio(int ministerio) {
+		this.ministerio = ministerio;
 	}
-	
 
 	public String getTitulo() {
 		return titulo;
@@ -127,7 +127,7 @@ public class Documento implements Serializable {
 	
 
 	public Documento(long id, int tipo, Date fecha, String titulo, String descripcion, boolean esFinal,
-			int estimulo, int usuario, int rol) {
+			int estimulo, int usuario, int ministerio) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
@@ -137,7 +137,7 @@ public class Documento implements Serializable {
 		this.esFinal = esFinal;
 		this.estimulo = estimulo;
 		this.usuario = usuario;
-		this.rol = rol;
+		this.ministerio = ministerio;
 	}
 	
 	

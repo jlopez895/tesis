@@ -32,8 +32,12 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 	
 	@Autowired
 	private DocumentoRepository documentoDAO;
+	
 	@Autowired
 	private INotificacionBusiness notificacionService;
+	
+	@Autowired
+	private IRolBusiness rolService;
 	
 	@Override
 	public RespuestaGenerica<Documento> nuevoDocumento(Documento documento) throws BusinessException, NotFoundException {
@@ -58,7 +62,7 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 			documento.setEsFinal(documento.isEsFinal());
 			documento.setEstimulo(documento.getEstimulo());
 			documento.setFecha(new Date());
-			documento.setRol(documento.getRol());
+			documento.setMinisterio(documento.getMinisterio());
 			documento.setTipo(documento.getTipo());
 			documento.setUsuario(documento.getUsuario());
 			documento.setTitulo(documento.getTitulo());
@@ -69,8 +73,8 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 			Notificacion not=new Notificacion();
 			not.setDescripcion("Se ha creado un nuevo documento para el estímulo "+estimulo.getId()+": '"+estimulo.getTitulo()+"'");
 			not.setFecha(new Date());
-			Rol rol = documento.get;
-			Set<Rol> setRoles = new HashSet<>(listaRoles);
+			List<Rol> rol = rolService.findByMinisterio(documento.getMinisterio());
+			Set<Rol> setRoles = new HashSet<>(rol);
 			not.setRoles(setRoles);
 			notificacionService.nuevaNotificacion(not);
 		} catch (Exception e) {
