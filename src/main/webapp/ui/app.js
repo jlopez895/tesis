@@ -48,7 +48,7 @@ function cerrarModalProb() {
 	$("#modalProb").modal('hide');
 }
 
-app.controller('controllerPedidos', function ($scope, $http, $rootScope, $stomp, URL_WS) {
+app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope, $stomp, URL_WS) {
 	if (localStorage.getItem("logged") != "true")
 		window.location.replace("/login.html");
 
@@ -72,8 +72,8 @@ app.controller('controllerPedidos', function ($scope, $http, $rootScope, $stomp,
 		localStorage.setItem("token", "");
 		window.location.replace("/login.html");
 	};
-	
-	
+
+
 	var reqEstimulos = {
 		method: 'GET',
 		url: 'http://localhost:8080/api/final/estimulos/list',
@@ -87,13 +87,31 @@ app.controller('controllerPedidos', function ($scope, $http, $rootScope, $stomp,
 	$scope.Estimulos = [];
 	$scope.Data = [];
 	$scope.FiltroEstimulos = { valor: '' };
+	$scope.filteredEstimulos = [];
+	$scope.currentPage = 0;
+	$scope.itemsPerPage = 5;
+
 
 	$scope.cargarEstimulos = function () {
 		$http(reqEstimulos).then(
 			function (resp) {
 				if (resp.status === 200) {
 					$scope.Estimulos = resp.data;
+					$scope.total = $scope.Estimulos.length;
 					$scope.totalEstimulos = $scope.Estimulos.length;
+
+					$scope.$watch('FiltroEstimulos.valor', function (newVal) {
+						
+						if (newVal == '') {
+							$scope.filteredEstimulos = $scope.Estimulos;
+							$scope.totalEstimulos = $scope.Estimulos.length;
+						}
+						else {
+							$scope.filteredEstimulos = $filter('filter')($scope.Estimulos, newVal);
+							$scope.totalEstimulos = $scope.filteredEstimulos.length;
+						}
+						$scope.currentPage = 0;
+					});
 
 				} else {
 					console.log(reqEstimulos);
@@ -109,6 +127,32 @@ app.controller('controllerPedidos', function ($scope, $http, $rootScope, $stomp,
 	}
 
 	$scope.cargarEstimulos();
+	
+
+	$scope.firstPage = function () {
+		return $scope.currentPage == 0;
+	}
+
+	$scope.lastPage = function () {
+		var lastPageNum = Math.ceil($scope.totalEstimulos / $scope.itemsPerPage - 1);
+		return $scope.currentPage == lastPageNum;
+	}
+
+	$scope.numberOfPages = function () {
+		return Math.ceil($scope.totalEstimulos / $scope.itemsPerPage);
+	}
+
+	$scope.startingItem = function () {
+		return $scope.currentPage * $scope.itemsPerPage;
+	}
+
+	$scope.pageBack = function () {
+		$scope.currentPage = $scope.currentPage - 1;
+	}
+
+	$scope.pageForward = function () {
+		$scope.currentPage = $scope.currentPage + 1;
+	}
 	var reqNotificaciones = {
 		method: 'GET',
 		url: 'http://localhost:8080/api/final/notificaciones/list/' + userDataFromLocalStorage.rolPrinc,
@@ -140,19 +184,19 @@ app.controller('controllerPedidos', function ($scope, $http, $rootScope, $stomp,
 		);
 	}
 
-	
+
 	$stomp.connect(URL_WS + "?xauthtoken=" + localStorage.getItem("token")).then(function (frame) {
-        console.log('WebSocket connected:', frame);
-        // Una vez conectado, puedes suscribirte a un canal específico
-		debugger;
-        $stomp.subscribe('/iw3/data', function (payload, headers, res) {
-            console.log('Received data from WebSocket:', payload);
-            // Aquí puedes hacer cualquier acción necesaria con los datos recibidos
-        });
-    }).catch(function (error) {
-		debugger;
-        console.error('WebSocket connection failed:', error);
-    });
+		console.log('WebSocket connected:', frame);
+		// Una vez conectado, puedes suscribirte a un canal específico
+
+		$stomp.subscribe('/iw3/data', function (payload, headers, res) {
+			console.log('Received data from WebSocket:', payload);
+			// Aquí puedes hacer cualquier acción necesaria con los datos recibidos
+		});
+	}).catch(function (error) {
+
+		console.error('WebSocket connection failed:', error);
+	});
 
 
 	var reqRoles = {

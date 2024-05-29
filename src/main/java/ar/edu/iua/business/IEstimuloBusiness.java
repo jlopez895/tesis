@@ -2,6 +2,8 @@ package ar.edu.iua.business;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Estimulo;

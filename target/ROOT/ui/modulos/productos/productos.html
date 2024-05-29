@@ -1,0 +1,69 @@
+<div style="padding-left: 20px; padding-right: 20px">
+
+	<div class="panel panel-success">
+		<div class="panel-heading">
+			<div class="row">
+				<div class="col-md-2">
+					<h3 class="panel-title">{{title}}</h3>
+				</div>
+				<div class="col-md-10">
+					<div class="pull-right">
+						<div class="row">
+							<div class="col-md-10">
+								<div class="input-group">
+									<span class="input-group-btn">
+										<button ng-click="refresh(textoABuscar)"
+											class="btn btn-default" type="button"
+											ng-disabled="!(textoABuscar && textoABuscar.length>2)">Buscar</button>
+									</span> <input type="text" ng-model="textoABuscar"
+										class="form-control" placeholder="Ingrese texto a buscar, mínimo 3 caractéres">
+								</div>
+							</div>
+							<div class="col-md-2">
+								<button ng-click="refresh(textoABuscar && textoABuscar.length>2 ? textoABuscar : false)" class="btn btn-default glyphicon glyphicon-refresh" title="Refrescar lista"></button>
+								<button ng-click="addEdit(false)" class="btn btn-primary pull-right" title="Agregar un nuevo producto"><i class="glyphicon glyphicon-plus"></i> Agregar</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel-body">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Nombre</th>
+						<th style="text-align: right;">Precio</th>
+						<th>Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr
+						ng-repeat="p in data.slice(((paginaActual-1)*itemsPorPagina), ((paginaActual)*itemsPorPagina))">
+						<td>{{p.id}}</td>
+						<td popover-append-to-body="true" uib-popover="{{p.descripcion}}" popover-trigger="'mouseenter'">{{p.nombre}}</td>
+						<td style="text-align: right;">{{p.precioLista | number:2}}</td>
+						<td>
+							<button ng-click="addEdit(p)" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar"></button>
+							<button ng-click="remove(p)" class="btn btn-danger glyphicon glyphicon-trash" title="Eliminar"></button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<hr />
+			<div style="text-align: center;">
+				<ul uib-pagination total-items="totalDeItems"
+					ng-model="paginaActual"
+					class="pagination-sm" items-per-page="itemsPorPagina" max-size="5"
+					next-text="Siguiente" previous-text="Anterior"></ul>
+			</div>
+		</div>
+
+		<div class="panel-footer" style="text-align: center;">
+
+			<pre>{{data.length}} productos.</pre>
+		</div>
+
+	</div>

@@ -1,0 +1,52 @@
+<!-- Editor del formularios: https://bootstrapformbuilder.com/ -->
+
+
+	<div class="modal-header  bg-primary">
+		<h4>{{ $ctrl.agregar ? 'Nuevo Producto' : 'Editando datos Producto'}}</h4>
+	</div>
+	<div class="modal-body">
+
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="nombre" class="control-label col-xs-4">Nombre</label>
+				<div class="col-xs-8">
+					<input id="nombre" name="nombre" placeholder="Nombre del producto"
+						type="text" class="form-control" ng-model="$ctrl.instance.nombre">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="precio" class="control-label col-xs-4">Precio</label>
+				<div class="col-xs-8">
+					<div class="input-group">
+						<div class="input-group-addon">$</div>
+						<input id="precio" name="precio" placeholder="Precio" type="number"
+							class="form-control" style="text-align: right;" ng-model="$ctrl.instance.precioLista">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="descripción" class="control-label col-xs-4">Descripción</label>
+				<div class="col-xs-8">
+					<textarea id="descripción" name="descripción" cols="40" rows="5"
+						class="form-control" ng-model="$ctrl.instance.descripcion"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="enStock" class="control-label col-xs-4"></label>
+				<div class="col-xs-8">
+					<label class="checkbox-inline"> <input type="checkbox"
+						name="enStock" value="enStock" ng-model="$ctrl.instance.enStock"> En Stock?
+					</label>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<div class="modal-footer  bg-primary">
+		<button ng-click="$ctrl.volver()" class="btn btn-default">Cerrar</button>
+		<button ng-show="$ctrl.verGuardar();" ng-click="$ctrl.ok();"
+			class="btn btn-success">Guardar</button>
+	</div>
+
+
+

@@ -13,14 +13,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<script src="ui/app.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-	<script src="ui/modules/ng-stomp/dist/ng-stomp.standalone.min.js"></script>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="ui/app.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="ui/modules/ng-stomp/dist/ng-stomp.standalone.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 
-	
-	<style>
+
+    <style>
         .animated:hover {
             animation: shakeX;
             /* referring directly to the animation's @keyframe declaration */
@@ -107,23 +107,24 @@
             animation: rotarload 1s ease-out infinite;
             transform: rotate(0deg);
         }
-        /*desde aca*/
-         .navbar {
-	        display: flex;
-	        justify-content: space-between;
-	        align-items: center;
-	        padding: 10px 50px; 
-	        background-color: rgb(94, 204, 247);
-	        height: 70px; 
-	        position: fixed; 
-	        width: 100%; 
-	        z-index: 1000; 
-	    }
 
-	    .navbar img {
-	        height: 60px;
-	        width: auto;
-	    }
+        /*desde aca*/
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 50px;
+            background-color: rgb(94, 204, 247);
+            height: 70px;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar img {
+            height: 60px;
+            width: auto;
+        }
 
         .user-initials {
             width: 50px;
@@ -169,25 +170,25 @@
         .user-popup ul li a:hover {
             background-color: #f5f5f5;
         }
-        
+
         .user-popup ul li hr {
-		    margin: 5px 0;
-		    border: none;
-		    border-top: 1px solid #ccc;
-		}
+            margin: 5px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
 
-		.user-popup ul li a i {
-		    margin-left: 10px;
-		}
-		
-		.user-popup ul li.user-info {
-		    color: grey;
-		    text-align: center;
-		    font-size: 0.9em;  /* Reducir el tamaño de la fuente */
-		}
+        .user-popup ul li a i {
+            margin-left: 10px;
+        }
 
+        .user-popup ul li.user-info {
+            color: grey;
+            text-align: center;
+            font-size: 0.9em;
+            /* Reducir el tamaño de la fuente */
+        }
     </style>
-    
+
     <script>
         function toggleUserPopup() {
             const popup = document.getElementById('userPopup');
@@ -202,10 +203,10 @@
 </head>
 
 <body ng-app='iw3' style="font-family: Arial;" ng-controller='controllerPedidos'>
-	<div id="contenedor">
+    <div id="contenedor">
         <div class="loader-page"></div>
     </div>
-     <div class="navbar">
+    <div class="navbar">
         <img src="ui/logo.png" alt="Logo" />
         <div class="user-initials" onclick="toggleUserPopup()">{{ userData.iniciales }}</div>
         <div class="user-popup" id="userPopup">
@@ -213,19 +214,22 @@
                 <li class="user-info">{{ userData.fullname }}</li>
                 <li class="user-info">{{ userData.email }}</li>
                 <li class="user-info">Rol: Administrador</li>
-                <li><hr></li>
-               <li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a></li>
+                <li>
+                    <hr>
+                </li>
+                <li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a></li>
             </ul>
         </div>
     </div>
-    
+
     <i class="bi bi-person-circle"></i>
-    
+
     <div style="margin-top:50px;width: 97%; height: 100%;">
         <div id="divPrinc" class="container-fluid" style="display: inline; flex: 1;height: 100%;text-align: center; ">
             <div class="row">
                 <div class="col-xl-4 xs-12">
-                    <button data-toggle="modal" data-target="#modalProb" style="border-style: none; background-color: transparent;" ng-click="problematica()">
+                    <button data-toggle="modal" data-target="#modalProb"
+                        style="border-style: none; background-color: transparent;" ng-click="problematica()">
                         <div class="card" id="card1"
                             style="width: 100%; height: 250px; margin-left: 20px; text-align: center;">
                             <img src="ui/argentina.png" style="width: 35%;align-self: center; margin-top: 10px;"
@@ -282,7 +286,8 @@
                     </button>
                 </div>
                 <div class="col-xl-4 xs-12">
-                    <button data-toggle="modal" data-target="#modalNotif" style="border-style: none; background-color: transparent;" ng-click="notificaciones()">
+                    <button data-toggle="modal" data-target="#modalNotif"
+                        style="border-style: none; background-color: transparent;" ng-click="notificaciones()">
                         <div class="card"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
                             <img src="ui/notificaciones.png" style="width: 35%;align-self: center; margin-top: 10px;"
@@ -333,7 +338,9 @@
                                 <div class="col l4">
                                     <label for="estimulo" class="form-label">Estímulo asociado</label>
 
-                                    <select id="estimulo"  ng-model="selectedEstimulo" ng-options="estimulo.titulo for estimulo in Estimulos" class="form-control" aria-label="Default select example" required>
+                                    <select id="estimulo" ng-model="selectedEstimulo"
+                                        ng-options="estimulo.titulo for estimulo in Estimulos" class="form-control"
+                                        aria-label="Default select example" required>
                                         <option value="" disabled selected>Selecciona un estimulo</option>
                                     </select>
                                 </div>
@@ -341,7 +348,9 @@
                                 <div class="col l4">
 
                                     <label for="destinatario" class="form-label">Destinatario</label>
-                                    <select id="ministerio"  ng-model="selectedMinisterio" ng-options="ministerio.nombre for ministerio in Ministerios" class="form-control" aria-label="Default select example" required>
+                                    <select id="ministerio" ng-model="selectedMinisterio"
+                                        ng-options="ministerio.nombre for ministerio in Ministerios"
+                                        class="form-control" aria-label="Default select example" required>
                                         <option value="" disabled selected>Selecciona un destinatario</option>
                                     </select>
                                 </div>
@@ -350,7 +359,8 @@
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l4">
                                     <label for="tipoDoc" class="form-label">Tipo de documento</label>
-                                    <select id="tipoDoc" ng-model="selectedTipoDoc" ng-change="cambiarVisibilidadDiv()" class="form-control" aria-label="Default select example" required>
+                                    <select id="tipoDoc" ng-model="selectedTipoDoc" ng-change="cambiarVisibilidadDiv()"
+                                        class="form-control" aria-label="Default select example" required>
                                         <option value="" disabled selected>Selecciona un documento</option>
                                         <option value="1">Decreto</option>
                                         <option value="2">Informe</option>
@@ -362,7 +372,8 @@
                                     <div class="form-check">
 
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label id="final" class="form-check-label" for="flexCheckDefault" style="margin-top: 2px;">
+                                        <label id="final" class="form-check-label" for="flexCheckDefault"
+                                            style="margin-top: 2px;">
                                             Final
                                         </label>
                                     </div>
@@ -380,8 +391,8 @@
                                 <div class="col l12">
                                     <label for="cuerpo" class="form-label">Cuerpo del
                                         documento</label>
-                                    <textarea class="form-control" placeholder="Cuerpo del documento"
-                                        id="cuerpo" rows="3" required></textarea>
+                                    <textarea class="form-control" placeholder="Cuerpo del documento" id="cuerpo"
+                                        rows="3" required></textarea>
                                 </div>
                             </div>
 
@@ -432,27 +443,30 @@
                                 <div class="col l12">
 
                                     <label for="descripcionEstimulo" class="form-label">Descripción</label>
-                                    <textarea class="form-control" placeholder="Descricpión"
-                                        id="descripcionEstimulo" rows="7" required></textarea>
+                                    <textarea class="form-control" placeholder="Descricpión" id="descripcionEstimulo"
+                                        rows="7" required></textarea>
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l2">
-                                    <label for="fechaEstFinEstimulo" class="form-label">Fecha estimada de finalización</label>
+                                    <label for="fechaEstFinEstimulo" class="form-label">Fecha estimada de
+                                        finalización</label>
                                     <div class="input-group date" data-provide="fechaEstFinEstimulo">
 
                                         <input type="date" class="form-control" id="fechaEstFinEstimulo" required>
                                         <script>
-											document.getElementById('fechaEstFinEstimulo').min = new Date().toISOString().split('T')[0];
-										</script>
+                                            document.getElementById('fechaEstFinEstimulo').min = new Date().toISOString().split('T')[0];
+                                        </script>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col l2">
-                                    <label for="horaEstFinEstimulo" class="form-label">Hora estimada de finalización</label>
-                                    <input type="time" class="form-control" id="horaEstFinEstimulo" value="10:05 AM" required />
+                                    <label for="horaEstFinEstimulo" class="form-label">Hora estimada de
+                                        finalización</label>
+                                    <input type="time" class="form-control" id="horaEstFinEstimulo" value="10:05 AM"
+                                        required />
                                 </div>
                             </div>
 
@@ -510,7 +524,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat='o in Estimulos | filter:FiltroEstimulos.valor track by $index'>
+                                    <tr ng-repeat="o in filteredEstimulos | limitTo: itemsPerPage : startingItem()">
                                         <td>
                                             {{ o.id }}
                                         </td>
@@ -539,7 +553,10 @@
 
                     </form>
                 </div>
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()" ng-click="pageBack()">&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()" ng-click="pageForward()">&gt</button>
+                </div>
             </div>
         </div>
     </div>
@@ -559,7 +576,7 @@
                 <div class="modal-body" style="background-color: #ffffff; font-size: small;">
                     <form>
                         <div class="container-fluid" style="font-size: 12px;">
-                            
+
                             <table id="tabla1" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -573,7 +590,7 @@
                                             Fecha
 
                                         </th>
-                       
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -584,7 +601,7 @@
                                         <td>
                                             {{n.fecha}}
                                         </td>
-                                        
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -612,7 +629,8 @@
                 <div class="modal-body" style="background-color: #ffffff; font-size: small;">
                     <form>
                         <div class="container-fluid" style="font-size: 12px;">
-                            <textarea class="form-control" id="descripcionProblematica" disabled="true" rows="20"></textarea>
+                            <textarea class="form-control" id="descripcionProblematica" disabled="true"
+                                rows="20"></textarea>
                         </div>
                         <br />
                     </form>
