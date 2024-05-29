@@ -208,7 +208,7 @@
     </div>
     <div class="navbar">
         <img src="ui/logo.png" alt="Logo" />
-        <div class="user-initials" onclick="toggleUserPopup()">{{ userData.iniciales }}</div>
+        <div class="user-initials" style="margin-bottom: 10px;" onclick="toggleUserPopup()">{{ userData.iniciales }}</div>
         <div class="user-popup" id="userPopup">
             <ul>
                 <li class="user-info">{{ userData.fullname }}</li>
@@ -532,10 +532,10 @@
                                             {{o.titulo}}
                                         </td>
                                         <td>
-                                            {{o.fechaInicio}}
+                                            {{o.fechaInicio| date:'dd/MM/yyyy'}}
                                         </td>
                                         <td>
-                                            {{o.fechaFin}}
+                                            {{o.fechaFin| date:'dd/MM/yyyy'}}
                                         </td>
                                         <td>
                                             <button class="btn btn-link" ng-click="verDocumentos($index);"
@@ -599,7 +599,7 @@
                                             {{ n.descripcion }}
                                         </td>
                                         <td>
-                                            {{n.fecha}}
+                                            {{n.fecha| date:'dd/MM/yyyy'}}
                                         </td>
 
                                     </tr>
