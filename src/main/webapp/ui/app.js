@@ -133,6 +133,15 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		return $scope.currentPage == 0;
 	}
 
+	$scope.primeraPag = function () {
+		 $scope.currentPage = 0;
+	}
+
+	$scope.ultimaPag = function () {
+		var lastPageNum = Math.ceil($scope.totalEstimulos / $scope.itemsPerPage - 1);
+		$scope.currentPage = lastPageNum;
+   }
+
 	$scope.lastPage = function () {
 		var lastPageNum = Math.ceil($scope.totalEstimulos / $scope.itemsPerPage - 1);
 		return $scope.currentPage == lastPageNum;

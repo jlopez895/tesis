@@ -554,8 +554,11 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()" ng-click="primeraPag()">&lt&lt</button>
                     <button type="button" class="btn btn-primary" ng-disabled="firstPage()" ng-click="pageBack()">&lt</button>
+                    {{currentPage+1}}
                     <button type="button" class="btn btn-primary" ng-disabled="lastPage()" ng-click="pageForward()">&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()" ng-click="ultimaPag()">&gt&gt</button>
                 </div>
             </div>
         </div>
