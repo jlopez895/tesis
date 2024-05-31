@@ -28,6 +28,8 @@ function llenarTextareaDesdeArchivo(rutaArchivo) {
 function cerrarModalNuevoDocumento() {
 	$("#modalNuevoDocumento").modal('hide');
 }
+
+
 function cerrarModalNuevoEstimulo() {
 	$("#modalNuevoEstimulo").modal('hide');
 }
@@ -412,11 +414,15 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		else
 			$scope.mostrarDiv = false;
 	};
+	$scope.currentPageDoc = 0;
+	$scope.itemsPerPageDoc = 5;
+	$scope.filteredEstimulos = [];
 
 	$scope.verDocumentos = function (i) {
 
 
 		$('#documentos').modal('show');
+		$('#modalEstimulos').modal('hide');
 		$scope.estimuloSelec = i;
 		
 		$scope.Documentos = [];
@@ -436,7 +442,18 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				if (resp.status === 200) {
 				$scope.Documentos =resp.data;
 				$scope.totalDocs = $scope.Documentos.length;
+				$scope.$watch('FiltroDocumentos.valor', function (newVal) {
 
+					if (newVal == '') {
+						$scope.filteredDocumentos = $scope.Documentos;
+						$scope.totalDocs = $scope.Documentos.length;
+					}
+					else {
+						$scope.filteredDocumentos = $filter('filter')($scope.Documentos, newVal);
+						$scope.totalDocs = $scope.filteredDocumentos.length;
+					}
+					$scope.currentPageDoc = 0;
+				});
 				} else {
 					console.log(reqNotificaciones);
 					alert("No se pueden obtener los documentos");
@@ -470,4 +487,43 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		});
 		return estimulo ? estimulo.titulo : '';
 	};
+
+	$scope.firstPageDoc = function () {
+		return $scope.currentPageDoc == 0;
+	}
+
+	$scope.primeraPagDoc = function () {
+		$scope.currentPageDoc = 0;
+	}
+
+	$scope.ultimaPagDoc = function () {
+		var lastPageNum = Math.ceil($scope.totalDocs / $scope.itemsPerPageDoc - 1);
+		$scope.currentPageDoc = lastPageNum;
+	}
+
+	$scope.lastPageDoc = function () {
+		var lastPageNum = Math.ceil($scope.totalDocs / $scope.itemsPerPageDoc - 1);
+		return $scope.currentPageDoc == lastPageNum;
+	}
+
+	$scope.numberOfPagesDoc = function () {
+		return Math.ceil($scope.totalDocs / $scope.itemsPerPageDoc);
+	}
+
+	$scope.startingItemDoc = function () {
+		return $scope.currentPageDoc * $scope.itemsPerPageDoc;
+	}
+
+	$scope.pageBackDoc = function () {
+		$scope.currentPageDoc = $scope.currentPageDoc - 1;
+	}
+
+	$scope.pageForwardDoc = function () {
+		$scope.currentPageDoc = $scope.currentPageDoc + 1;
+	}
+
+	$scope.cerrarModalDocumentos = function () {
+		$('#documentos').modal('hide');
+		$('#modalEstimulos').modal('show');
+	}
 });

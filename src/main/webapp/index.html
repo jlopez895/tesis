@@ -483,7 +483,7 @@
         </div>
     </div>
     <div class="modal fade" id="modalEstimulos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg  modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #8ac8ff">
                     <h5 class="modal-title" id="H1">ESTIMULOS ABIERTOS</h5>
@@ -646,11 +646,11 @@
     </div>
 
     <div class="modal fade" id="documentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #8ac8ff">
                     <h5 class="modal-title" id="H1">DOCUMENTOS ASOCIADOS AL ESTÍMULO: {{getEstimulo()}}</h5>
-                    <button type="button" onclick="cerrarModalDocumentos()"
+                    <button type="button" ng-click="cerrarModalDocumentos()"
                         style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
                         aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                             fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
@@ -664,7 +664,7 @@
                             <p style=" font-size: 20px;">Total de documentos: {{totalDocs}} </p>
                             <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
                             <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
-                                placeholder="Buscar" aria-label="Search" ng-model="FiltroEstimulos.valor">
+                                placeholder="Buscar" aria-label="Search" ng-model="FiltroDocumentos.valor">
                             <table id="tabla1" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -682,7 +682,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="o in Documentos">
+                                    <tr ng-repeat="o in filteredDocumentos | limitTo: itemsPerPageDoc : startingItemDoc()">
                                         <td>
                                             {{ getMinisterio(o.ministerio)| uppercase }}
                                         </td>
@@ -716,15 +716,15 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
-                        ng-click="primeraPag()">&lt&lt</button>
-                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
-                        ng-click="pageBack()">&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPageDoc()"
+                        ng-click="primeraPagDoc()">&lt&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPageDoc()"
+                        ng-click="pageBackDoc()">&lt</button>
                     {{currentPage+1}}
-                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
-                        ng-click="pageForward()">&gt</button>
-                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
-                        ng-click="lastPage()">&gt&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPageDoc()"
+                        ng-click="pageForwardDoc()">&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPageDoc()"
+                        ng-click="lastPageDoc()">&gt&gt</button>
                 </div>
             </div>
         </div>
