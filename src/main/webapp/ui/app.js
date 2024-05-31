@@ -421,7 +421,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		
 		$scope.Documentos = [];
 		$scope.FiltroNotificaciones = { valor: '' };
-		debugger;
+		
 		var reqDocs = {
 			method: 'GET',
 			url: 'http://localhost:8080/api/final/documentos/list/' + i,
