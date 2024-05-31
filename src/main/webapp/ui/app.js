@@ -73,6 +73,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		window.location.replace("/login.html");
 	};
 
+	$scope.tiposDoc = [
+		{ id: 1, nombre: 'Decreto' },
+		{ id: 2, nombre: 'Informe' },
+		{ id: 3, nombre: 'Solicitud' },
+		{ id: 4, nombre: 'Volante' }
+	];
 
 	var reqEstimulos = {
 		method: 'GET',
@@ -101,7 +107,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 					$scope.totalEstimulos = $scope.Estimulos.length;
 
 					$scope.$watch('FiltroEstimulos.valor', function (newVal) {
-						
+
 						if (newVal == '') {
 							$scope.filteredEstimulos = $scope.Estimulos;
 							$scope.totalEstimulos = $scope.Estimulos.length;
@@ -127,20 +133,20 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 
 	$scope.cargarEstimulos();
-	
+
 
 	$scope.firstPage = function () {
 		return $scope.currentPage == 0;
 	}
 
 	$scope.primeraPag = function () {
-		 $scope.currentPage = 0;
+		$scope.currentPage = 0;
 	}
 
 	$scope.ultimaPag = function () {
 		var lastPageNum = Math.ceil($scope.totalEstimulos / $scope.itemsPerPage - 1);
 		$scope.currentPage = lastPageNum;
-   }
+	}
 
 	$scope.lastPage = function () {
 		var lastPageNum = Math.ceil($scope.totalEstimulos / $scope.itemsPerPage - 1);
@@ -208,7 +214,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	});
 
 
-	var reqRoles = {
+	var reqMinisterios = {
 		method: 'GET',
 		url: 'http://localhost:8080/api/final/ministerios/list',
 		headers: {
@@ -220,14 +226,14 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.Ministerio = {};
 	$scope.Ministerios = [];
 
-	$http(reqRoles).then(
+	$http(reqMinisterios).then(
 		function (resp) {
 			if (resp.status === 200) {
 				$scope.Ministerios = resp.data;
 				$scope.totalMinisterios = $scope.Ministerios.length;
 
 			} else {
-				console.log(reqNotificaciones);
+				
 				alert("No se pueden obtener los ministerios");
 			}
 		},
@@ -407,4 +413,61 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			$scope.mostrarDiv = false;
 	};
 
+	$scope.verDocumentos = function (i) {
+
+
+		$('#documentos').modal('show');
+		$scope.estimuloSelec = i;
+		
+		$scope.Documentos = [];
+		$scope.FiltroNotificaciones = { valor: '' };
+		debugger;
+		var reqDocs = {
+			method: 'GET',
+			url: 'http://localhost:8080/api/final/documentos/list/' + i,
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			},
+		};
+
+		$http(reqDocs).then(
+			function (resp) {
+				if (resp.status === 200) {
+				$scope.Documentos =resp.data;
+				$scope.totalDocs = $scope.Documentos.length;
+
+				} else {
+					console.log(reqNotificaciones);
+					alert("No se pueden obtener los documentos");
+				}
+			},
+			function (respErr) {
+
+				alert("No se pueden obtener las documentos");
+			}
+		);
+
+	}
+
+	$scope.getMinisterio = function(ministerioId) {
+		var ministerio = $scope.Ministerios.find(function(m) {
+			return m.id === ministerioId;
+		});
+		return ministerio ? ministerio.nombre : '';
+	};
+
+	$scope.getTipo = function(tipoId) {
+		var tipo = $scope.tiposDoc.find(function(m) {
+			return m.id === tipoId;
+		});
+		return tipo ? tipo.nombre : '';
+	};
+
+	$scope.getEstimulo = function() {
+		var estimulo = $scope.Estimulos.find(function(m) {
+			return m.id === $scope.estimuloSelec;
+		});
+		return estimulo ? estimulo.titulo : '';
+	};
 });

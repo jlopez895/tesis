@@ -208,7 +208,8 @@
     </div>
     <div class="navbar">
         <img src="ui/logo.png" alt="Logo" />
-        <div class="user-initials" style="margin-bottom: 10px;" onclick="toggleUserPopup()">{{ userData.iniciales }}</div>
+        <div class="user-initials" style="margin-bottom: 10px;" onclick="toggleUserPopup()">{{ userData.iniciales }}
+        </div>
         <div class="user-popup" id="userPopup">
             <ul>
                 <li class="user-info">{{ userData.fullname }}</li>
@@ -360,12 +361,9 @@
                                 <div class="col l4">
                                     <label for="tipoDoc" class="form-label">Tipo de documento</label>
                                     <select id="tipoDoc" ng-model="selectedTipoDoc" ng-change="cambiarVisibilidadDiv()"
-                                        class="form-control" aria-label="Default select example" required>
+                                        class="form-control" aria-label="Default select example" required
+                                        ng-options="tipo.id as tipo.nombre for tipo in tiposDoc">
                                         <option value="" disabled selected>Selecciona un documento</option>
-                                        <option value="1">Decreto</option>
-                                        <option value="2">Informe</option>
-                                        <option value="3">Solicitud</option>
-                                        <option value="4">Volante</option>
                                     </select>
                                 </div>
                                 <div class="col l4" style="margin-top: 35px;" ng-show="mostrarDiv">
@@ -538,8 +536,8 @@
                                             {{o.fechaFin| date:'dd/MM/yyyy'}}
                                         </td>
                                         <td>
-                                            <button class="btn btn-link" ng-click="verDocumentos($index);"
-                                                style=" color:#8ac8ff; font-size: 12px;" id="conciliacion">Ver
+                                            <button class="btn btn-link" ng-click="verDocumentos(o.id);"
+                                                style=" color:#8ac8ff; font-size: 12px;" id="verDocumentos">Ver
                                                 Docs.</button>
 
                                         </td>
@@ -554,11 +552,15 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()" ng-click="primeraPag()">&lt&lt</button>
-                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()" ng-click="pageBack()">&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
+                        ng-click="primeraPag()">&lt&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
+                        ng-click="pageBack()">&lt</button>
                     {{currentPage+1}}
-                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()" ng-click="pageForward()">&gt</button>
-                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()" ng-click="ultimaPag()">&gt&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
+                        ng-click="pageForward()">&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
+                        ng-click="lastPage()">&gt&gt</button>
                 </div>
             </div>
         </div>
@@ -639,6 +641,91 @@
                     </form>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="documentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8ac8ff">
+                    <h5 class="modal-title" id="H1">DOCUMENTOS ASOCIADOS AL ESTÍMULO: {{getEstimulo()}}</h5>
+                    <button type="button" onclick="cerrarModalDocumentos()"
+                        style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
+                        aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></button>
+                </div>
+                <div class="modal-body" style="background-color: #ffffff; font-size: small;">
+                    <form>
+                        <div class="container-fluid" style="font-size: 12px;">
+                            <p style=" font-size: 20px;">Total de documentos: {{totalDocs}} </p>
+                            <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
+                            <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
+                                placeholder="Buscar" aria-label="Search" ng-model="FiltroEstimulos.valor">
+                            <table id="tabla1" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            Destinatario
+                                        </th>
+                                        <th scope="col">
+                                            Tipo
+                                        </th>
+                                        <th scope="col">Título</th>
+                                        <th scope="col">Cuerpo</th>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col"></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="o in Documentos">
+                                        <td>
+                                            {{ getMinisterio(o.ministerio)| uppercase }}
+                                        </td>
+                                        <td>
+                                            {{ getTipo(o.tipo) | uppercase}}
+                                        </td>
+                                        <td>
+                                            {{o.titulo| uppercase}}
+                                        </td>
+                                        <td>
+                                            {{o.descripcion| uppercase}}
+                                        </td>
+                                        <td>
+                                            {{o.fecha| date:'dd/MM/yyyy'}}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger" ng-click="verDocumentos($index);"
+                                                style="font-size: 12px;" ng-if="o.esFinal" id="rechazar">X</button>
+                                            <button class="btn btn-success" ng-click="verDocumentos($index);"
+                                                style="font-size: 12px;" ng-if="o.esFinal" id="aceptar">✓</button>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
+                        ng-click="primeraPag()">&lt&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
+                        ng-click="pageBack()">&lt</button>
+                    {{currentPage+1}}
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
+                        ng-click="pageForward()">&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
+                        ng-click="lastPage()">&gt&gt</button>
+                </div>
             </div>
         </div>
     </div>
