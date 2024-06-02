@@ -20,7 +20,7 @@ public class Documento implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 
 	@Column()
 	private int tipo;
@@ -34,6 +34,8 @@ public class Documento implements Serializable {
 	private boolean esFinal;
 	@Column()
 	private int estimulo;
+	@Column()
+	private int estado;
 
 	
 	@Column()
@@ -43,11 +45,11 @@ public class Documento implements Serializable {
 	private int ministerio;
 	
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -126,8 +128,20 @@ public class Documento implements Serializable {
 	
 	
 
-	public Documento(long id, int tipo, Date fecha, String titulo, String descripcion, boolean esFinal,
-			int estimulo, int usuario, int ministerio) {
+	public int getEstado() {
+		return estado;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
+
+	
+	
+	
+
+	public Documento(int id, int tipo, Date fecha, String titulo, String descripcion, boolean esFinal, int estimulo,
+			int estado, int usuario, int ministerio) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
@@ -136,11 +150,10 @@ public class Documento implements Serializable {
 		this.descripcion = descripcion;
 		this.esFinal = esFinal;
 		this.estimulo = estimulo;
+		this.estado = estado;
 		this.usuario = usuario;
 		this.ministerio = ministerio;
 	}
-	
-	
 
 	public Documento() {
 		super();

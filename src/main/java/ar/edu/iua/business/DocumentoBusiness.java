@@ -1,5 +1,6 @@
 package ar.edu.iua.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 import ar.edu.iua.model.persistence.DocumentoRepository;
 import ar.edu.iua.model.persistence.EstimuloRepository;
+import ar.edu.iua.model.persistence.RolRepository;
 
 @Service
 public class DocumentoBusiness implements IDocumentoBusiness{
@@ -38,6 +40,10 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 	
 	@Autowired
 	private IRolBusiness rolService;
+	
+
+	@Autowired
+	private RolRepository rolDAO;
 	
 	@Override
 	public RespuestaGenerica<Documento> nuevoDocumento(Documento documento) throws BusinessException, NotFoundException {
@@ -64,6 +70,7 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 			documento.setFecha(new Date());
 			documento.setMinisterio(documento.getMinisterio());
 			documento.setTipo(documento.getTipo());
+			documento.setEstado(1);
 			documento.setUsuario(documento.getUsuario());
 			documento.setTitulo(documento.getTitulo());
 			
@@ -113,6 +120,46 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 			throw new NotFoundException("El documento no se encuentra en la BD");
 
 		return doc.get();
+	}
+	@Override
+	public Documento cambiarEstado(int idDocumentos, int estado) throws BusinessException, NotFoundException {
+		Optional<Documento> documento = null;
+		try {
+
+			documento = documentoDAO.findById(idDocumentos);
+			if (documento != null) {
+				try {
+					Documento documentoNew=documento.get();
+					documentoNew.setEstado(estado);
+					
+					documentoDAO.save(documentoNew);
+					
+					//creando notificacion
+					Notificacion not=new Notificacion();
+					String aux="";
+					if(estado==2)
+						aux="aceptado";
+					else
+						aux="rechazado";
+					not.setDescripcion("El doumento "+idDocumentos+" ha sido "+aux);
+					not.setFecha(new Date());
+					List<Rol> listaRoles=rolDAO.findByMinisterio(documentoNew.getMinisterio());
+					Set<Rol> setRoles = new HashSet<>(listaRoles);
+					not.setRoles(setRoles);
+					notificacionService.nuevaNotificacion(not);
+					
+					return documento.get();
+				} catch (Exception e) {
+					throw new BusinessException(e);
+				}
+			}
+			else
+				throw new NotFoundException("El estimulo no se encuentra en la BD");
+
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+		
 	}
 
 }

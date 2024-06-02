@@ -12,5 +12,6 @@ public interface IDocumentoBusiness {
 	public RespuestaGenerica<Documento> nuevoDocumento(Documento documento) throws BusinessException,NotFoundException;
 	public List<Documento> list(int idEstado) throws BusinessException;
 	public Documento load(int nro) throws BusinessException, NotFoundException;
+	public Documento cambiarEstado(int idDocumento, int estado) throws BusinessException, NotFoundException;;
 
 }

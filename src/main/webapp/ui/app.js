@@ -51,6 +51,7 @@ function cerrarModalProb() {
 }
 
 app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope, $stomp, URL_WS) {
+	// Verifica si el usuario está logueado
 	if (localStorage.getItem("logged") != "true")
 		window.location.replace("/login.html");
 
@@ -133,8 +134,6 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		);
 
 	}
-
-	$scope.cargarEstimulos();
 
 
 	$scope.firstPage = function () {
@@ -235,7 +234,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				$scope.totalMinisterios = $scope.Ministerios.length;
 
 			} else {
-				
+
 				alert("No se pueden obtener los ministerios");
 			}
 		},
@@ -339,11 +338,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	$scope.nuevoDoc = function () {
 
-		tipoDocumento = document.getElementById('tipoDoc').value;
+		tipoDocumento = $scope.selectedTipoDoc;
 		idEstimulo = $scope.selectedEstimulo.id;
 		idMinisterio = $scope.selectedMinisterio.id;
 		tituloDocumento = document.getElementById('tituloDocumento').value;
 		descripcionDocumento = document.getElementById('cuerpo').value;
+	
 		if ($scope.mostrarDiv == true && document.getElementById('final').checked)
 			esFinalDocumento = true;
 		else
@@ -409,7 +409,8 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.mostrarDiv = false;
 
 	$scope.cambiarVisibilidadDiv = function () {
-		if ($scope.selectedTipoDoc === "1")
+	
+		if ($scope.selectedTipoDoc === 1)
 			$scope.mostrarDiv = true;
 		else
 			$scope.mostrarDiv = false;
@@ -424,10 +425,10 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$('#documentos').modal('show');
 		$('#modalEstimulos').modal('hide');
 		$scope.estimuloSelec = i;
-		
+
 		$scope.Documentos = [];
 		$scope.FiltroNotificaciones = { valor: '' };
-		
+
 		var reqDocs = {
 			method: 'GET',
 			url: 'http://localhost:8080/api/final/documentos/list/' + i,
@@ -440,20 +441,20 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$http(reqDocs).then(
 			function (resp) {
 				if (resp.status === 200) {
-				$scope.Documentos =resp.data;
-				$scope.totalDocs = $scope.Documentos.length;
-				$scope.$watch('FiltroDocumentos.valor', function (newVal) {
+					$scope.Documentos = resp.data;
+					$scope.totalDocs = $scope.Documentos.length;
+					$scope.$watch('FiltroDocumentos.valor', function (newVal) {
 
-					if (newVal == '') {
-						$scope.filteredDocumentos = $scope.Documentos;
-						$scope.totalDocs = $scope.Documentos.length;
-					}
-					else {
-						$scope.filteredDocumentos = $filter('filter')($scope.Documentos, newVal);
-						$scope.totalDocs = $scope.filteredDocumentos.length;
-					}
-					$scope.currentPageDoc = 0;
-				});
+						if (newVal == '') {
+							$scope.filteredDocumentos = $scope.Documentos;
+							$scope.totalDocs = $scope.Documentos.length;
+						}
+						else {
+							$scope.filteredDocumentos = $filter('filter')($scope.Documentos, newVal);
+							$scope.totalDocs = $scope.filteredDocumentos.length;
+						}
+						$scope.currentPageDoc = 0;
+					});
 				} else {
 					console.log(reqNotificaciones);
 					alert("No se pueden obtener los documentos");
@@ -467,22 +468,22 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	}
 
-	$scope.getMinisterio = function(ministerioId) {
-		var ministerio = $scope.Ministerios.find(function(m) {
+	$scope.getMinisterio = function (ministerioId) {
+		var ministerio = $scope.Ministerios.find(function (m) {
 			return m.id === ministerioId;
 		});
 		return ministerio ? ministerio.nombre : '';
 	};
 
-	$scope.getTipo = function(tipoId) {
-		var tipo = $scope.tiposDoc.find(function(m) {
+	$scope.getTipo = function (tipoId) {
+		var tipo = $scope.tiposDoc.find(function (m) {
 			return m.id === tipoId;
 		});
 		return tipo ? tipo.nombre : '';
 	};
 
-	$scope.getEstimulo = function() {
-		var estimulo = $scope.Estimulos.find(function(m) {
+	$scope.getEstimulo = function () {
+		var estimulo = $scope.Estimulos.find(function (m) {
 			return m.id === $scope.estimuloSelec;
 		});
 		return estimulo ? estimulo.titulo : '';
@@ -525,5 +526,74 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.cerrarModalDocumentos = function () {
 		$('#documentos').modal('hide');
 		$('#modalEstimulos').modal('show');
+	}
+
+	$scope.aprobar = function (i, id) {
+
+		var req = {
+			method: 'PUT',
+			url: 'http://localhost:8080/api/final/estimulos/cambiarEstado/' + i,
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			}
+		};
+
+		$scope.Ejecutar(req).
+			then(function (resp) {
+				req = {
+					method: 'PUT',
+					url: 'http://localhost:8080/api/final/documentos/cambiarEstado/' + id + "/2",
+					headers: {
+						'Content-Type': 'application/json',
+						'xauthtoken': userDataFromLocalStorage.authtoken
+					}
+				};
+				$scope.Ejecutar(req).
+					then(function (resp) {
+						$scope.cargarEstimulos();
+						swal("¡Estímulo cerrado exitosamente!", "", "success");
+						$('#documentos').modal('hide');
+						$('#modalEstimulos').modal('show');
+
+					});
+
+				
+			}).catch(function (error) {
+
+				console.error('Error al cerrar el estímulo:', error);
+				swal("Error", "Hubo un problema al cerrar el estímulo.", "error");
+			});
+
+	}
+
+	$scope.estimulos= function (){
+		$scope.cargarEstimulos();
+	}
+
+	$scope.rechazar = function (i, id) {
+
+		req = {
+				method: 'PUT',
+				url: 'http://localhost:8080/api/final/documentos/cambiarEstado/' + id + "/3",
+				headers: {
+					'Content-Type': 'application/json',
+					'xauthtoken': userDataFromLocalStorage.authtoken
+				}
+			};
+
+		$scope.Ejecutar(req).
+			then(function (resp) {
+
+				$scope.cargarEstimulos();
+				swal("Documento rechazado exitosamente!", "", "success");
+				$('#documentos').modal('hide');
+				$('#modalEstimulos').modal('show');
+			}).catch(function (error) {
+
+				console.error('Error al rechazar el documento:', error);
+				swal("Error", "Hubo un problema al rechazar el documento.", "error");
+			});
+
 	}
 });

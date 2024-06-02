@@ -113,8 +113,10 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 			estimulo = estimuloDAO.findById(id);
 			if (estimulo != null) {
 				try {
-					estimuloDAO.cambiarEstado(id);
-					estimulo.get().setEstado(2);
+					Estimulo estimuloNew=estimulo.get();
+					estimuloNew.setEstado(2);
+					
+					estimuloDAO.save(estimuloNew);
 					
 					//creando notificacion
 					Notificacion not=new Notificacion();
