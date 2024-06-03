@@ -180,12 +180,18 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.Notificacion = {};
 	$scope.Notificaciones = [];
 	$scope.FiltroNotificaciones = { valor: '' };
+	$scope.totalNotificaciones=0;
 	$scope.cargarNotificaciones = function () {
-
+	
 		$http(reqNotificaciones).then(
 			function (resp) {
 				if (resp.status === 200) {
 					$scope.Notificaciones = resp.data;
+					
+					if($scope.totalNotificaciones<$scope.Notificaciones.length)
+					{
+						swal("Tiene nuevas notificaciones", "", "warning");
+					}
 					$scope.totalNotificaciones = $scope.Notificaciones.length;
 
 				} else {
@@ -207,7 +213,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		$stomp.subscribe('/iw3/data', function (payload, headers, res) {
 			console.log('Received data from WebSocket:', payload);
-			// Aquí puedes hacer cualquier acción necesaria con los datos recibidos
+			$scope.cargarNotificaciones();
 		});
 	}).catch(function (error) {
 

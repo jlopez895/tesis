@@ -1,5 +1,7 @@
 package ar.edu.iua.rest;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ar.edu.iua.authtoken.AuthToken;
 import ar.edu.iua.authtoken.IAuthTokenBusiness;
 import ar.edu.iua.business.exception.BusinessException;
+import ar.edu.iua.model.RolPrincipalHolder;
 import ar.edu.iua.model.User;
 
 public class BaseRestController {
@@ -24,10 +27,13 @@ public class BaseRestController {
 
 	@Autowired
 	private IAuthTokenBusiness authTokenBusiness;
-
+	@Autowired
+	private HttpSession session;
+	
 	protected User getUserLogged() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) auth.getPrincipal();
+		RolPrincipalHolder.getInstance().setIdRolPrincipal(user.getRolPrincipal().getId());
 		return user;
 	}
 
