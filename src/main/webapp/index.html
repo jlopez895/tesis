@@ -374,7 +374,9 @@
                                             style="margin-top: 2px;">
                                             Final
                                         </label>
+                                        <p class="text-muted">Al marcar un decreto como "Final" el estimulo se encuentra apto para cer cerrado.</p>
                                     </div>
+                                    
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 10px;">
@@ -530,10 +532,10 @@
                                             {{o.titulo}}
                                         </td>
                                         <td>
-                                            {{o.fechaInicio| date:'dd/MM/yyyy'}}
+                                            {{o.fechaInicio| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
                                         <td>
-                                            {{o.fechaFin| date:'dd/MM/yyyy'}}
+                                            {{o.fechaFin| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
                                         <td>
                                             <button class="btn btn-link" ng-click="verDocumentos(o.id);"
@@ -560,7 +562,7 @@
                     <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
                         ng-click="pageForward()">&gt</button>
                     <button type="button" class="btn btn-primary" ng-disabled="lastPage()"
-                        ng-click="lastPage()">&gt&gt</button>
+                        ng-click="ultimaPag()">&gt&gt</button>
                 </div>
             </div>
         </div>
@@ -604,7 +606,7 @@
                                             {{ n.descripcion }}
                                         </td>
                                         <td>
-                                            {{n.fecha| date:'dd/MM/yyyy'}}
+                                            {{n.fecha| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
 
                                     </tr>
@@ -696,7 +698,7 @@
                                             {{o.descripcion| uppercase}}
                                         </td>
                                         <td>
-                                            {{o.fecha| date:'dd/MM/yyyy'}}
+                                            {{o.fecha| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
                                         <td>
                                             <button class="btn btn-danger" ng-click="rechazar(o.estimulo,o.id);"

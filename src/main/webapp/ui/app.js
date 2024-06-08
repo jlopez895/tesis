@@ -150,6 +150,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 
 	$scope.lastPage = function () {
+	
 		var lastPageNum = Math.ceil($scope.totalEstimulos / $scope.itemsPerPage - 1);
 		return $scope.currentPage == lastPageNum;
 	}
