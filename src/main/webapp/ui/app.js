@@ -52,6 +52,7 @@ function cerrarModalProb() {
 
 app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope, $stomp, URL_WS) {
 	// Verifica si el usuario está logueado
+
 	if (localStorage.getItem("logged") != "true")
 		window.location.replace("/login.html");
 
@@ -182,6 +183,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.Notificaciones = [];
 	$scope.FiltroNotificaciones = { valor: '' };
 	$scope.totalNotificaciones=0;
+	$scope.currentPageNot = 0;
 	$scope.cargarNotificaciones = function () {
 	
 		$http(reqNotificaciones).then(
@@ -302,14 +304,14 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		//TiempoEstimado
 		let diferenciaMilisegundos = fechaHoraFin - fechaHoraActual;
-		let diferenciaHoras = diferenciaMilisegundos / (1000 * 60 * 60);
+		let diferenciaHoras = diferenciaMilisegundos / (1000 * 60);
 		let tiempoEstimado = parseInt(diferenciaHoras);
 
 
 		var data = {
 			'descripcion': descripcionEstimulo,
 			'estado': 1,
-			'fechaFin': fechaHoraFinSQL,
+			'fechaFin': null,
 			'fechaInicio': fechaHoraActualSQL,
 			'tiempoEstmado': tiempoEstimado,
 			'titulo': tituloEstimulo,
@@ -426,6 +428,10 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.itemsPerPageDoc = 5;
 	$scope.filteredEstimulos = [];
 
+	$scope.currentPageNot = 0;
+	$scope.itemsPerPageNot = 5;
+	
+
 	$scope.verDocumentos = function (i) {
 
 
@@ -482,6 +488,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		return ministerio ? ministerio.nombre : '';
 	};
 
+	$scope.getFechaEstimadaFin = function (estimulo) {
+		var fecha = new Date(estimulo.fechaInicio);
+		fecha.setMinutes(fecha.getMinutes() + estimulo.tiempoEstmado);
+		return fecha;
+	};
+
 	$scope.getTipo = function (tipoId) {
 		var tipo = $scope.tiposDoc.find(function (m) {
 			return m.id === tipoId;
@@ -496,6 +508,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		return estimulo ? estimulo.titulo : '';
 	};
 
+	////paginacion documentos
 	$scope.firstPageDoc = function () {
 		return $scope.currentPageDoc == 0;
 	}
@@ -529,6 +542,42 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.pageForwardDoc = function () {
 		$scope.currentPageDoc = $scope.currentPageDoc + 1;
 	}
+
+	//paginacion notificaciones
+	$scope.firstPageNot = function () {
+		return $scope.currentPageNot == 0;
+	}
+
+	$scope.primeraPagNot = function () {
+		$scope.currentPageNot = 0;
+	}
+
+	$scope.ultimaPagNot = function () {
+		var lastPageNum = Math.ceil($scope.totalNotificaciones / $scope.itemsPerPageNot - 1);
+		$scope.currentPageNot = lastPageNum;
+	}
+
+	$scope.lastPageNot = function () {
+		var lastPageNum = Math.ceil($scope.totalNotificaciones / $scope.itemsPerPageNot - 1);
+		return $scope.currentPageNot == lastPageNum;
+	}
+
+	$scope.numberOfPagesNot = function () {
+		return Math.ceil($scope.totalNotificaciones / $scope.itemsPerPageNot);
+	}
+
+	$scope.startingItemNot = function () {
+		return $scope.currentPageNot * $scope.itemsPerPageNot;
+	}
+
+	$scope.pageBackNot = function () {
+		$scope.currentPageNot = $scope.currentPageNot - 1;
+	}
+
+	$scope.pageForwardNot = function () {
+		$scope.currentPageNot = $scope.currentPageNot + 1;
+	}
+	////////////////////////
 
 	$scope.cerrarModalDocumentos = function () {
 		$('#documentos').modal('hide');
@@ -575,7 +624,73 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 
 	$scope.estimulos= function (){
+		$scope.titulo="ESTIMULOS ABIERTOS";
+		$scope.esHistorico=false;
 		$scope.cargarEstimulos();
+	}
+
+	$scope.pintar=function(estimulo){
+	
+		var fecha = new Date(estimulo.fechaFin);
+		fecha.setSeconds(0);
+		var fecha2=new Date($scope.getFechaEstimadaFin(estimulo));
+		fecha2.setSeconds(0);
+		return $scope.esHistorico&&fecha<=fecha2;
+	}
+
+	$scope.getEstado=function(documento){
+		if(documento.esFinal==1&&documento.estado==2)
+			return "ACEPTADO";
+		else if(documento.esFinal==1&&documento.estado==3)
+			return "RECHAZADO";
+		else
+			return "";
+	
+	}
+
+	$scope.historial= function (){
+		$scope.titulo="ESTIMULOS CERRADOS";
+		$scope.esHistorico=true;
+		$('#modalEstimulos').modal('show');
+
+		var reqEstimulosOld = {
+			method: 'GET',
+			url: 'http://localhost:8080/api/final/estimulos/list/old',
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			},
+		};
+		$http(reqEstimulosOld).then(
+			function (resp) {
+				if (resp.status === 200) {
+					$scope.Estimulos = resp.data;
+					$scope.total = $scope.Estimulos.length;
+					$scope.totalEstimulos = $scope.Estimulos.length;
+
+					$scope.$watch('FiltroEstimulos.valor', function (newVal) {
+
+						if (newVal == '') {
+							$scope.filteredEstimulos = $scope.Estimulos;
+							$scope.totalEstimulos = $scope.Estimulos.length;
+						}
+						else {
+							$scope.filteredEstimulos = $filter('filter')($scope.Estimulos, newVal);
+							$scope.totalEstimulos = $scope.filteredEstimulos.length;
+						}
+						$scope.currentPage = 0;
+					});
+
+				} else {
+					console.log(reqEstimulosOld);
+					alert("No se pueden obtener los estimulos");
+				}
+			},
+			function (respErr) {
+
+				alert("No se pueden obtener los estimulos");
+			}
+		);
 	}
 
 	$scope.rechazar = function (i, id) {

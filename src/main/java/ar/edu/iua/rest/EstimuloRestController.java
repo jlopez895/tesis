@@ -76,6 +76,22 @@ public class EstimuloRestController {
 		}
 	}
 	
+	@ApiOperation(value = "Obtener listado de estimulos", response = Documento.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+
+	@GetMapping(value = "/list/old", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Estimulo>> listOld() {
+		try {
+
+			return new ResponseEntity<List<Estimulo>>(estimuloBusiness.listOld(), HttpStatus.OK);
+
+		} catch (BusinessException e) {
+			return new ResponseEntity<List<Estimulo>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@ApiOperation(value = "Obtener un estimulo por su id", response = Estimulo.class)
 
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),

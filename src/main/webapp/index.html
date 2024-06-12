@@ -207,8 +207,9 @@
         <div class="loader-page"></div>
     </div>
     <div class="navbar">
-        <img src="ui/logo.png" alt="Logo" />
-        <div class="user-initials" style="margin-bottom: 10px;" onclick="toggleUserPopup()">{{ userData.iniciales }}
+        <img src="ui/logo.png" style="margin-bottom: 10px;" alt="Logo" />
+
+        <div class="user-initials" style="margin-bottom:  20px;" onclick="toggleUserPopup()">{{ userData.iniciales }}
         </div>
         <div class="user-popup" id="userPopup">
             <ul>
@@ -218,9 +219,11 @@
                 <li>
                     <hr>
                 </li>
-                <li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a></li>
+                <li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a>
+                </li>
             </ul>
         </div>
+
     </div>
 
     <i class="bi bi-person-circle"></i>
@@ -228,20 +231,7 @@
     <div style="margin-top:50px;width: 97%; height: 100%;">
         <div id="divPrinc" class="container-fluid" style="display: inline; flex: 1;height: 100%;text-align: center; ">
             <div class="row">
-                <div class="col-xl-4 xs-12">
-                    <button data-toggle="modal" data-target="#modalProb"
-                        style="border-style: none; background-color: transparent;" ng-click="problematica()">
-                        <div class="card" id="card1"
-                            style="width: 100%; height: 250px; margin-left: 20px; text-align: center;">
-                            <img src="ui/argentina.png" style="width: 35%;align-self: center; margin-top: 10px;"
-                                class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">PROBLEMATICA</h5>
-
-                            </div>
-                        </div>
-                        </a>
-                </div>
+                
                 <div class="col-xl-4 xs-12">
                     <button data-toggle="modal" data-target="#modalEstimulos" ng-click="estimulos()"
                         style="border-style: none; background-color: transparent;">
@@ -251,6 +241,20 @@
                                 class="card-img-top" alt="...">
                             <div class="card-body" style="margin-bottom: 5px;">
                                 <h5 class="card-title">ESTIMULOS</h5>
+
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <div class="col-xl-4 xs-12">
+                    <button data-toggle="modal" data-target="#modalNuevoEstimulo"
+                        style="border-style: none; background-color: transparent;" ng-click="nuevoEstimulo()">
+                        <div class="card"
+                            style="width: 100%; height: 250px; margin-left: 20px;text-align: center;">
+                            <img src="ui/agregar.png" data-toggle="modal" data-target="#modalNuevoEstimulo"
+                                style="width: 35%;align-self: center; margin-top: 10px;" class="card-img-top" alt="...">
+                            <div class="card-body" style="margin-bottom: 5px;">
+                                <h5 class="card-title">NUEVO ESTIMULO</h5>
 
                             </div>
                         </div>
@@ -272,21 +276,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-4 xs-12">
-                    <button data-toggle="modal" data-target="#modalNuevoEstimulo"
-                        style="border-style: none; background-color: transparent;" ng-click="nuevoEstimulo()">
-                        <div class="card"
+                <div class="col-xl-3 xs-12">
+                    <button data-toggle="modal" data-target="#modalProb"
+                        style="border-style: none; background-color: transparent;" ng-click="problematica()">
+                        <div class="card" id="card1"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
-                            <img src="ui/agregar.png" data-toggle="modal" data-target="#modalNuevoEstimulo"
-                                style="width: 35%;align-self: center; margin-top: 10px;" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">NUEVO ESTIMULO</h5>
+                            <img src="ui/argentina.png" style="width: 35%;align-self: center; margin-top: 10px;"
+                                class="card-img-top" alt="...">
+                            <div class="card-body" >
+                                <h5 class="card-title">PROBLEMATICA</h5>
 
                             </div>
                         </div>
-                    </button>
+                        </a>
                 </div>
-                <div class="col-xl-4 xs-12">
+                
+                <div class="col-xl-3 xs-12">
                     <button data-toggle="modal" data-target="#modalNotif"
                         style="border-style: none; background-color: transparent;" ng-click="notificaciones()">
                         <div class="card"
@@ -300,18 +305,31 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-4 xs-12">
-                    <button style="border-style: none; background-color: transparent;" ng-click="consultas()">
+                <div class="col-xl-3 xs-12">
+                    <button style="border-style: none; background-color: transparent;" ng-click="historial()">
                         <div class="card"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
-                            <img src="ui/consulta.png" style="width: 35%;align-self: center; margin-top: 10px;"
+                            <img src="ui/historia.png" style="width: 35%;align-self: center; margin-top: 10px;"
                                 class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title">CONSULTAS</h5>
+                                <h5 class="card-title">HISTORIAL</h5>
 
                             </div>
                         </div>
-                        </consultas>
+                    </button>
+                </div>
+                <div class="col-xl-3 xs-12">
+                    <button style="border-style: none; background-color: transparent;" ng-click="consultas()">
+                        <div class="card"
+                            style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
+                            <img src="ui/tendencia.png" style="width: 35%;align-self: center; margin-top: 10px;"
+                                class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">ESTADISTICAS</h5>
+
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </div>
 
@@ -369,14 +387,14 @@
                                 <div class="col l4" style="margin-top: 35px;" ng-show="mostrarDiv">
                                     <div class="form-check">
 
-                                        <input id="final" class="form-check-input" type="checkbox" value="" >
-                                        <label class="form-check-label" for="flexCheckDefault"
-                                            style="margin-top: 2px;">
+                                        <input id="final" class="form-check-input" type="checkbox" value="">
+                                        <label class="form-check-label" for="flexCheckDefault" style="margin-top: 2px;">
                                             Final
                                         </label>
-                                        <p class="text-muted">Al marcar un decreto como "Final" el estimulo se encuentra apto para cer cerrado.</p>
+                                        <p class="text-muted">Al marcar un decreto como "Final" el estimulo se encuentra
+                                            apto para cer cerrado.</p>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 10px;">
@@ -488,7 +506,7 @@
         <div class="modal-dialog modal-lg  modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #8ac8ff">
-                    <h5 class="modal-title" id="H1">ESTIMULOS ABIERTOS</h5>
+                    <h5 class="modal-title" id="H1">{{titulo}}</h5>
                     <button type="button" onclick="cerrarModaEstimulos()"
                         style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
                         aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -517,14 +535,15 @@
                                             Título
 
                                         </th>
-                                        <th scope="col">Fceha inicio</th>
+                                        <th scope="col">Fecha inicio</th>
+                                        <th scope="col" ng-show="esHistorico">Fecha fin</th>
                                         <th scope="col">Fecha estimada de finalización</th>
                                         <th scope="col"></th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="o in filteredEstimulos | limitTo: itemsPerPage : startingItem()">
+                                    <tr ng-repeat="o in filteredEstimulos | limitTo: itemsPerPage : startingItem()" >
                                         <td>
                                             {{ o.id }}
                                         </td>
@@ -534,8 +553,11 @@
                                         <td>
                                             {{o.fechaInicio| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
-                                        <td>
+                                        <td ng-show="esHistorico" ng-style="{'background-color': pintar(o) ? 'lightgreen' : '#ff4444'}">
                                             {{o.fechaFin| date:'dd/MM/yyyy HH:mm'}}
+                                        </td>
+                                        <td>
+                                            {{getFechaEstimadaFin(o) | date:'dd/MM/yyyy HH:mm'}}
                                         </td>
                                         <td>
                                             <button class="btn btn-link" ng-click="verDocumentos(o.id);"
@@ -601,7 +623,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat='n in Notificaciones'>
+                                    <tr ng-repeat='n in Notificaciones| limitTo: itemsPerPageNot : startingItemNot()'>
                                         <td>
                                             {{ n.descripcion }}
                                         </td>
@@ -616,7 +638,17 @@
                         <br />
                     </form>
                 </div>
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPageNot()"
+                        ng-click="primeraPagNot()">&lt&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPageNot()"
+                        ng-click="pageBackNot()">&lt</button>
+                    {{currentPageNot+1}}
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPageNot()"
+                        ng-click="pageForwardNot()">&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPageNot()"
+                        ng-click="ultimaPagNot()">&gt&gt</button>
+                </div>
             </div>
         </div>
     </div>
@@ -679,12 +711,14 @@
                                         <th scope="col">Título</th>
                                         <th scope="col">Cuerpo</th>
                                         <th scope="col">Fecha</th>
-                                        <th scope="col"></th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col" ng-show="o.esFinal && o.estado==1"></th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="o in filteredDocumentos | limitTo: itemsPerPageDoc : startingItemDoc()">
+                                    <tr
+                                        ng-repeat="o in filteredDocumentos | limitTo: itemsPerPageDoc : startingItemDoc()">
                                         <td>
                                             {{ getMinisterio(o.ministerio)| uppercase }}
                                         </td>
@@ -700,11 +734,16 @@
                                         <td>
                                             {{o.fecha| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
-                                        <td>
+                                        <td ng-style="{'color': getEstado(o)=='APROBADO' ? 'green' : 'red'}">
+                                            {{getEstado(o)}}
+                                        </td>
+                                        <td ng-show="o.esFinal && o.estado==1">
                                             <button class="btn btn-danger" ng-click="rechazar(o.estimulo,o.id);"
-                                                style="font-size: 12px;" ng-if="o.esFinal && o.estado==1" id="rechazar">X</button>
+                                                style="font-size: 12px;" 
+                                                id="rechazar">X</button>
                                             <button class="btn btn-success" ng-click="aprobar(o.estimulo,o.id);"
-                                                style="font-size: 12px;" ng-if="o.esFinal && o.estado==1" id="aceptar">✓</button>
+                                                style="font-size: 12px;"
+                                                id="aceptar">✓</button>
 
                                         </td>
                                     </tr>
@@ -722,7 +761,7 @@
                         ng-click="primeraPagDoc()">&lt&lt</button>
                     <button type="button" class="btn btn-primary" ng-disabled="firstPageDoc()"
                         ng-click="pageBackDoc()">&lt</button>
-                    {{currentPage+1}}
+                    {{currentPageDoc+1}}
                     <button type="button" class="btn btn-primary" ng-disabled="lastPageDoc()"
                         ng-click="pageForwardDoc()">&gt</button>
                     <button type="button" class="btn btn-primary" ng-disabled="lastPageDoc()"

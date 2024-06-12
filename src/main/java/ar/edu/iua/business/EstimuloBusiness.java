@@ -115,7 +115,7 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 				try {
 					Estimulo estimuloNew=estimulo.get();
 					estimuloNew.setEstado(2);
-					
+					estimuloNew.setFechaFin(new Date());
 					estimuloDAO.save(estimuloNew);
 					
 					//creando notificacion
@@ -140,6 +140,23 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 		}
 		
 
+	}
+
+	@Override
+	public List<Estimulo> listOld() throws BusinessException {
+		List<Estimulo> list = null;
+		try {
+
+			list = estimuloDAO.findCerradas();
+
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+
+		if (list != null && list.size() > 0)
+			return list;
+		else
+			return null;
 	}
 
 

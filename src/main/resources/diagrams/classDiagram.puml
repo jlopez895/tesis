@@ -1,0 +1,189 @@
+@startuml
+
+!define DOCUMENTO class Documento
+!define ESTIMULO class Estimulo
+!define MINISTERIO class Ministerio
+!define NOTIFICACION class Notificacion
+!define PERMISO class Permiso
+!define ROL class Rol
+!define USER class User
+!define ROLPRINCIPALHOLDER class RolPrincipalHolder
+
+DOCUMENTO {
+    + int id
+    + int tipo
+    + Date fecha
+    + String titulo
+    + String descripcion
+    + boolean esFinal
+    + int estimulo
+    + int estado
+    + int usuario
+    + int ministerio
+    + int getId()
+    + void setId(int id)
+    + int getTipo()
+    + void setTipo(int tipo)
+    + Date getFecha()
+    + void setFecha(Date fecha)
+    + String getDescripcion()
+    + void setDescripcion(String descripcion)
+    + boolean isEsFinal()
+    + void setEsFinal(boolean esFinal)
+    + int getEstimulo()
+    + void setEstimulo(int estimulo)
+    + int getUsuario()
+    + void setUsuario(int usuario)
+    + int getMinisterio()
+    + void setMinisterio(int ministerio)
+    + String getTitulo()
+    + void setTitulo(String titulo)
+    + int getEstado()
+    + void setEstado(int estado)
+    + Documento()
+    + Documento(int id, int tipo, Date fecha, String titulo, String descripcion, boolean esFinal, int estimulo, int estado, int usuario, int ministerio)
+    + String checkBasicData(Estimulo estimulo)
+}
+
+ESTIMULO {
+    + int id
+    + String titulo
+    + String descripcion
+    + int tiempoEstmado
+    + Date fechaInicio
+    + Date fechaFin
+    + int estado
+    + int usuarioCreador
+    + int usuarioFinalizador
+    + int getId()
+    + void setId(int id)
+    + String getDescripcion()
+    + void setDescripcion(String descripcion)
+    + int getTiempoEstmado()
+    + void setTiempoEstmado(int tiempoEstmado)
+    + Date getFechaInicio()
+    + void setFechaInicio(Date fechaInicio)
+    + Date getFechaFin()
+    + void setFechaFin(Date fechaFin)
+    + int getEstado()
+    + void setEstado(int estado)
+    + String getTitulo()
+    + void setTitulo(String titulo)
+    + int getUsuarioCreador()
+    + void setUsuarioCreador(int usuarioCreador)
+    + int getUsuarioFinalizador()
+    + void setUsuarioFinalizador(int usuarioFinalizador)
+    + Estimulo()
+    + Estimulo(int id, String titulo, String descripcion, int tiempoEstmado, Date fechaInicio, Date fechaFin, int estado, int usuarioCreador, int usuarioFinalizador)
+    + String checkBasicInfo()
+}
+
+MINISTERIO {
+    + Integer id
+    + String nombre
+    + Integer getId()
+    + void setId(Integer id)
+    + String getNombre()
+    + void setNombre(String nombre)
+    + Ministerio()
+    + Ministerio(Integer id, String nombre, Set<Rol> roles)
+    + Set<Rol> getRoles()
+    + void setRoles(Set<Rol> roles)
+}
+
+NOTIFICACION {
+    + Integer id
+    + String descripcion
+    + Date fecha
+    + Integer getId()
+    + void setId(Integer id)
+    + String getDescripcion()
+    + void setDescripcion(String descripcion)
+    + Date getFecha()
+    + void setFecha(Date fecha)
+    + Set<Rol> getRoles()
+    + void setRoles(Set<Rol> roles)
+}
+
+PERMISO {
+    + Integer id
+    + String permiso
+    + String descripcion
+    + Integer getId()
+    + void setId(Integer id)
+    + String getPermiso()
+    + void setPermiso(String permiso)
+    + String getDescripcion()
+    + void setDescripcion(String descripcion)
+    + Permiso(Integer id, String permiso, String descripcion)
+}
+
+ROL {
+    + Integer id
+    + String rol
+    + String descripcion
+    + Integer getId()
+    + void setId(Integer id)
+    + String getRol()
+    + void setRol(String rol)
+    + String getDescripcion()
+    + void setDescripcion(String descripcion)
+    + Set<Permiso> getPermisos()
+    + void setPermisos(Set<Permiso> permisos)
+    + Rol()
+    + Rol(Integer id, String rol, String descripcion, Set<Permiso> permisos)
+}
+
+USER {
+    + Integer id
+    + String nombre
+    + String email
+    + String apellido
+    + String username
+    + String password
+    + String legajo
+    + boolean accountNonExpired
+    + boolean accountNonLocked
+    + boolean credentialsNonExpired
+    + boolean enabled
+    + String sessionToken
+    + int sessionTimeout
+    + Integer getId()
+    + void setId(Integer id)
+    + String getNombre()
+    + void setNombre(String nombre)
+    + String getEmail()
+    + void setEmail(String email)
+    + String getApellido()
+    + void setApellido(String apellido)
+    + String getUsername()
+    + void setUsername(String username)
+    + String getPassword()
+    + void setPassword(String password)
+    + String getlegajo()
+    + void setlegajo(String legajo)
+    + boolean isAccountNonExpired()
+    + void setAccountNonExpired(boolean accountNonExpired)
+    + boolean isAccountNonLocked()
+    + void setAccountNonLocked(boolean accountNonLocked)
+    + boolean isCredentialsNonExpired()
+    + void setCredentialsNonExpired(boolean credentialsNonExpired)
+    + boolean isEnabled()
+    + void setEnabled(boolean enabled)
+    + String getSessionToken()
+    + void setSessionToken(String sessionToken)
+    + int getSessionTimeout()
+    + void setSessionTimeout(int sessionTimeout)
+    + Collection<? extends GrantedAuthority> getAuthorities()
+    + String getNombreCompleto()
+    + String checkAccount(PasswordEncoder passwordEncoder, String password)
+}
+
+ROLPRINCIPALHOLDER {
+    + Integer idRolPrincipal
+    + static RolPrincipalHolder getInstance()
+    + Integer getIdRolPrincipal()
+    + void setIdRolPrincipal(Integer idRolPrincipal)
+}
+
+@enduml
