@@ -42,6 +42,10 @@ function cerrarModaEstimulos() {
 	$("#modalEstimulos").modal('hide');
 }
 
+function cerrarModalNoticias() {
+	$("#modalNoticias").modal('hide');
+}
+
 function cerrarModalNuevoEstimulo() {
 	$("#modalNuevoEstimulo").modal('hide');
 }
@@ -67,8 +71,11 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		iniciales: initials,
 		fullname: fullName,
 		email: userDataFromLocalStorage.email,
-		rol: "Administrador"  // Puedes obtener estos valores desde localStorage o cualquier otra fuente
+		rol: userDataFromLocalStorage.rolPrinc,
+		rolDesc: userDataFromLocalStorage.rolPrincDesc  // Puedes obtener estos valores desde localStorage o cualquier otra fuente
 	};
+
+	console.log(userDataFromLocalStorage);
 
 	$scope.cerrarSesion = function () {
 		console.log("Función cerrarSesion llamada");
@@ -124,7 +131,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 					});
 
 				} else {
-					console.log(reqEstimulos);
+					console.log("entro aca");
 					alert("No se pueden obtener los estimulos");
 				}
 			},
@@ -151,7 +158,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 
 	$scope.lastPage = function () {
-	
+
 		var lastPageNum = Math.ceil($scope.totalEstimulos / $scope.itemsPerPage - 1);
 		return $scope.currentPage == lastPageNum;
 	}
@@ -179,20 +186,20 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			'xauthtoken': userDataFromLocalStorage.authtoken
 		},
 	};
+
 	$scope.Notificacion = {};
 	$scope.Notificaciones = [];
 	$scope.FiltroNotificaciones = { valor: '' };
-	$scope.totalNotificaciones=0;
+	$scope.totalNotificaciones = 0;
 	$scope.currentPageNot = 0;
 	$scope.cargarNotificaciones = function () {
-	
+
 		$http(reqNotificaciones).then(
 			function (resp) {
 				if (resp.status === 200) {
 					$scope.Notificaciones = resp.data;
-					
-					if($scope.totalNotificaciones<$scope.Notificaciones.length)
-					{
+
+					if ($scope.totalNotificaciones < $scope.Notificaciones.length) {
 						swal("Tiene nuevas notificaciones", "", "warning");
 					}
 					$scope.totalNotificaciones = $scope.Notificaciones.length;
@@ -219,8 +226,9 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			$scope.cargarNotificaciones();
 		});
 	}).catch(function (error) {
-
-		console.error('WebSocket connection failed:', error);
+		localStorage.setItem("logged", "false");
+		localStorage.setItem("token", "");
+		window.location.replace("/login.html");
 	});
 
 
@@ -254,6 +262,33 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	);
 
 	$scope.mostrarDiv = true;
+	obtenerDivsVisibles();
+
+	function obtenerDivsVisibles() {
+		$scope.modalHistorialVisible = false;
+		$scope.modalNuevoDocVisible = false;
+		$scope.modalNuevoEstVisible = false;
+		$scope.modalEstadisticasVisible = false;
+		$scope.modalEstVisible=false;
+		$scope.modalNotifVisible = false;
+
+		if ($scope.userData.rol == 1) {
+			$scope.modalHistorialVisible = true;
+			$scope.modalNuevoDocVisible = true;
+			$scope.modalNuevoEstVisible = true;
+			$scope.modalEstadisticasVisible = true;
+			$scope.modalEstVisible=true;
+			$scope.modalNotifVisible = true;
+		}
+		else if($scope.userData.rol != 5){
+			
+			$scope.modalNuevoDocVisible = true;
+			$scope.modalNuevoEstVisible = true;
+			$scope.modalEstVisible=true;
+			$scope.modalNotifVisible = true;
+		}
+
+	}
 
 	function limpiarCampos() {
 		document.getElementById('tituloEstimulo').value = '';
@@ -352,7 +387,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		idMinisterio = $scope.selectedMinisterio.id;
 		tituloDocumento = document.getElementById('tituloDocumento').value;
 		descripcionDocumento = document.getElementById('cuerpo').value;
-	
+
 		if ($scope.mostrarDiv == true && document.getElementById('final').checked)
 			esFinalDocumento = true;
 		else
@@ -418,7 +453,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.mostrarDiv = false;
 
 	$scope.cambiarVisibilidadDiv = function () {
-	
+
 		if ($scope.selectedTipoDoc === 1)
 			$scope.mostrarDiv = true;
 		else
@@ -430,7 +465,10 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	$scope.currentPageNot = 0;
 	$scope.itemsPerPageNot = 5;
-	
+
+	$scope.currentPageNoticias = 0;
+	$scope.itemsPerPageNoticias= 5;
+	$scope.totalNoticias=0;
 
 	$scope.verDocumentos = function (i) {
 
@@ -543,6 +581,41 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.currentPageDoc = $scope.currentPageDoc + 1;
 	}
 
+	////paginacion noticias
+	$scope.firstPageNoticias = function () {
+		return $scope.currentPageNoticias == 0;
+	}
+
+	$scope.primeraPagNoticias = function () {
+		$scope.currentPageNoticias = 0;
+	}
+
+	$scope.ultimaPagNoticias = function () {
+		var lastPageNum = Math.ceil($scope.totalNoticias / $scope.itemsPerPageNoticias - 1);
+		$scope.currentPageNoticias = lastPageNum;
+	}
+
+	$scope.lastPageNoticias = function () {
+		var lastPageNum = Math.ceil($scope.totalNoticias / $scope.itemsPerPageNoticias - 1);
+		return $scope.currentPageNoticias == lastPageNum;
+	}
+
+	$scope.numberOfPagesNoticias = function () {
+		return Math.ceil($scope.totalNoticias / $scope.itemsPerPageNoticias);
+	}
+
+	$scope.startingItemNoticias = function () {
+		return $scope.currentPageNoticias * $scope.itemsPerPageNoticias;
+	}
+
+	$scope.pageBackNoticias = function () {
+		$scope.currentPageNoticias = $scope.currentPageNoticias - 1;
+	}
+
+	$scope.pageForwardNoticias = function () {
+		$scope.currentPageNoticias = $scope.currentPageNoticias + 1;
+	}
+
 	//paginacion notificaciones
 	$scope.firstPageNot = function () {
 		return $scope.currentPageNot == 0;
@@ -614,7 +687,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 					});
 
-				
+
 			}).catch(function (error) {
 
 				console.error('Error al cerrar el estímulo:', error);
@@ -623,39 +696,80 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	}
 
-	$scope.estimulos= function (){
-		$scope.titulo="ESTIMULOS ABIERTOS";
-		$scope.esHistorico=false;
+	$scope.estimulos = function () {
+		$scope.titulo = "ESTIMULOS ABIERTOS";
+		$scope.esHistorico = false;
 		$scope.cargarEstimulos();
 	}
 
-	$scope.pintar=function(estimulo){
-	
+	$scope.pintar = function (estimulo) {
+
 		var fecha = new Date(estimulo.fechaFin);
 		fecha.setSeconds(0);
-		var fecha2=new Date($scope.getFechaEstimadaFin(estimulo));
+		var fecha2 = new Date($scope.getFechaEstimadaFin(estimulo));
 		fecha2.setSeconds(0);
-		return $scope.esHistorico&&fecha<=fecha2;
+		return $scope.esHistorico && fecha <= fecha2;
 	}
 
-	$scope.getEstado=function(documento){
-		if(documento.esFinal==1&&documento.estado==2)
+	$scope.getEstado = function (documento) {
+		if (documento.esFinal == 1 && documento.estado == 2)
 			return "ACEPTADO";
-		else if(documento.esFinal==1&&documento.estado==3)
+		else if (documento.esFinal == 1 && documento.estado == 3)
 			return "RECHAZADO";
 		else
 			return "";
-	
+
+	}
+	console.log(userDataFromLocalStorage.token);
+
+	$scope.noticias = function () {
+		var reqNoticias = {
+			method: 'GET',
+			url: 'http://localhost:8080/api/final/noticias/list',
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			},
+		};
+		$http(reqNoticias).then(
+			function (resp) {
+				if (resp.status === 200) {
+					$scope.Noticias = resp.data;
+					
+					$scope.totalNoticias = $scope.Noticias.length;
+
+					$scope.$watch('FiltroNoticias.valor', function (newVal) {
+
+						if (newVal == '') {
+							$scope.filteredNoticias = $scope.Noticias;
+							$scope.totalNoticias = $scope.Noticias.length;
+						}
+						else {
+							$scope.filteredNoticias = $filter('filter')($scope.Noticias, newVal);
+							$scope.totalNoticias = $scope.filteredNoticias.length;
+						}
+						$scope.currentPageNoticias = 0;
+					});
+
+				}
+			},
+			function (respErr) {
+
+				$scope.Noticias = null;
+				$scope.total = 0;
+				$scope.totalNoticias = 0;
+			}
+		);
 	}
 
-	$scope.historial= function (){
-		$scope.titulo="ESTIMULOS CERRADOS";
-		$scope.esHistorico=true;
+	$scope.historial = function () {
+		$scope.titulo = "ESTIMULOS CERRADOS";
+		$scope.esHistorico = true;
 		$('#modalEstimulos').modal('show');
 
 		var reqEstimulosOld = {
 			method: 'GET',
-			url: 'http://localhost:8080/api/final/estimulos/list/old',
+			url: 'http://localhost:8080/api/final/estimulos/list/old2',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -681,14 +795,13 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 						$scope.currentPage = 0;
 					});
 
-				} else {
-					console.log(reqEstimulosOld);
-					alert("No se pueden obtener los estimulos");
 				}
 			},
 			function (respErr) {
 
-				alert("No se pueden obtener los estimulos");
+				$scope.Estimulos = null;
+				$scope.total = 0;
+				$scope.totalEstimulos = 0;
 			}
 		);
 	}
@@ -696,13 +809,13 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.rechazar = function (i, id) {
 
 		req = {
-				method: 'PUT',
-				url: 'http://localhost:8080/api/final/documentos/cambiarEstado/' + id + "/3",
-				headers: {
-					'Content-Type': 'application/json',
-					'xauthtoken': userDataFromLocalStorage.authtoken
-				}
-			};
+			method: 'PUT',
+			url: 'http://localhost:8080/api/final/documentos/cambiarEstado/' + id + "/3",
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			}
+		};
 
 		$scope.Ejecutar(req).
 			then(function (resp) {
@@ -717,5 +830,48 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				swal("Error", "Hubo un problema al rechazar el documento.", "error");
 			});
 
+	}
+	$scope.crearNoticia = function () {
+		$('#modalNuevaNoticia').modal('show');
+		$('#modalNoticia').modal('hide');
+	}
+
+	$scope.nuevaNoticia = function () {
+
+		var descripcion = document.getElementById('descripcionNoticia').value;
+
+		//FechaHoraInicio
+		let fechaHoraActual = new Date();
+
+		let fechaDocumentoSQL = fechaHoraActual.toISOString();
+
+		var data = {
+			'descripcion': descripcion,
+			'fecha': fechaDocumentoSQL,
+		};
+
+		var req = {
+			method: 'POST',
+			url: 'http://localhost:8080/api/final/noticias/nuevaNoticia',
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			},
+			data: data
+		};
+
+		$scope.Ejecutar(req).
+			then(function (resp) {
+				document.getElementById('descripcionNoticia').value = '';
+				swal("Noticia registrada exitosamente!", "", "success");
+				$scope.noticias();
+				$('#modalNuevaNoticia').modal('hide');
+				$('#modalNoticia').modal('show');
+
+			}).catch(function (error) {
+
+				console.error('Error al registrar el documento:', error);
+				swal("Error", "Hubo un problema al registrar el documento.", "error");
+			});
 	}
 });

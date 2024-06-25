@@ -81,7 +81,7 @@ public class EstimuloRestController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
-	@GetMapping(value = "/list/old", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/list/old2", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Estimulo>> listOld() {
 		try {
 

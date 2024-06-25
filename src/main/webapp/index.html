@@ -215,7 +215,7 @@
             <ul>
                 <li class="user-info">{{ userData.fullname }}</li>
                 <li class="user-info">{{ userData.email }}</li>
-                <li class="user-info">Rol: Administrador</li>
+                <li class="user-info">Rol: {{ userData.rolDesc }}</li>
                 <li>
                     <hr>
                 </li>
@@ -231,8 +231,21 @@
     <div style="margin-top:50px;width: 97%; height: 100%;">
         <div id="divPrinc" class="container-fluid" style="display: inline; flex: 1;height: 100%;text-align: center; ">
             <div class="row">
-                
-                <div class="col-xl-4 xs-12">
+                <div class="col-xl-3 xs-12">
+                    <button data-toggle="modal" data-target="#modalProb"
+                        style="border-style: none; background-color: transparent;" ng-click="problematica()">
+                        <div class="card" id="card1"
+                            style="width: 100%; height: 250px; margin-left: 20px;text-align: center;">
+                            <img src="ui/argentina.png" style="width: 35%;align-self: center; margin-top: 10px;"
+                                class="card-img-top" alt="...">
+                            <div class="card-body" >
+                                <h5 class="card-title">PROBLEMATICA</h5>
+
+                            </div>
+                        </div>
+                        </a>
+                </div>
+                <div class="col-xl-3 xs-12" ng-show="modalEstVisible">
                     <button data-toggle="modal" data-target="#modalEstimulos" ng-click="estimulos()"
                         style="border-style: none; background-color: transparent;">
                         <div class="card" id="card2"
@@ -246,7 +259,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-4 xs-12">
+                <div class="col-xl-3 xs-12" ng-show="modalNuevoEstVisible">
                     <button data-toggle="modal" data-target="#modalNuevoEstimulo"
                         style="border-style: none; background-color: transparent;" ng-click="nuevoEstimulo()">
                         <div class="card"
@@ -260,7 +273,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-4 xs-12">
+                <div class="col-xl-3 xs-12" ng-show="modalNuevoDocVisible">
                     <button data-toggle="modal" data-target="#modalNuevoDocumento" ng-click="estimulos()"
                         style="border-style: none; background-color: transparent;">
                         <div class="card" id="card3"
@@ -277,21 +290,21 @@
             </div>
             <div class="row">
                 <div class="col-xl-3 xs-12">
-                    <button data-toggle="modal" data-target="#modalProb"
-                        style="border-style: none; background-color: transparent;" ng-click="problematica()">
+                    <button data-toggle="modal" data-target="#modalNoticias"
+                        style="border-style: none; background-color: transparent;" ng-click="noticias()">
                         <div class="card" id="card1"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
-                            <img src="ui/argentina.png" style="width: 35%;align-self: center; margin-top: 10px;"
+                            <img src="ui/noticias.png" style="width: 35%;align-self: center; margin-top: 10px;"
                                 class="card-img-top" alt="...">
                             <div class="card-body" >
-                                <h5 class="card-title">PROBLEMATICA</h5>
+                                <h5 class="card-title">NOTICIAS</h5>
 
                             </div>
                         </div>
                         </a>
                 </div>
                 
-                <div class="col-xl-3 xs-12">
+                <div class="col-xl-3 xs-12" ng-show="modalNotifVisible">
                     <button data-toggle="modal" data-target="#modalNotif"
                         style="border-style: none; background-color: transparent;" ng-click="notificaciones()">
                         <div class="card"
@@ -305,7 +318,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-3 xs-12">
+                <div class="col-xl-3 xs-12" ng-show="modalHistorialVisible">
                     <button style="border-style: none; background-color: transparent;" ng-click="historial()">
                         <div class="card"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
@@ -318,7 +331,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-3 xs-12">
+                <div class="col-xl-3 xs-12" ng-show="modalEstadisticasVisible">
                     <button style="border-style: none; background-color: transparent;" ng-click="consultas()">
                         <div class="card"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
@@ -575,7 +588,7 @@
 
                     </form>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" ng-show="totalEstimulos!=0">
                     <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
                         ng-click="primeraPag()">&lt&lt</button>
                     <button type="button" class="btn btn-primary" ng-disabled="firstPage()"
@@ -638,7 +651,7 @@
                         <br />
                     </form>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" ng-show="totalNotificaciones!=0">
                     <button type="button" class="btn btn-primary" ng-disabled="firstPageNot()"
                         ng-click="primeraPagNot()">&lt&lt</button>
                     <button type="button" class="btn btn-primary" ng-disabled="firstPageNot()"
@@ -734,14 +747,14 @@
                                         <td>
                                             {{o.fecha| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
-                                        <td ng-style="{'color': getEstado(o)=='APROBADO' ? 'green' : 'red'}">
+                                        <td ng-style="{'color': getEstado(o)=='ACEPTADO' ? 'green' : 'red'}">
                                             {{getEstado(o)}}
                                         </td>
-                                        <td ng-show="o.esFinal && o.estado==1">
-                                            <button class="btn btn-danger" ng-click="rechazar(o.estimulo,o.id);"
+                                        <td>
+                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1sder" class="btn btn-danger" ng-click="rechazar(o.estimulo,o.id);"
                                                 style="font-size: 12px;" 
                                                 id="rechazar">X</button>
-                                            <button class="btn btn-success" ng-click="aprobar(o.estimulo,o.id);"
+                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1" class="btn btn-success" ng-click="aprobar(o.estimulo,o.id);"
                                                 style="font-size: 12px;"
                                                 id="aceptar">✓</button>
 
@@ -756,7 +769,7 @@
 
                     </form>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" ng-show="totalDocs!=0">
                     <button type="button" class="btn btn-primary" ng-disabled="firstPageDoc()"
                         ng-click="primeraPagDoc()">&lt&lt</button>
                     <button type="button" class="btn btn-primary" ng-disabled="firstPageDoc()"
@@ -771,6 +784,117 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalNoticias" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8ac8ff">
+                    <h5 class="modal-title" id="H1">NOTICIAS</h5>
+                    <button type="button" onclick="cerrarModalNoticias()"
+                        style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
+                        aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></button>
+                </div>
+                <div class="modal-body" style="background-color: #ffffff; font-size: small;">
+                    <form>
+                        <div class="container-fluid" style="font-size: 12px;">
+                            <button ng-show="userData.rol==1" type="button" ng-click="crearNoticia()" class="btn btn-secondary">Nueva noticia</button> <br><br>
+                            <p style=" font-size: 20px;">Total de noticias: {{totalNoticias}} </p>
+                            <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
+                            <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
+                                placeholder="Buscar" aria-label="Search" ng-model="FiltroNoticias.valor">
+                            <table id="tabla1" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+
+                                            Descripción
+
+                                        </th>
+                                        <th scope="col">
+
+                                            Fecha
+
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat='n in Noticias| limitTo: itemsPerPageNoticias : startingItemNoticias()'>
+                                        <td>
+                                            {{ n.descripcion }}
+                                        </td>
+                                        <td>
+                                            {{n.fecha| date:'dd/MM/yyyy HH:mm'}}
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+                    </form>
+                </div>
+                <div class="modal-footer" ng-show="totalNoticias!=0">
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPageNoticias()"
+                        ng-click="primeraPagNoticias()">&lt&lt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="firstPageNoticias()"
+                        ng-click="pageBackNoticias()">&lt</button>
+                    {{currentPageNoticias+1}}
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPageNoticias()"
+                        ng-click="pageForwardNoticias()">&gt</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="lastPageNoticias()"
+                        ng-click="ultimaPagNoticias()">&gt&gt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNuevaNoticia" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #8ac8ff">
+                    <h5 class="modal-title" id="H1">NUEVA NOTICIA</h5>
+                    <button type="button" onclick="cerrarModalNuevaNoticia()"
+                        style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
+                        aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg></button>
+                </div>
+                <div class="modal-body" style="background-color: #cbe7ff; font-size: small;">
+                    <form>
+                        <div class="container-fluid">
+                         
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col l12">
+
+                                    <label for="descripcionNoticia" class="form-label">Descripción</label>
+                                    <textarea class="form-control" placeholder="Descricpión" id="descripcionNoticia"
+                                        rows="10" required></textarea>
+                                </div>
+                            </div>
+                            
+                            </div>
+
+                        </div>
+                        <br />
+                        <div class="mb-3 form-check">
+                            <button class="btn btn-primary" ng-click='nuevaNoticia()' id="estado1">Enviar</button>
+
+                        </div>
+
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 </body>
 
