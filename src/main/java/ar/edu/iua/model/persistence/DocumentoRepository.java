@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.iua.model.Documento;
 import ar.edu.iua.model.Estimulo;
+import ar.edu.iua.model.dto.EstadisticaDTO;
 
 @Repository
 public interface DocumentoRepository extends JpaRepository<Documento, Integer>{
@@ -21,5 +22,13 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer>{
 	
 	@Query(value = "SELECT * FROM DOCUMENTO WHERE ID=?1", nativeQuery = true)
 	Optional<Documento> obtenerPorId(int idDocumento);
+
+	@Query(value = "select r.descripcion as label, count(*) as value from tesis.documento as d inner join tesis.users as u on d.usuario=u.id\n"
+			+ "inner join tesis.roles as r on u.id_rol_principal=r.id group by id_rol_principal", nativeQuery = true)
+	public List<Object[]> estdisticasPorRol();
+	
+	@Query(value = "select m.nombre as label,count(*) as value from tesis.documento as d inner join tesis.ministerio as m \n"
+			+ "on d.ministerio=m.id group by ministerio", nativeQuery = true)
+	public List<Object[]> estadisticasPorMinisterio();
 
 }

@@ -2,6 +2,7 @@ package ar.edu.iua.rest;
 
 import java.io.Console;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -127,6 +128,21 @@ public class EstimuloRestController {
 		} catch (NotFoundException e) {
 			return new ResponseEntity<Estimulo>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@ApiOperation(value = "Obtener listado de documentos por estimulo", response = Documento.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+
+	@GetMapping(value = "/estadisticasPorEstimulo", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Integer>> estadisticasPorRol() {
+	    try {
+	       
+	        return new ResponseEntity<Map<String, Integer>>(estimuloBusiness.estadisticasPorEstimulo(), HttpStatus.OK);
+	    } catch (BusinessException e) {
+	        return new ResponseEntity<Map<String, Integer>>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 
 }

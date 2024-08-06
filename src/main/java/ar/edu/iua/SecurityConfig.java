@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					.antMatchers("/logout*").permitAll()
 					.antMatchers("/").permitAll()
 				 	.antMatchers("/index.html").permitAll()
-				 	.antMatchers("/ordenes.html").permitAll()
+				 	.antMatchers("/estadisticas.html").permitAll()
 					.antMatchers("/favicon.*").permitAll()	   
 					.antMatchers("/ui/**").permitAll()
 

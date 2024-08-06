@@ -1,10 +1,13 @@
 package ar.edu.iua.business;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Estimulo;
 import ar.edu.iua.model.Notificacion;
 import ar.edu.iua.model.Rol;
+import ar.edu.iua.model.dto.Estadistica2DTO;
+import ar.edu.iua.model.dto.EstadisticaDTO;
 import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 import ar.edu.iua.model.persistence.EstimuloRepository;
@@ -157,6 +162,22 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 			return list;
 		else
 			return null;
+	}
+
+	@Override
+	public Map<String, Integer> estadisticasPorEstimulo() throws BusinessException {
+		Map<String, Integer> response = new HashMap<>();
+		List<Object[]> results = estimuloDAO.estadisticasPorEstimulo();
+		List<Estadistica2DTO> dtos = results.stream()
+			    .map(result -> new Estadistica2DTO(((Number) result[0]).intValue(),((Number) result[1]).intValue()))
+			    .collect(Collectors.toList());
+		if (dtos != null) {
+			for (Estadistica2DTO d : dtos) {
+				response.put("TIEMPO MAYOR AL ESTIMADO", d.getLabel());
+				response.put("TIEMPO MENOR AL ESTIMADO", d.getValue());
+			}
+		}
+		return response;
 	}
 
 

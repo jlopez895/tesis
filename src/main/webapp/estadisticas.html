@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="ui/favicon.png">
+	<script type="text/javascript" src="bower_components/angular/angular.min.js">
+	</script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+	</script>
+	<script src="ui/modules/sockjs-client/dist/sockjs-1.1.1.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="ui/estadisticas.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+	<script src="ui/modules/ng-stomp/dist/ng-stomp.standalone.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<style>
+		.animated:hover {
+			animation: shakeX;
+			/* referring directly to the animation's @keyframe declaration */
+			animation-duration: 1s;
+			/* don't forget to set a duration! */
+		}
+
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.chart-container {
+			width: 97%;
+			/* Ajusta este valor para cambiar el ancho del gráfico */
+			height: 97%;
+			/* Ajusta este valor para cambiar la altura del gráfico */
+			position: relative;
+			
+			/* Necesario para que Chart.js dimensione correctamente el gráfico */
+		}
+
+		.card:hover {
+			background-color: rgb(196 200 205);
+		}
+
+		.card {
+			transition: color 0.8s linear 0.2s;
+		}
+
+		.navbar .nav-item:not(:last-child) {
+			margin-right: 35px;
+		}
+
+		.dropdown-toggle::after {
+			transition: transform 0.15s linear;
+		}
+
+		.show.dropdown .dropdown-toggle::after {
+			transform: translateY(3px);
+		}
+
+		.loader-page {
+			position: fixed;
+			z-index: 25000;
+			background: rgb(255, 255, 255);
+			left: 0px;
+			top: 0px;
+			height: 100%;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all .3s ease;
+		}
+
+		.loader-page::before {
+			content: "";
+			position: absolute;
+			border: 2px solid rgb(50, 150, 176);
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			box-sizing: border-box;
+			border-left: 2px solid rgba(50, 150, 176, 0);
+			border-top: 2px solid rgba(50, 150, 176, 0);
+			animation: rotarload 1s linear infinite;
+			transform: rotate(0deg);
+		}
+
+		@keyframes rotarload {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		.loader-page::after {
+			content: "";
+			position: absolute;
+			border: 2px solid rgba(50, 150, 176, .5);
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			box-sizing: border-box;
+			border-left: 2px solid rgba(50, 150, 176, 0);
+			border-top: 2px solid rgba(50, 150, 176, 0);
+			animation: rotarload 1s ease-out infinite;
+			transform: rotate(0deg);
+		}
+
+		/*desde aca*/
+		.navbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px 50px;
+			background-color: rgb(94, 204, 247);
+			height: 70px;
+			position: fixed;
+			width: 100%;
+			z-index: 1000;
+		}
+
+		.navbar img {
+			height: 60px;
+			width: auto;
+		}
+
+		.user-initials {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			background-color: #007bff;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: #fff;
+			cursor: pointer;
+		}
+
+		.user-popup {
+			position: absolute;
+			top: 60px;
+			right: 50px;
+			background-color: #fff;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+			display: none;
+			z-index: 1000;
+		}
+
+		.user-popup ul {
+			list-style: none;
+			margin: 0;
+			padding: 10px;
+		}
+
+		.user-popup ul li {
+			margin-bottom: 10px;
+		}
+
+		.user-popup ul li a {
+			text-decoration: none;
+			color: #333;
+			display: block;
+			padding: 5px;
+		}
+
+		.user-popup ul li a:hover {
+			background-color: #f5f5f5;
+		}
+
+		.user-popup ul li hr {
+			margin: 5px 0;
+			border: none;
+			border-top: 1px solid #ccc;
+		}
+
+		.user-popup ul li a i {
+			margin-left: 10px;
+		}
+
+		.user-popup ul li.user-info {
+			color: grey;
+			text-align: center;
+			font-size: 0.9em;
+			/* Reducir el tamaño de la fuente */
+		}
+	</style>
+
+	<script>
+		function toggleUserPopup() {
+			const popup = document.getElementById('userPopup');
+			if (popup.style.display === 'block') {
+				popup.style.display = 'none';
+			} else {
+				popup.style.display = 'block';
+			}
+		}
+	</script>
+
+</head>
+
+<body ng-app='iw3' style="font-family: Arial;" ng-controller='controllerPedidos'>
+	<div id="contenedor">
+		<div class="loader-page"></div>
+	</div>
+	<div class="navbar">
+		<img src="ui/logo.png" style="margin-bottom: 10px;" alt="Logo" />
+
+		<div class="user-initials" style="margin-bottom:  20px;" onclick="toggleUserPopup()">{{ userData.iniciales }}
+		</div>
+		<div class="user-popup" id="userPopup">
+			<ul>
+				<li class="user-info">{{ userData.fullname }}</li>
+				<li class="user-info">{{ userData.email }}</li>
+				<li class="user-info">Rol: {{ userData.rolDesc }}</li>
+				<li>
+					<hr>
+				</li>
+				<li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<i class="bi bi-person-circle"></i>
+
+	<div style="margin-top:50px;margin-left: 50px; width: 97%; height: 100%;">
+		<div id="divPrinc" class="container-fluid" style="height: 100%;text-align: center; ">
+			<div class="row">
+				<div class="col l4" ng-init="init()">
+
+					<canvas id="myChart"></canvas>
+
+				</div>
+				<div class="col l4" ng-init="init2()">
+
+					<canvas id="myChart2"></canvas>
+
+				</div>
+				<div class="col l4" style="margin-left: 150px;" ng-init="init3()">
+					<div  class="chart-container">
+						<canvas id="myChart3"></canvas>
+					</div>
+					
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+
+
+</body>
+
+
+</html>

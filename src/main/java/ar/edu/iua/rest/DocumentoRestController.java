@@ -1,6 +1,8 @@
 package ar.edu.iua.rest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,6 +79,36 @@ public class DocumentoRestController {
 		} catch (BusinessException e) {
 			return new ResponseEntity<List<Documento>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@ApiOperation(value = "Obtener listado de documentos por estimulo", response = Documento.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+
+	@GetMapping(value = "/estadisticasPorRol", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Integer>> estadisticasPorRol() {
+	    try {
+	       
+	        return new ResponseEntity<Map<String, Integer>>(documentoBusiness.estdisticasPorRol(), HttpStatus.OK);
+	    } catch (BusinessException e) {
+	        return new ResponseEntity<Map<String, Integer>>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	@ApiOperation(value = "Obtener listado de documentos por estimulo", response = Documento.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+
+	@GetMapping(value = "/estadisticasPorMinisterio", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Integer>> estadisticasPorMinisterio() {
+	    try {
+	       
+	        return new ResponseEntity<Map<String, Integer>>(documentoBusiness.estadisticasPorMinisterio(), HttpStatus.OK);
+	    } catch (BusinessException e) {
+	        return new ResponseEntity<Map<String, Integer>>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 	
 	@ApiOperation(value = "Obtener un documento en particular", response = Documento.class)

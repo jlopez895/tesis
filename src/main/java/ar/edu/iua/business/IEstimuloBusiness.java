@@ -1,6 +1,7 @@
 package ar.edu.iua.business;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
@@ -20,4 +21,6 @@ public interface IEstimuloBusiness {
 	public Estimulo cerrarEstimulo(int id) throws BusinessException, NotFoundException;
 
 	public List<Estimulo> listOld() throws BusinessException;
+
+	public Map<String, Integer> estadisticasPorEstimulo() throws BusinessException;
 }

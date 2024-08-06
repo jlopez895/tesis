@@ -2,10 +2,13 @@ package ar.edu.iua.business;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import ar.edu.iua.model.Estimulo;
 import ar.edu.iua.model.Notificacion;
 import ar.edu.iua.model.Rol;
 import ar.edu.iua.model.User;
+import ar.edu.iua.model.dto.EstadisticaDTO;
 import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 import ar.edu.iua.model.persistence.DocumentoRepository;
@@ -24,36 +28,34 @@ import ar.edu.iua.model.persistence.EstimuloRepository;
 import ar.edu.iua.model.persistence.RolRepository;
 
 @Service
-public class DocumentoBusiness implements IDocumentoBusiness{
+public class DocumentoBusiness implements IDocumentoBusiness {
 
 	@Autowired
 	private IEstimuloBusiness estimuloService;
-	
+
 	@Autowired
 	private IUserBusiness userService;
-	
+
 	@Autowired
 	private DocumentoRepository documentoDAO;
-	
+
 	@Autowired
 	private INotificacionBusiness notificacionService;
-	
+
 	@Autowired
 	private IRolBusiness rolService;
-	
 
 	@Autowired
 	private RolRepository rolDAO;
-	
+
 	@Override
-	public RespuestaGenerica<Documento> nuevoDocumento(Documento documento) throws BusinessException, NotFoundException {
+	public RespuestaGenerica<Documento> nuevoDocumento(Documento documento)
+			throws BusinessException, NotFoundException {
 		MensajeRespuesta m = new MensajeRespuesta();
 		RespuestaGenerica<Documento> rg = new RespuestaGenerica<Documento>(documento, m);
 
-		
 		Estimulo estimulo = estimuloService.load(documento.getEstimulo());
 		String mensajeCheck = documento.checkBasicData(estimulo);
-
 
 		if (mensajeCheck != "OK") {
 			m.setCodigo(-1);
@@ -73,12 +75,13 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 			documento.setEstado(1);
 			documento.setUsuario(documento.getUsuario());
 			documento.setTitulo(documento.getTitulo());
-			
+
 			documentoDAO.save(documento);
-			
-			//creando notificacion
-			Notificacion not=new Notificacion();
-			not.setDescripcion("Se ha creado un nuevo documento para el estímulo "+estimulo.getId()+": '"+estimulo.getTitulo()+"'");
+
+			// creando notificacion
+			Notificacion not = new Notificacion();
+			not.setDescripcion("Se ha creado un nuevo documento para el estímulo " + estimulo.getId() + ": '"
+					+ estimulo.getTitulo() + "'");
 			not.setFecha(new Date());
 			List<Rol> rol = rolService.findByMinisterio(documento.getMinisterio());
 			Set<Rol> setRoles = new HashSet<>(rol);
@@ -90,22 +93,24 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 
 		return rg;
 	}
+
 	@Override
 	public List<Documento> list(int idEstimulo) throws BusinessException {
-		List<Documento> list=null;
+		List<Documento> list = null;
 		try {
 
-			list=documentoDAO.findByIdEstimulo(idEstimulo);
+			list = documentoDAO.findByIdEstimulo(idEstimulo);
 
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
-		
-		if(list!=null&&list.size()>0)
+
+		if (list != null && list.size() > 0)
 			return list;
 		else
 			return null;
 	}
+
 	@Override
 	public Documento load(int nro) throws BusinessException, NotFoundException {
 		Optional<Documento> doc = null;
@@ -121,6 +126,7 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 
 		return doc.get();
 	}
+
 	@Override
 	public Documento cambiarEstado(int idDocumentos, int estado) throws BusinessException, NotFoundException {
 		Optional<Documento> documento = null;
@@ -129,37 +135,66 @@ public class DocumentoBusiness implements IDocumentoBusiness{
 			documento = documentoDAO.findById(idDocumentos);
 			if (documento != null) {
 				try {
-					Documento documentoNew=documento.get();
+					Documento documentoNew = documento.get();
 					documentoNew.setEstado(estado);
-					
+
 					documentoDAO.save(documentoNew);
-					
-					//creando notificacion
-					Notificacion not=new Notificacion();
-					String aux="";
-					if(estado==2)
-						aux="aceptado";
+
+					// creando notificacion
+					Notificacion not = new Notificacion();
+					String aux = "";
+					if (estado == 2)
+						aux = "aceptado";
 					else
-						aux="rechazado";
-					not.setDescripcion("El doumento "+idDocumentos+" ha sido "+aux);
+						aux = "rechazado";
+					not.setDescripcion("El doumento " + idDocumentos + " ha sido " + aux);
 					not.setFecha(new Date());
-					List<Rol> listaRoles=rolDAO.findByMinisterio(documentoNew.getMinisterio());
+					List<Rol> listaRoles = rolDAO.findByMinisterio(documentoNew.getMinisterio());
 					Set<Rol> setRoles = new HashSet<>(listaRoles);
 					not.setRoles(setRoles);
 					notificacionService.nuevaNotificacion(not);
-					
+
 					return documento.get();
 				} catch (Exception e) {
 					throw new BusinessException(e);
 				}
-			}
-			else
+			} else
 				throw new NotFoundException("El estimulo no se encuentra en la BD");
 
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
-		
+
+	}
+
+	@Override
+	public Map<String, Integer> estdisticasPorRol() throws BusinessException {
+		Map<String, Integer> response = new HashMap<>();
+		List<Object[]> results = documentoDAO.estdisticasPorRol();
+		List<EstadisticaDTO> dtos = results.stream()
+			    .map(result -> new EstadisticaDTO((String) result[0],((Number) result[1]).intValue()))
+			    .collect(Collectors.toList());
+		if (dtos != null) {
+			for (EstadisticaDTO d : dtos) {
+				response.put(d.getLabel(), d.getValue());
+			}
+		}
+		return response;
+	}
+
+	@Override
+	public Map<String, Integer> estadisticasPorMinisterio() throws BusinessException {
+		Map<String, Integer> response = new HashMap<>();
+		List<Object[]> results = documentoDAO.estadisticasPorMinisterio();
+		List<EstadisticaDTO> dtos = results.stream()
+			    .map(result -> new EstadisticaDTO((String) result[0],((Number) result[1]).intValue()))
+			    .collect(Collectors.toList());
+		if (dtos != null) {
+			for (EstadisticaDTO d : dtos) {
+				response.put(d.getLabel(), d.getValue());
+			}
+		}
+		return response;
 	}
 
 }

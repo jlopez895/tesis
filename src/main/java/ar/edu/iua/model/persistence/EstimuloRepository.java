@@ -22,4 +22,9 @@ public interface EstimuloRepository extends JpaRepository<Estimulo, Integer>{
 	@Query(value = "UPDATE ESTIMULO SET ESTADO='2' WHERE ID=?1", nativeQuery = true)
 	public void cambiarEstado(int id);
 
+	@Query(value = "SELECT "
+			+ "  (SELECT COUNT(*) FROM estimulo WHERE (TIMESTAMPDIFF(HOUR, fecha_inicio, fecha_fin) - tiempo_estmado) < 0) AS label,"
+			+ "  (SELECT COUNT(*) FROM estimulo WHERE (TIMESTAMPDIFF(HOUR, fecha_inicio, fecha_fin) - tiempo_estmado) >= 0) AS value", nativeQuery = true)
+	public List<Object[]> estadisticasPorEstimulo();
+
 }
