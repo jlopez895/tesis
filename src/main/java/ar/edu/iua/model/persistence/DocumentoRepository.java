@@ -20,7 +20,7 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer>{
 			+ "where estimulo=?1", nativeQuery = true)
 	public List<Documento> findByIdEstimulo(int idEstimulo);
 	
-	@Query(value = "SELECT * FROM DOCUMENTO WHERE ID=?1", nativeQuery = true)
+	@Query(value = "SELECT * FROM documento WHERE ID=?1", nativeQuery = true)
 	Optional<Documento> obtenerPorId(int idDocumento);
 
 	@Query(value = "select r.descripcion as label, count(*) as value from tesis.documento as d inner join tesis.users as u on d.usuario=u.id\n"

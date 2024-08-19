@@ -226,9 +226,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			$scope.cargarNotificaciones();
 		});
 	}).catch(function (error) {
-		localStorage.setItem("logged", "false");
-		localStorage.setItem("token", "");
-		window.location.replace("/login.html");
+		
 	});
 
 
