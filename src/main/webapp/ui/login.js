@@ -1,8 +1,8 @@
 let moduloLogin=angular.module('iw3',['ngStorage', 'oitozero.ngSweetAlert'])
 
 
-    .constant('URL_API_BASE', 'http://localhost:8080/api/final/')
-    .constant('URL_BASE', 'http://localhost:8080/')
+    .constant('URL_API_BASE', 'https://iuatesis.chickenkiller.com/api/final/')
+    .constant('URL_BASE', 'https://iuatesis.chickenkiller.com/')
     .constant('URL_WS', '/api/final/ws')
 
 moduloLogin.controller('loginController', function($scope, $localStorage, $http){
@@ -18,7 +18,7 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
 
          let req = {
               method: 'POST',
-              url: 'http://localhost:8080/login-user?legajo='+user.legajo+'&password='+user.password,
+              url: 'https://iuatesis.chickenkiller.com/login-user?legajo='+user.legajo+'&password='+user.password,
               headers : { 'Content-Type': 'form-data' }
           };
 
@@ -30,7 +30,7 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
                           $localStorage.userdata=resp.data;
                           localStorage.setItem("logged","true");
                           localStorage.setItem("token",resp.data.authtoken);
-                          window.location.replace("http://localhost:8080");
+                          window.location.replace("https://iuatesis.chickenkiller.com");
                       }else{
                           console.log("No se pudo loguear.");
                           alert("Los datos ingresados son incorrectos.");
