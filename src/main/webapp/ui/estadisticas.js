@@ -261,6 +261,16 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			},
 			options: {
 				responsive: true, // Asegura que el gráfico se redimensione correctamente en diferentes tamaños de pantalla
+				plugins: {
+					title: {
+						display: true,
+						text: [
+							'Estimulos con tiempo total > estimado',
+							'vs',
+							'Estimulos con tiempo total < estimado'
+						] // Título con saltos de línea
+					}
+				}
 			}
 		});
 

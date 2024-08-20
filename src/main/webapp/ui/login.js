@@ -1,4 +1,4 @@
-let moduloLogin=angular.module('iw3',['ngStorage', 'oitozero.ngSweetAlert'])
+let moduloLogin=angular.module('iw3',['ngStorage'])
 
 
     .constant('URL_API_BASE', 'https://iuatesis.chickenkiller.com/api/final/')
@@ -32,13 +32,13 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
                           localStorage.setItem("token",resp.data.authtoken);
                           window.location.replace("https://iuatesis.chickenkiller.com");
                       }else{
-                          console.log("No se pudo loguear.");
-                          alert("Los datos ingresados son incorrectos.");
+                        swal("Error", "Los datos ingresados son incorrectos.", "error");
+                    
                       }
                   },
                   function(respErr){
-                      console.log("No se pudo loguear.");
-                      alert("Los datos ingresados son incorrectos.");
+                    swal("Error", "Los datos ingresados son incorrectos.", "error");
+                    
                   }
               );
           };

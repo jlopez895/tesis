@@ -199,6 +199,15 @@
             }
         }
     </script>
+    <script>
+     
+        document.getElementById('nuevoDocumentoForm').addEventListener('input', function () {
+            const form = document.getElementById('nuevoDocumentoForm');
+            const submitBtn = document.getElementById('estado2');
+            submitBtn.disabled = !form.checkValidity();
+        });
+    </script>
+
 
 </head>
 
@@ -230,7 +239,7 @@
 
     <div style="margin-top:50px;width: 97%; height: 100%;">
         <div id="divPrinc" class="container-fluid" style="display: inline; flex: 1;height: 100%;text-align: center; ">
-           
+
             <div class="row">
                 <div class="col-xl-3 xs-12">
                     <button data-toggle="modal" data-target="#modalProb"
@@ -239,7 +248,7 @@
                             style="width: 100%; height: 250px; margin-left: 20px;text-align: center;">
                             <img src="ui/argentina.png" style="width: 35%;align-self: center; margin-top: 10px;"
                                 class="card-img-top" alt="...">
-                            <div class="card-body" >
+                            <div class="card-body">
                                 <h5 class="card-title">PROBLEMATICA</h5>
 
                             </div>
@@ -263,8 +272,7 @@
                 <div class="col-xl-3 xs-12" ng-show="modalNuevoEstVisible">
                     <button data-toggle="modal" data-target="#modalNuevoEstimulo"
                         style="border-style: none; background-color: transparent;" ng-click="nuevoEstimulo()">
-                        <div class="card"
-                            style="width: 100%; height: 250px; margin-left: 20px;text-align: center;">
+                        <div class="card" style="width: 100%; height: 250px; margin-left: 20px;text-align: center;">
                             <img src="ui/agregar.png" data-toggle="modal" data-target="#modalNuevoEstimulo"
                                 style="width: 35%;align-self: center; margin-top: 10px;" class="card-img-top" alt="...">
                             <div class="card-body" style="margin-bottom: 5px;">
@@ -297,14 +305,14 @@
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
                             <img src="ui/noticias.png" style="width: 35%;align-self: center; margin-top: 10px;"
                                 class="card-img-top" alt="...">
-                            <div class="card-body" >
+                            <div class="card-body">
                                 <h5 class="card-title">NOTICIAS</h5>
 
                             </div>
                         </div>
                         </a>
                 </div>
-                
+
                 <div class="col-xl-3 xs-12" ng-show="modalNotifVisible">
                     <button data-toggle="modal" data-target="#modalNotif"
                         style="border-style: none; background-color: transparent;" ng-click="notificaciones()">
@@ -364,7 +372,7 @@
                         </svg></button>
                 </div>
                 <div class="modal-body" style="background-color: #cbe7ff; font-size: small;">
-                    <form>
+                    <form id="nuevoDocumentoForm" onsubmit="return validarFormularioDocumento()">
                         <div class="container-fluid">
 
                             <div class="row">
@@ -430,14 +438,12 @@
 
                         </div>
                         <br />
-                        <div class="row">
-                            <div class="col l12" style="text-align: center;">
-
-                                <button class="btn btn-primary" ng-click='nuevoDoc()' id="estado1">Enviar</button>
-                            </div>
-
+                        <div class="mb-3 form-check">
+                            <button class="btn btn-primary" type="submit" ng-click='nuevoDoc()'
+                                id="estado2">Enviar</button>
 
                         </div>
+
 
 
                     </form>
@@ -557,7 +563,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="o in filteredEstimulos | limitTo: itemsPerPage : startingItem()" >
+                                    <tr ng-repeat="o in filteredEstimulos | limitTo: itemsPerPage : startingItem()">
                                         <td>
                                             {{ o.id }}
                                         </td>
@@ -567,7 +573,8 @@
                                         <td>
                                             {{o.fechaInicio| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
-                                        <td ng-show="esHistorico" ng-style="{'background-color': pintar(o) ? 'lightgreen' : '#ff4444'}">
+                                        <td ng-show="esHistorico"
+                                            ng-style="{'background-color': pintar(o) ? 'lightgreen' : '#ff4444'}">
                                             {{o.fechaFin| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
                                         <td>
@@ -752,12 +759,12 @@
                                             {{getEstado(o)}}
                                         </td>
                                         <td>
-                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1" class="btn btn-danger" ng-click="rechazar(o.estimulo,o.id);"
-                                                style="font-size: 12px;" 
-                                                id="rechazar">X</button>
-                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1" class="btn btn-success" ng-click="aprobar(o.estimulo,o.id);"
-                                                style="font-size: 12px;"
-                                                id="aceptar">✓</button>
+                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1"
+                                                class="btn btn-danger" ng-click="rechazar(o.estimulo,o.id);"
+                                                style="font-size: 12px;" id="rechazar">X</button>
+                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1"
+                                                class="btn btn-success" ng-click="aprobar(o.estimulo,o.id);"
+                                                style="font-size: 12px;" id="aceptar">✓</button>
 
                                         </td>
                                     </tr>
@@ -801,7 +808,8 @@
                 <div class="modal-body" style="background-color: #ffffff; font-size: small;">
                     <form>
                         <div class="container-fluid" style="font-size: 12px;">
-                            <button ng-show="userData.rol==1" type="button" ng-click="crearNoticia()" class="btn btn-secondary">Nueva noticia</button> <br><br>
+                            <button ng-show="userData.rol==1" type="button" ng-click="crearNoticia()"
+                                class="btn btn-secondary">Nueva noticia</button> <br><br>
                             <p style=" font-size: 20px;">Total de noticias: {{totalNoticias}} </p>
                             <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
                             <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
@@ -823,7 +831,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat='n in Noticias| limitTo: itemsPerPageNoticias : startingItemNoticias()'>
+                                    <tr
+                                        ng-repeat='n in Noticias| limitTo: itemsPerPageNoticias : startingItemNoticias()'>
                                         <td>
                                             {{ n.descripcion }}
                                         </td>
@@ -853,8 +862,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalNuevaNoticia" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="modalNuevaNoticia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #8ac8ff">
@@ -870,7 +878,7 @@
                 <div class="modal-body" style="background-color: #cbe7ff; font-size: small;">
                     <form>
                         <div class="container-fluid">
-                         
+
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l12">
 
@@ -879,22 +887,22 @@
                                         rows="10" required></textarea>
                                 </div>
                             </div>
-                            
-                            </div>
-
-                        </div>
-                        <br />
-                        <div class="mb-3 form-check">
-                            <button class="btn btn-primary" ng-click='nuevaNoticia()' id="estado1">Enviar</button>
 
                         </div>
 
+                </div>
+                <br />
+                <div class="mb-3 form-check">
+                    <button class="btn btn-primary" ng-click='nuevaNoticia()' id="estado1">Enviar</button>
 
-                    </form>
                 </div>
 
+
+                </form>
             </div>
+
         </div>
+    </div>
     </div>
 
 </body>

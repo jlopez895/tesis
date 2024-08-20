@@ -11,15 +11,15 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.js"></script>
-        <script src="ui/modules/sweetalert/dist/sweetalert.min.js"></script>
-        <script src="ui/modules/angular-sweetalert/SweetAlert.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
         <script src="ui/login.js"></script>
 
         
     </head>
 
-    <body style="font-family: serif; background-color:#e2e2e2;" ng-app='iw3'>
+    <body style="font-family: serif; background-color:#e2e2e2;" ng-app='iw3' ng-controller="loginController">
         <div style="background-color: #3ab2e3;">
             <img src="ui/logo.png"/>  <b>Escuela de Aviación Militar</b>
         </div>
@@ -28,7 +28,7 @@
               <H3>INICIAR SESIÓN</H3> 
             </div>
             <div class="card-body">
-              <div id="login-form" ng-controller="loginController">
+              <div id="login-form" >
             	<div class="form-group">
                 	<input type="text" class="form-control" placeholder="Legajo" required="required" ng-model="legajo">
             	</div>
@@ -38,9 +38,9 @@
             	<div class="form-group">
                 	<input class="btn btn-primary btn-block btn-lg"  value="Ingresar" ng-click="validar()">
             	</div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                 	<input class="btn btn-link" value="Recuperar contraseña" ng-click="recuperar()">
-            	</div>
+            	</div> -->
         	</div>
                    
     	</div>

@@ -46,6 +46,12 @@ function cerrarModalNoticias() {
 	$("#modalNoticias").modal('hide');
 }
 
+function cerrarModalNuevaNoticia() {
+	$("#modalNuevaNoticia").modal('hide');
+	$("#modalNoticias").modal('show');
+}
+
+
 function cerrarModalNuevoEstimulo() {
 	$("#modalNuevoEstimulo").modal('hide');
 }
@@ -54,7 +60,9 @@ function cerrarModalProb() {
 	$("#modalProb").modal('hide');
 }
 
-app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope, $stomp,$window, URL_WS) {
+
+
+app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope, $stomp, $window, URL_WS) {
 	// Verifica si el usuario está logueado
 
 	if (localStorage.getItem("logged") != "true")
@@ -131,13 +139,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 					});
 
 				} else {
-					console.log("entro aca");
-					alert("No se pueden obtener los estimulos");
+
 				}
 			},
 			function (respErr) {
 
-				alert("No se pueden obtener los estimulos");
+
 			}
 		);
 
@@ -205,13 +212,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 					$scope.totalNotificaciones = $scope.Notificaciones.length;
 
 				} else {
-					console.log(reqNotificaciones);
-					alert("No se pueden obtener las notificaciones");
+
 				}
 			},
 			function (respErr) {
 
-				alert("No se pueden obtener las notificaciones");
+
 			}
 		);
 	}
@@ -226,7 +232,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			$scope.cargarNotificaciones();
 		});
 	}).catch(function (error) {
-		
+
 	});
 
 
@@ -250,15 +256,19 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 			} else {
 
-				alert("No se pueden obtener los ministerios");
+				localStorage.setItem("logged", "false");
+				localStorage.setItem("token", "");
+				window.location.replace("/login.html");
 			}
 		},
 		function (respErr) {
 
-			alert("No se pueden obtener los ministerios");
+			localStorage.setItem("logged", "false");
+			localStorage.setItem("token", "");
+			window.location.replace("/login.html");
 		}
 	);
-
+	
 	$scope.mostrarDiv = true;
 	obtenerDivsVisibles();
 
@@ -267,7 +277,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.modalNuevoDocVisible = false;
 		$scope.modalNuevoEstVisible = false;
 		$scope.modalEstadisticasVisible = false;
-		$scope.modalEstVisible=false;
+		$scope.modalEstVisible = false;
 		$scope.modalNotifVisible = false;
 
 		if ($scope.userData.rol == 1) {
@@ -275,14 +285,14 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			$scope.modalNuevoDocVisible = true;
 			$scope.modalNuevoEstVisible = true;
 			$scope.modalEstadisticasVisible = true;
-			$scope.modalEstVisible=true;
+			$scope.modalEstVisible = true;
 			$scope.modalNotifVisible = true;
 		}
-		else if($scope.userData.rol != 5){
-			
+		else if ($scope.userData.rol != 5) {
+
 			$scope.modalNuevoDocVisible = true;
 			$scope.modalNuevoEstVisible = true;
-			$scope.modalEstVisible=true;
+			$scope.modalEstVisible = true;
 			$scope.modalNotifVisible = true;
 		}
 
@@ -379,55 +389,64 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 
 	$scope.nuevoDoc = function () {
+		const form = document.getElementById('nuevoDocumentoForm');
+		if (!form.checkValidity()) {
+			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
 
-		tipoDocumento = $scope.selectedTipoDoc;
-		idEstimulo = $scope.selectedEstimulo.id;
-		idMinisterio = $scope.selectedMinisterio.id;
-		tituloDocumento = document.getElementById('tituloDocumento').value;
-		descripcionDocumento = document.getElementById('cuerpo').value;
+			return false;
+		}
+		else {
 
-		if ($scope.mostrarDiv == true && document.getElementById('final').checked)
-			esFinalDocumento = true;
-		else
-			esFinalDocumento = false;
 
-		//FechaHoraInicio
-		let fechaHoraActual = new Date();
+			tipoDocumento = $scope.selectedTipoDoc;
+			idEstimulo = $scope.selectedEstimulo.id;
+			idMinisterio = $scope.selectedMinisterio.id;
+			tituloDocumento = document.getElementById('tituloDocumento').value;
+			descripcionDocumento = document.getElementById('cuerpo').value;
 
-		let fechaDocumentoSQL = fechaHoraActual.toISOString();
+			if ($scope.mostrarDiv == true && document.getElementById('final').checked)
+				esFinalDocumento = true;
+			else
+				esFinalDocumento = false;
 
-		var data = {
-			'tipo': tipoDocumento,
-			'fecha': fechaDocumentoSQL,
-			'titulo': tituloDocumento,
-			'descripcion': descripcionDocumento,
-			'esFinal': esFinalDocumento,
-			'estimulo': $scope.selectedEstimulo.id,
-			'usuario': userDataFromLocalStorage.idUser,
-			'ministerio': idMinisterio
-		};
+			//FechaHoraInicio
+			let fechaHoraActual = new Date();
 
-		var req = {
-			method: 'POST',
-			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/nuevoDocumento',
-			headers: {
-				'Content-Type': 'application/json',
-				'xauthtoken': userDataFromLocalStorage.authtoken
-			},
-			data: data
-		};
+			let fechaDocumentoSQL = fechaHoraActual.toISOString();
 
-		$scope.Ejecutar(req).
-			then(function (resp) {
-				limpiarCampos();
-				swal("¡Documento registrado exitosamente!", "", "success");
-				$('#modalNuevoDocumento').modal('hide');
+			var data = {
+				'tipo': tipoDocumento,
+				'fecha': fechaDocumentoSQL,
+				'titulo': tituloDocumento,
+				'descripcion': descripcionDocumento,
+				'esFinal': esFinalDocumento,
+				'estimulo': $scope.selectedEstimulo.id,
+				'usuario': userDataFromLocalStorage.idUser,
+				'ministerio': idMinisterio
+			};
 
-			}).catch(function (error) {
+			var req = {
+				method: 'POST',
+				url: 'https://iuatesis.chickenkiller.com/api/final/documentos/nuevoDocumento',
+				headers: {
+					'Content-Type': 'application/json',
+					'xauthtoken': userDataFromLocalStorage.authtoken
+				},
+				data: data
+			};
 
-				console.error('Error al registrar el documento:', error);
-				swal("Error", "Hubo un problema al registrar el documento.", "error");
-			});
+			$scope.Ejecutar(req).
+				then(function (resp) {
+					limpiarCampos();
+					swal("¡Documento registrado exitosamente!", "", "success");
+					$('#modalNuevoDocumento').modal('hide');
+
+				}).catch(function (error) {
+
+					console.error('Error al registrar el documento:', error);
+					swal("Error", "Hubo un problema al registrar el documento.", "error");
+				});
+		}
 	}
 
 	$scope.Ejecutar = function (req) {
@@ -465,8 +484,8 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.itemsPerPageNot = 5;
 
 	$scope.currentPageNoticias = 0;
-	$scope.itemsPerPageNoticias= 5;
-	$scope.totalNoticias=0;
+	$scope.itemsPerPageNoticias = 5;
+	$scope.totalNoticias = 0;
 
 	$scope.verDocumentos = function (i) {
 
@@ -505,13 +524,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 						$scope.currentPageDoc = 0;
 					});
 				} else {
-					console.log(reqNotificaciones);
-					alert("No se pueden obtener los documentos");
+
 				}
 			},
 			function (respErr) {
 
-				alert("No se pueden obtener las documentos");
+
 			}
 		);
 
@@ -695,6 +713,14 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 
 	$scope.estimulos = function () {
+		const selectElement = document.getElementById("estimulo");
+		const options = selectElement.options;
+		for (let i = options.length - 1; i >= 0; i--) {
+			if (options[i].label === "") {
+				selectElement.remove(i);
+			}
+		}
+		document.getElementById('nuevoDocumentoForm').reset();
 		$scope.titulo = "ESTIMULOS ABIERTOS";
 		$scope.esHistorico = false;
 		$scope.cargarEstimulos();
@@ -733,7 +759,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			function (resp) {
 				if (resp.status === 200) {
 					$scope.Noticias = resp.data;
-					
+
 					$scope.totalNoticias = $scope.Noticias.length;
 
 					$scope.$watch('FiltroNoticias.valor', function (newVal) {
@@ -831,53 +857,62 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 	$scope.crearNoticia = function () {
 		$('#modalNuevaNoticia').modal('show');
-		$('#modalNoticia').modal('hide');
+		$('#modalNoticias').modal('hide');
 	}
 
 	$scope.nuevaNoticia = function () {
 
-		var descripcion = document.getElementById('descripcionNoticia').value;
+		const form = document.getElementById('descripcionNoticia');
+		if (!form.checkValidity()) {
+			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
 
-		//FechaHoraInicio
-		let fechaHoraActual = new Date();
+			return false;
+		}
+		else {
 
-		let fechaDocumentoSQL = fechaHoraActual.toISOString();
+			var descripcion = document.getElementById('descripcionNoticia').value;
 
-		var data = {
-			'descripcion': descripcion,
-			'fecha': fechaDocumentoSQL,
-		};
+			//FechaHoraInicio
+			let fechaHoraActual = new Date();
 
-		var req = {
-			method: 'POST',
-			url: 'https://iuatesis.chickenkiller.com/api/final/noticias/nuevaNoticia',
-			headers: {
-				'Content-Type': 'application/json',
-				'xauthtoken': userDataFromLocalStorage.authtoken
-			},
-			data: data
-		};
+			let fechaDocumentoSQL = fechaHoraActual.toISOString();
 
-		$scope.Ejecutar(req).
-			then(function (resp) {
-				document.getElementById('descripcionNoticia').value = '';
-				swal("Noticia registrada exitosamente!", "", "success");
-				$scope.noticias();
-				$('#modalNuevaNoticia').modal('hide');
-				$('#modalNoticia').modal('show');
+			var data = {
+				'descripcion': descripcion,
+				'fecha': fechaDocumentoSQL,
+			};
 
-			}).catch(function (error) {
+			var req = {
+				method: 'POST',
+				url: 'https://iuatesis.chickenkiller.com/api/final/noticias/nuevaNoticia',
+				headers: {
+					'Content-Type': 'application/json',
+					'xauthtoken': userDataFromLocalStorage.authtoken
+				},
+				data: data
+			};
 
-				console.error('Error al registrar el documento:', error);
-				swal("Error", "Hubo un problema al registrar el documento.", "error");
-			});
+			$scope.Ejecutar(req).
+				then(function (resp) {
+					document.getElementById('descripcionNoticia').value = '';
+					swal("Noticia registrada exitosamente!", "", "success");
+					$scope.noticias();
+					$('#modalNuevaNoticia').modal('hide');
+					$('#modalNoticias').modal('show');
+
+				}).catch(function (error) {
+
+					console.error('Error al registrar el documento:', error);
+					swal("Error", "Hubo un problema al registrar el documento.", "error");
+				});
+		}
 	}
 
-	$scope.estadisticas = function() {
-        $window.open("/estadisticas.html");
-    };
+	$scope.estadisticas = function () {
+		$window.open("/estadisticas.html");
+	};
 
-	$scope.init = function() {
+	$scope.init = function () {
 		var ctx = document.getElementById('myChart').getContext('2d');
 		var myChart = new Chart(ctx, {
 			type: 'bar',
