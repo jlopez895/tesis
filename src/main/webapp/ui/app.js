@@ -268,7 +268,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			window.location.replace("/login.html");
 		}
 	);
-	
+
 	$scope.mostrarDiv = true;
 	obtenerDivsVisibles();
 
@@ -389,11 +389,28 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 
 	$scope.nuevoDoc = function () {
+		var selectElement = document.getElementById('estimulo');
+		var indiceSeleccionado = selectElement.selectedIndex - 1;
+		if (indiceSeleccionado < 0) {
+			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
+			return;
+		}
+		selectElement = document.getElementById('ministerio');
+		indiceSeleccionado = selectElement.selectedIndex - 1;
+		if (indiceSeleccionado < 0) {
+			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
+			return;
+		} // Restar 1 para ajustar el índice debido a la opción "Selecciona un estimulo"
+		selectElement = document.getElementById('tipoDoc');
+		indiceSeleccionado = selectElement.selectedIndex - 1;
+		if (indiceSeleccionado < 0) {
+			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
+			return;
+		} // Restar 1 para ajustar el índice debido a la opción "Selecciona un estimulo"
 		const form = document.getElementById('nuevoDocumentoForm');
 		if (!form.checkValidity()) {
 			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
-
-			return false;
+			return;
 		}
 		else {
 
