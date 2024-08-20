@@ -164,3 +164,4 @@ target/ROOT/WEB-INF/classes/ar/edu/iua/rest/DocumentoRestController.class
 target/ROOT/WEB-INF/classes/ar/edu/iua/rest/EstimuloRestController.class
 target/ROOT/WEB-INF/classes/ar/edu/iua/ScheduledEvents.class
 target/ROOT/WEB-INF/classes/ar/edu/iua/SecurityConfig.class
+target/classes/ar/edu/iua/auth/PersistenceUserDetailService.class
