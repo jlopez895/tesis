@@ -626,7 +626,7 @@
                 <div class="modal-body" style="background-color: #ffffff; font-size: small;">
                     <form>
                         <div class="container-fluid" style="font-size: 12px;">
-
+                            <p style=" font-size: 20px;">Total: {{totalNotificaciones}} </p>
                             <table id="tabla1" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -640,6 +640,8 @@
                                             Fecha
 
                                         </th>
+                                        <th scope="col" style="text-align: center;">
+                                        </th>
 
                                     </tr>
                                 </thead>
@@ -651,7 +653,12 @@
                                         <td>
                                             {{n.fecha| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
-
+                                        <td style="text-align: center;">
+                                            <button ng-show="n.leida==0"
+                                            title="Marcar como leída"
+                                            class="btn btn-success" ng-click="leida(n.id);"
+                                            style="font-size: 12px;" id="leida">✓</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

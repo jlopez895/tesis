@@ -34,6 +34,9 @@ public class Notificacion {
 			@JoinColumn(name = "id_notificacion", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_rol", referencedColumnName = "id") })
 	private Set<Rol> roles;
+	
+	@Column(length = 250, nullable = true)
+	private int leida;
 
 	public Integer getId() {
 		return id;
@@ -65,6 +68,14 @@ public class Notificacion {
 
 	public void setRoles(Set<Rol> roles) {
 		this.roles = roles;
+	}
+
+	public int getLeida() {
+		return leida;
+	}
+
+	public void setLeida(int leida) {
+		this.leida = leida;
 	}
 
 	

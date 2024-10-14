@@ -1,6 +1,10 @@
 package ar.edu.iua.business;
 
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,7 +14,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ar.edu.iua.business.exception.BusinessException;
+import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Notificacion;
+import ar.edu.iua.model.Rol;
 import ar.edu.iua.model.RolPrincipalHolder;
 import ar.edu.iua.model.User;
 import ar.edu.iua.model.persistence.DocumentoRepository;
@@ -57,6 +63,29 @@ public class NotificacionBusiness implements INotificacionBusiness{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	@Override
+	public Notificacion leida(int id) throws BusinessException, NotFoundException {
+		Optional<Notificacion> notificacion = null;
+		try {
+
+			notificacion = notificacionDAO.findById(id);
+			if (notificacion != null) {
+				try {
+					Notificacion notificacionNew=notificacion.get();
+					notificacionNew.setLeida(1);
+					notificacionDAO.save(notificacionNew);
+					return notificacion.get();
+				} catch (Exception e) {
+					throw new BusinessException(e);
+				}
+			}
+			else
+				throw new NotFoundException("La notificacion no se encuentra en la BD");
+
+		} catch (Exception e) {
+			throw new BusinessException(e);
 		}
 	}
 

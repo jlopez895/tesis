@@ -13,7 +13,7 @@ import ar.edu.iua.model.Permiso;
 public interface NotificacionRepository extends JpaRepository<Notificacion, Integer>{
 	
 	@Query(value = "select n.* from roles as r inner join notificaciones_roles as nr "
-			+ "on r.id=nr.id_rol inner join notificaciones as n on nr.id_notificacion=n.id where r.id=?1", nativeQuery = true)
+			+ "on r.id=nr.id_rol inner join notificaciones as n on nr.id_notificacion=n.id where n.leida=0 and r.id=?1", nativeQuery = true)
 	public List<Notificacion> findByUser(int idUser);
 
 }

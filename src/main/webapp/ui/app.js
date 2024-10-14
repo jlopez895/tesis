@@ -222,18 +222,26 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		);
 	}
 
+	// Ejecutar la función cargarNotificaciones cada 5 segundos
+	const intervalo = 5000; // 5 segundos (5000 ms)
+	setInterval(function () {
+		$scope.cargarNotificaciones();
+	}, intervalo);
 
-	$stomp.connect(URL_WS + "?xauthtoken=" + localStorage.getItem("token")).then(function (frame) {
-		console.log('WebSocket connected:', frame);
-		// Una vez conectado, puedes suscribirte a un canal específico
+	// Llamar inmediatamente la primera vez al cargar la página
+	$scope.cargarNotificaciones();
 
-		$stomp.subscribe('/iw3/data', function (payload, headers, res) {
-			console.log('Received data from WebSocket:', payload);
-			$scope.cargarNotificaciones();
-		});
-	}).catch(function (error) {
+	// $stomp.connect(URL_WS + "?xauthtoken=" + localStorage.getItem("token")).then(function (frame) {
+	// 	console.log('WebSocket connected:', frame);
+	// 	// Una vez conectado, puedes suscribirte a un canal específico
 
-	});
+	// 	$stomp.subscribe('/iw3/data', function (payload, headers, res) {
+	// 		console.log('Received data from WebSocket:', payload);
+	// 		$scope.cargarNotificaciones();
+	// 	});
+	// }).catch(function (error) {
+	// 	console.log('WebSocket no conectado:', error);
+	// });
 
 
 	var reqMinisterios = {
@@ -719,6 +727,33 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 						$('#modalEstimulos').modal('show');
 
 					});
+
+
+			}).catch(function (error) {
+
+				console.error('Error al cerrar el estímulo:', error);
+				swal("Error", "Hubo un problema al cerrar el estímulo.", "error");
+			});
+
+	}
+
+	$scope.leida = function (id) {
+
+		var req = {
+			method: 'PUT',
+			url: 'https://iuatesis.chickenkiller.com/api/final/notificaciones/leida/' + id,
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			}
+		};
+
+		$scope.Ejecutar(req).
+			then(function (resp) {
+				$scope.cargarNotificaciones();
+						swal("¡Notificacion leída exitosamente!", "", "success");
+						$('#modalNotif').modal('show');
+						
 
 
 			}).catch(function (error) {

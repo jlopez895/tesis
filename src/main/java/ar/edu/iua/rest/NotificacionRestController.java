@@ -8,12 +8,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.iua.business.INotificacionBusiness;
 import ar.edu.iua.business.IPermisoBusiness;
 import ar.edu.iua.business.exception.BusinessException;
+import ar.edu.iua.business.exception.NotFoundException;
+import ar.edu.iua.model.Estimulo;
 import ar.edu.iua.model.Notificacion;
 import ar.edu.iua.model.Permiso;
 import io.swagger.annotations.Api;
@@ -44,6 +47,24 @@ public class NotificacionRestController {
 
 		} catch (BusinessException e) {
 			return new ResponseEntity<List<Notificacion>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@ApiOperation(value = "cambiar estado", response = Estimulo.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 201, message = "estimulo cerrado"),
+			@ApiResponse(code = 400, message = "El servidor no procesará la solicitud porque no puede o no debe debido  a un error del usuario "),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+	@PutMapping(value = "/leida/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Notificacion> leida(@ApiParam(value = "El id de la notificacion") @PathVariable("id") int id) {
+
+		try {
+			return new ResponseEntity<Notificacion>(notificacionBusiness.leida(id), HttpStatus.OK);
+		} catch (BusinessException e) {
+			return new ResponseEntity<Notificacion>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<Notificacion>(HttpStatus.NOT_FOUND);
 		}
 	}
 

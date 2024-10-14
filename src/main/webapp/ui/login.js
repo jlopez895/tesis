@@ -46,6 +46,10 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
           login();
 
           }
+          else
+          {
+            swal("Error", "Los datos ingresados son incorrectos.", "error");
+          }
         };
 
 });
