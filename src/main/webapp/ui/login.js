@@ -26,7 +26,7 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
               $http(req).then(
                   function(resp){
                       if(resp.status===200) {
-                          console.log(resp.data);
+                
                           $localStorage.userdata=resp.data;
                           localStorage.setItem("logged","true");
                           localStorage.setItem("token",resp.data.authtoken);
@@ -45,10 +45,6 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
 
           login();
 
-          }
-          else
-          {
-            swal("Error", "Los datos ingresados son incorrectos.", "error");
           }
         };
 

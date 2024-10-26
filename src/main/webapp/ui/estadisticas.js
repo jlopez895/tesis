@@ -35,16 +35,16 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		rolDesc: userDataFromLocalStorage.rolPrincDesc  // Puedes obtener estos valores desde localStorage o cualquier otra fuente
 	};
 
-	console.log(userDataFromLocalStorage);
 
 	$scope.cerrarSesion = function () {
-		console.log("Función cerrarSesion llamada");
+
 		localStorage.setItem("logged", "false");
 		localStorage.setItem("token", "");
 		window.location.replace("/login.html");
 	};
-
+	
 	$scope.init = function () {
+		
 		var reqNotificaciones = {
 			method: 'GET',
 			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/estadisticasPorRol',
@@ -277,6 +277,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		// Llamar a cargarNotificaciones
 		$scope.cargarestadisticasPorEstimulo();
 	};
-
+	// Ejecutar la función cargarNotificaciones cada 5 segundos
+	const intervalo = 5000; // 5 segundos (5000 ms)
+	setInterval(function () {
+		$scope.cargarDocumentosPorRol();
+		$scope.cargarDocumentosPorMinisterio();
+		$scope.cargarestadisticasPorEstimulo();
+	}, intervalo);
 
 });

@@ -138,6 +138,17 @@
             cursor: pointer;
         }
 
+        .estimulo-initials {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            cursor: pointer;
+        }
+
         .user-popup {
             position: absolute;
             top: 60px;
@@ -200,7 +211,7 @@
         }
     </script>
     <script>
-     
+
         document.getElementById('nuevoDocumentoForm').addEventListener('input', function () {
             const form = document.getElementById('nuevoDocumentoForm');
             const submitBtn = document.getElementById('estado2');
@@ -215,24 +226,29 @@
     <div id="contenedor">
         <div class="loader-page"></div>
     </div>
-    <div class="navbar">
+    <div class="navbar" style="display: flex; justify-content: space-between; align-items: center;">
         <img src="ui/logo.png" style="margin-bottom: 10px;" alt="Logo" />
-
-        <div class="user-initials" style="margin-bottom:  20px;" onclick="toggleUserPopup()">{{ userData.iniciales }}
+        <div style="display: flex; align-items: center;">
+            <div class="estimulo-initials" style="margin-bottom: 20px;" ng-click="verUltEstimulo()">
+                <img src="ui/estimulo.png">
+            </div>
+            <div class="user-initials" style="margin-bottom: 20px; margin-left: 10px;" onclick="toggleUserPopup()">
+                {{ userData.iniciales | uppercase }}
+            </div>
+            <div class="user-popup" id="userPopup">
+                <ul>
+                    <li class="user-info">{{ userData.fullname|uppercase }}</li>
+                    <li class="user-info">{{ userData.email|uppercase }}</li>
+                    <li class="user-info">Rol: {{ userData.rolDesc|uppercase }}</li>
+                    <li class="user-info">Ministerio: {{ getMinisterio(userData.ministerio)|uppercase }} </li>
+                    <li>
+                        <hr>
+                    </li>
+                    <li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="user-popup" id="userPopup">
-            <ul>
-                <li class="user-info">{{ userData.fullname }}</li>
-                <li class="user-info">{{ userData.email }}</li>
-                <li class="user-info">Rol: {{ userData.rolDesc }}</li>
-                <li>
-                    <hr>
-                </li>
-                <li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a>
-                </li>
-            </ul>
-        </div>
-
     </div>
 
     <i class="bi bi-person-circle"></i>
@@ -269,7 +285,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-3 xs-12" ng-show="modalNuevoEstVisible">
+                <div class="col-xl-3 xs-12" ng-show="userData.permisos.includes('PERMISO_CREAR_ESTIMULO')">
                     <button data-toggle="modal" data-target="#modalNuevoEstimulo"
                         style="border-style: none; background-color: transparent;" ng-click="nuevoEstimulo()">
                         <div class="card" style="width: 100%; height: 250px; margin-left: 20px;text-align: center;">
@@ -282,7 +298,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-3 xs-12" ng-show="modalNuevoDocVisible">
+                <div class="col-xl-3 xs-12" ng-show="userData.permisos.includes('PERMISO_CREAR_DOCUMENTO')">
                     <button data-toggle="modal" data-target="#modalNuevoDocumento" ng-click="estimulos()"
                         style="border-style: none; background-color: transparent;">
                         <div class="card" id="card3"
@@ -327,7 +343,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-3 xs-12" ng-show="modalHistorialVisible">
+                <div class="col-xl-3 xs-12" ng-show="userData.permisos.includes('PERMISO_VISUALIZAR_HISTORIAL')">
                     <button style="border-style: none; background-color: transparent;" ng-click="historial()">
                         <div class="card"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
@@ -340,7 +356,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="col-xl-3 xs-12" ng-show="modalEstadisticasVisible">
+                <div class="col-xl-3 xs-12" ng-show="userData.permisos.includes('PERMISO_VISUALIZAR_ESTADISTICAS')">
                     <button style="border-style: none; background-color: transparent;" ng-click="estadisticas()">
                         <div class="card"
                             style="width: 100%; height: 250px; margin-left: 20px;margin-top: 20px; text-align: center;">
@@ -381,18 +397,26 @@
 
                                     <select id="estimulo" ng-model="selectedEstimulo"
                                         ng-options="estimulo.titulo for estimulo in Estimulos" class="form-control"
-                                        aria-label="Default select example" required>
+                                        aria-label="Default select example" >
                                         <option value="" disabled selected>Selecciona un estimulo</option>
                                     </select>
                                 </div>
-
                                 <div class="col l4">
 
                                     <label for="destinatario" class="form-label">Destinatario</label>
+                                    <select id="destinatario" ng-model="selectedDestinatario"
+                                        ng-change="llenarMinisterio()" ng-options="rol.descripcion for rol in Roles"
+                                        class="form-control" aria-label="Default select example" >
+                                        <option value="" disabled selected>Selecciona un destinatario</option>
+                                    </select>
+                                </div>
+                                <div class="col l4">
+
+                                    <label for="ministerio" class="form-label">Ministerio</label>
                                     <select id="ministerio" ng-model="selectedMinisterio"
                                         ng-options="ministerio.nombre for ministerio in Ministerios"
-                                        class="form-control" aria-label="Default select example" required>
-                                        <option value="" disabled selected>Selecciona un destinatario</option>
+                                        class="form-control" aria-label="Default select example">
+                                        <option value="" disabled selected>Selecciona un ministerio</option>
                                     </select>
                                 </div>
 
@@ -401,8 +425,8 @@
                                 <div class="col l4">
                                     <label for="tipoDoc" class="form-label">Tipo de documento</label>
                                     <select id="tipoDoc" ng-model="selectedTipoDoc" ng-change="cambiarVisibilidadDiv()"
-                                        class="form-control" aria-label="Default select example" required
-                                        ng-options="tipo.id as tipo.nombre for tipo in tiposDoc">
+                                        class="form-control" aria-label="Default select example" 
+                                        ng-options="tipo.id as tipo.nombre for tipo in tiposDoc" >
                                         <option value="" disabled selected>Selecciona un documento</option>
                                     </select>
                                 </div>
@@ -422,8 +446,8 @@
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l12">
                                     <label for="tituloDocumento" class="form-label">Título del documento</label>
-                                    <input class="form-control" id="tituloDocumento" type="text"
-                                        placeholder="Título del documento" aria-label="default input example" required>
+                                    <input class="form-control" id="tituloDocumento" ng-model="tituloDocumento" type="text"
+                                        placeholder="Título del documento" aria-label="default input example" >
 
                                 </div>
                             </div>
@@ -431,8 +455,8 @@
                                 <div class="col l12">
                                     <label for="cuerpo" class="form-label">Cuerpo del
                                         documento</label>
-                                    <textarea class="form-control" placeholder="Cuerpo del documento" id="cuerpo"
-                                        rows="3" required></textarea>
+                                    <textarea class="form-control" ng-model="cuerpo" placeholder="Cuerpo del documento" id="cuerpo"
+                                        rows="3" ></textarea>
                                 </div>
                             </div>
 
@@ -473,7 +497,7 @@
                                 <div class="col l12">
                                     <label for="titulo" class="form-label">Título del estímulo</label>
                                     <input class="form-control" id="tituloEstimulo" type="text"
-                                        placeholder="Título del documento" aria-label="default input example" required>
+                                        placeholder="Título del documento" aria-label="default input example" >
 
                                 </div>
                             </div>
@@ -482,7 +506,7 @@
 
                                     <label for="descripcionEstimulo" class="form-label">Descripción</label>
                                     <textarea class="form-control" placeholder="Descricpión" id="descripcionEstimulo"
-                                        rows="7" required></textarea>
+                                        rows="7" ></textarea>
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 10px;">
@@ -491,7 +515,7 @@
                                         finalización</label>
                                     <div class="input-group date" data-provide="fechaEstFinEstimulo">
 
-                                        <input type="date" class="form-control" id="fechaEstFinEstimulo" required>
+                                        <input type="date" class="form-control" id="fechaEstFinEstimulo" >
                                         <script>
                                             document.getElementById('fechaEstFinEstimulo').min = new Date().toISOString().split('T')[0];
                                         </script>
@@ -504,7 +528,7 @@
                                     <label for="horaEstFinEstimulo" class="form-label">Hora estimada de
                                         finalización</label>
                                     <input type="time" class="form-control" id="horaEstFinEstimulo" value="10:05 AM"
-                                        required />
+                                         />
                                 </div>
                             </div>
 
@@ -583,7 +607,7 @@
                                         <td>
                                             <button class="btn btn-link" ng-click="verDocumentos(o.id);"
                                                 style=" color:#8ac8ff; font-size: 12px;" id="verDocumentos">Ver
-                                                Docs.</button>
+                                            </button>
 
                                         </td>
                                     </tr>
@@ -642,6 +666,8 @@
                                         </th>
                                         <th scope="col" style="text-align: center;">
                                         </th>
+                                        <th scope="col" style="text-align: center;">
+                                        </th>
 
                                     </tr>
                                 </thead>
@@ -653,11 +679,15 @@
                                         <td>
                                             {{n.fecha| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
+                                        <td>
+                                            <button class="btn btn-link" ng-click="verNotif(n);"
+                                                style=" color:#8ac8ff; font-size: 12px;" id="verDocumentos">Ver</button>
+
+                                        </td>
                                         <td style="text-align: center;">
-                                            <button ng-show="n.leida==0"
-                                            title="Marcar como leída"
-                                            class="btn btn-success" ng-click="leida(n.id);"
-                                            style="font-size: 12px;" id="leida">✓</button>
+                                            <button ng-show="n.leida==0" title="Marcar como leída"
+                                                class="btn btn-success" ng-click="leida(n.id);" style="font-size: 12px;"
+                                                id="leida">✓</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -709,9 +739,9 @@
 
     <div class="modal fade" id="documentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 1000px;">
                 <div class="modal-header" style="background-color: #8ac8ff">
-                    <h5 class="modal-title" id="H1">DOCUMENTOS ASOCIADOS AL ESTÍMULO: {{getEstimulo()}}</h5>
+                    <h5 class="modal-title" id="H1">{{tituloModalDocumentos}}</h5>
                     <button type="button" ng-click="cerrarModalDocumentos()"
                         style="border-color: transparent; background-color: transparent;" data-mdb-dismiss="modal"
                         aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -720,63 +750,106 @@
                                 d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                         </svg></button>
                 </div>
-                <div class="modal-body" style="background-color: #ffffff; font-size: small;">
+                <div class="modal-body" style="background-color: #ffffff;max-height: 600px; overflow-y: auto; font-size: small;">
                     <form>
                         <div class="container-fluid" style="font-size: 12px;">
+                            <p style=" font-size: 20px;">Datos del estímulo </p>
+                            <div class="row">
+                                <div class="col l3">
+                                    <label for="descripcionNoticia" class="form-label">Titulo</label>
+                                    <input class="form-control" id="tituloEstimulo2" disabled="true" type="text"
+                                        aria-label="default input example">
+                                </div>
+                                <div class="col l3">
+                                    <label for="descripcionNoticia" class="form-label">Fecha Inicio</label>
+                                    <input class="form-control" id="fechaInicio2" disabled="true" type="text"
+                                        aria-label="default input example">
+                                </div>
+                                <div class="col l3">
+                                    <label for="descripcionNoticia" class="form-label">Fecha estimada fin</label>
+                                    <input class="form-control" id="fechaEstimadaFin2" disabled="true" type="text"
+                                        aria-label="default input example">
+                                </div>
+                                <div class="col l3">
+                                    <label for="descripcionNoticia" class="form-label">Fecha Fin</label>
+                                    <input class="form-control" id="fechaFin2" disabled="true" type="text"
+                                        aria-label="default input example">
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col l12">
+                                    <label for="descripcionNoticia" class="form-label">Descripción</label>
+                                    <textarea class="form-control" disabled="true" id="descripcionEstimulo2" rows="4"
+                                        ></textarea>
+                                </div>
+
+                            </div>
+                            <br />
                             <p style=" font-size: 20px;">Total de documentos: {{totalDocs}} </p>
+                            <br />
                             <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
                             <input class="form-control form-control-sm mr-3" style="width: 200px;" type="text"
                                 placeholder="Buscar" aria-label="Search" ng-model="FiltroDocumentos.valor">
-                            <table id="tabla1" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">
-                                            Destinatario
-                                        </th>
-                                        <th scope="col">
-                                            Tipo
-                                        </th>
-                                        <th scope="col">Título</th>
-                                        <th scope="col">Cuerpo</th>
-                                        <th scope="col">Fecha</th>
-                                        <th scope="col">Estado</th>
-                                        <th scope="col" ng-show="o.esFinal && o.estado==1"></th>
+                         
+                                <table id="tabla1" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                Destinatario
+                                            </th>
+                                            <th scope="col">
+                                                Ministerio
+                                            </th>
+                                            <th scope="col">
+                                                Tipo
+                                            </th>
+                                            <th scope="col">Título</th>
+                                            <th scope="col">Cuerpo</th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Estado</th>
+                                            <th scope="col" ng-show="userData.permisos.includes('PERMISO_CERRAR_ESTIMULO')"></th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        ng-repeat="o in filteredDocumentos | limitTo: itemsPerPageDoc : startingItemDoc()">
-                                        <td>
-                                            {{ getMinisterio(o.ministerio)| uppercase }}
-                                        </td>
-                                        <td>
-                                            {{ getTipo(o.tipo) | uppercase}}
-                                        </td>
-                                        <td>
-                                            {{o.titulo| uppercase}}
-                                        </td>
-                                        <td>
-                                            {{o.descripcion| uppercase}}
-                                        </td>
-                                        <td>
-                                            {{o.fecha| date:'dd/MM/yyyy HH:mm'}}
-                                        </td>
-                                        <td ng-style="{'color': getEstado(o)=='ACEPTADO' ? 'green' : 'red'}">
-                                            {{getEstado(o)}}
-                                        </td>
-                                        <td>
-                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1"
-                                                class="btn btn-danger" ng-click="rechazar(o.estimulo,o.id);"
-                                                style="font-size: 12px;" id="rechazar">X</button>
-                                            <button ng-show="o.esFinal && o.estado==1 && userData.rol==1"
-                                                class="btn btn-success" ng-click="aprobar(o.estimulo,o.id);"
-                                                style="font-size: 12px;" id="aceptar">✓</button>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            ng-repeat="o in filteredDocumentos | limitTo: itemsPerPageDoc : startingItemDoc()">
+                                            <td>
+                                                {{ getRol(o.rol)| uppercase }}
+                                            </td>
+                                            <td>
+                                                {{ getMinisterio(o.ministerio)| uppercase }}
+                                            </td>
+                                            <td>
+                                                {{ getTipo(o.tipo) | uppercase}}
+                                            </td>
+                                            <td>
+                                                {{o.titulo| uppercase}}
+                                            </td>
+                                            <td>
+                                                {{o.descripcion| uppercase}}
+                                            </td>
+                                            <td>
+                                                {{o.fecha| date:'dd/MM/yyyy HH:mm'}}
+                                            </td>
+                                            <td ng-style="{'color': getEstado(o)=='ACEPTADO' ? 'green' : 'red'}">
+                                                {{getEstado(o)}}
+                                            </td>
+                                            <td ng-show="userData.permisos.includes('PERMISO_CERRAR_ESTIMULO')">
+                                                <button ng-show="o.esFinal && o.estado==1" class="btn btn-danger"
+                                                    ng-click="rechazar(o.estimulo,o.id);" style="font-size: 12px;"
+                                                    id="rechazar">X</button>
+                                                <button ng-show="o.esFinal && o.estado==1" class="btn btn-success"
+                                                    ng-click="aprobar(o.estimulo,o.id);" style="font-size: 12px;"
+                                                    id="aceptar">✓</button>
 
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            
+
                         </div>
                         <br />
 
@@ -815,7 +888,7 @@
                 <div class="modal-body" style="background-color: #ffffff; font-size: small;">
                     <form>
                         <div class="container-fluid" style="font-size: 12px;">
-                            <button ng-show="userData.rol==1" type="button" ng-click="crearNoticia()"
+                            <button ng-show="userData.permisos.includes('PERMISO_CREAR_NOTICIAS')" type="button" ng-click="crearNoticia()"
                                 class="btn btn-secondary">Nueva noticia</button> <br><br>
                             <p style=" font-size: 20px;">Total de noticias: {{totalNoticias}} </p>
                             <img src="ui/lupa.jpg" width="40" class="rounded float-left" alt="">
@@ -891,12 +964,12 @@
 
                                     <label for="descripcionNoticia" class="form-label">Descripción</label>
                                     <textarea class="form-control" placeholder="Descricpión" id="descripcionNoticia"
-                                        rows="10" required></textarea>
+                                        rows="10" ></textarea>
                                 </div>
                             </div>
 
                         </div>
-
+                    </form>
                 </div>
                 <br />
                 <div class="mb-3 form-check">

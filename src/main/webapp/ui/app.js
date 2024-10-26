@@ -80,13 +80,16 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		fullname: fullName,
 		email: userDataFromLocalStorage.email,
 		rol: userDataFromLocalStorage.rolPrinc,
-		rolDesc: userDataFromLocalStorage.rolPrincDesc  // Puedes obtener estos valores desde localStorage o cualquier otra fuente
+		rolDesc: userDataFromLocalStorage.rolPrincDesc,
+		ministerio: userDataFromLocalStorage.ministerioPrinc,
+		permisos: userDataFromLocalStorage.permisos// Puedes obtener estos valores desde localStorage o cualquier otra fuente
 	};
 
-	console.log(userDataFromLocalStorage);
+	console.log($scope.userData.permisos);
+
 
 	$scope.cerrarSesion = function () {
-		console.log("Función cerrarSesion llamada");
+
 		localStorage.setItem("logged", "false");
 		localStorage.setItem("token", "");
 		window.location.replace("/login.html");
@@ -107,8 +110,9 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			'xauthtoken': userDataFromLocalStorage.authtoken
 		},
 	};
-	$scope.selectedEstimulo = {};
-	$scope.selectedMinisterio = {};
+	//$scope.selectedEstimulo = {};
+	//$scope.selectedMinisterio = {};
+	//$scope.selectedDestinatario = {};
 	$scope.Estimulos = [];
 	$scope.Data = [];
 	$scope.FiltroEstimulos = { valor: '' };
@@ -277,6 +281,72 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		}
 	);
 
+	var reqRoles = {
+		method: 'GET',
+		url: 'https://iuatesis.chickenkiller.com/api/final/roles/listRol/' + $scope.userData.rol,
+		headers: {
+			'Content-Type': 'application/json',
+			'xauthtoken': userDataFromLocalStorage.authtoken
+		},
+	};
+
+	$scope.Roles = [];
+
+	$http(reqRoles).then(
+		function (resp) {
+			if (resp.status === 200) {
+				$scope.Roles = resp.data;
+				$scope.totalRoles = $scope.Roles.length;
+
+			} else {
+
+				localStorage.setItem("logged", "false");
+				localStorage.setItem("token", "");
+				window.location.replace("/login.html");
+			}
+		},
+		function (respErr) {
+
+			localStorage.setItem("logged", "false");
+			localStorage.setItem("token", "");
+			window.location.replace("/login.html");
+		}
+	);
+
+
+	var reqRolesTot = {
+		method: 'GET',
+		url: 'https://iuatesis.chickenkiller.com/api/final/roles/list',
+		headers: {
+			'Content-Type': 'application/json',
+			'xauthtoken': userDataFromLocalStorage.authtoken
+		},
+	};
+
+	$scope.RolesTot = [];
+
+	$http(reqRolesTot).then(
+		function (resp) {
+			if (resp.status === 200) {
+				$scope.RolesTot = resp.data;
+
+
+			} else {
+
+				localStorage.setItem("logged", "false");
+				localStorage.setItem("token", "");
+				window.location.replace("/login.html");
+			}
+		},
+		function (respErr) {
+
+			localStorage.setItem("logged", "false");
+			localStorage.setItem("token", "");
+			window.location.replace("/login.html");
+		}
+	);
+
+
 	$scope.mostrarDiv = true;
 	obtenerDivsVisibles();
 
@@ -319,6 +389,57 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	var tituloEstimulo, descripcionEstimulo, fechaEstFinEstimulo, horaEstFinEstimulo;
 	$scope.nuevoEst = function () {
+
+		if (document.getElementById('tituloEstimulo').value === "") {
+			swal("Error", "Todos los campos son obligatorios.", "error");
+			return;
+		}
+
+		if (document.getElementById('descripcionEstimulo').value === "") {
+			swal("Error", "Todos los campos son obligatorios.", "error");
+			return;
+		}
+
+		const fechaValue = document.getElementById('fechaEstFinEstimulo').value;
+		const horaValue = document.getElementById('horaEstFinEstimulo').value;
+		if (!fechaValue) {
+			swal("Error", "Todos los campos son obligatorios.", "error");
+			return;
+		}
+
+		const fecha = new Date(fechaValue);
+		if (isNaN(fecha.getTime())) {
+			swal("Error", 'Por favor, ingrese una fecha válida.', "error");
+			return false;
+		}
+
+		;
+		const fechaActual = new Date();
+		fecha.setDate(fecha.getDate() + 1)
+		if (fecha < fechaActual) {
+			swal("Error", 'La fecha debe ser mayor o igual a la fecha actual.', "error");
+			return false;
+		}
+
+		if (!horaValue) {
+			swal("Error", "Todos los campos son obligatorios.", "error");
+			return;
+		}
+
+		const [hora, minutos] = horaValue.split(':');
+		if (isNaN(hora) || isNaN(minutos)) {
+			swal("Error", 'Por favor, ingrese una hora válida.', "error");
+			return false;
+		}
+
+		if (fecha.toDateString() === fechaActual.toDateString()) {
+			const horaActual = fechaActual.getHours();
+			const minutosActuales = fechaActual.getMinutes();
+			if (hora < horaActual || (hora == horaActual && minutos < minutosActuales)) {
+				swal("Error", 'La hora debe ser mayor o igual a la hora actual.', "error");
+				return false;
+			}
+		}
 
 		tituloEstimulo = document.getElementById('tituloEstimulo').value;
 		descripcionEstimulo = document.getElementById('descripcionEstimulo').value;
@@ -389,7 +510,6 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 			}).catch(function (error) {
 
-				console.error('Error al registrar el estímulo:', error);
 				swal("Error", "Hubo un problema al registrar el estímulo.", "error");
 			});
 
@@ -400,32 +520,57 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		var selectElement = document.getElementById('estimulo');
 		var indiceSeleccionado = selectElement.selectedIndex - 1;
 		if (indiceSeleccionado < 0) {
-			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
+			swal("Error", "Todos los campos son obligatorios.", "error");
 			return;
 		}
-		selectElement = document.getElementById('ministerio');
+		selectElement = document.getElementById('destinatario');
 		indiceSeleccionado = selectElement.selectedIndex - 1;
 		if (indiceSeleccionado < 0) {
-			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
+			swal("Error", "Todos los campos son obligatorios.", "error");
 			return;
-		} // Restar 1 para ajustar el índice debido a la opción "Selecciona un estimulo"
+		}
+		if (document.getElementById('ministerio').disabled === false) {
+			selectElement = document.getElementById('ministerio');
+			indiceSeleccionado = selectElement.selectedIndex - 1;
+			if (indiceSeleccionado < 0) {
+				swal("Error", "Todos los campos son obligatorios.", "error");
+				return;
+			} // Restar 1 para ajustar el índice debido a la opción "Selecciona un estimulo"
+		}
+		;
+		if (document.getElementById('tituloDocumento').value === "") {
+			swal("Error", "Todos los campos son obligatorios.", "error");
+			return;
+		}
+		if (document.getElementById('cuerpo').value === "") {
+			swal("Error", "Todos los campos son obligatorios.", "error");
+			return;
+		}
 		selectElement = document.getElementById('tipoDoc');
 		indiceSeleccionado = selectElement.selectedIndex - 1;
 		if (indiceSeleccionado < 0) {
-			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
+			swal("Error", "Todos los campos son obligatorios.", "error");
 			return;
 		} // Restar 1 para ajustar el índice debido a la opción "Selecciona un estimulo"
 		const form = document.getElementById('nuevoDocumentoForm');
 		if (!form.checkValidity()) {
-			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
+			swal("Error", "Todos los campos son obligatorios.", "error");
 			return;
 		}
 		else {
 
 
+
+
 			tipoDocumento = $scope.selectedTipoDoc;
 			idEstimulo = $scope.selectedEstimulo.id;
-			idMinisterio = $scope.selectedMinisterio.id;
+			idRol = $scope.selectedDestinatario.id;
+			if (idRol === 6 || idRol === 7)
+				idMinisterio = null;
+			else if (document.getElementById('ministerio').disabled === true)
+				idMinisterio = $scope.userData.ministerio;
+			else
+				idMinisterio = $scope.selectedMinisterio.id;
 			tituloDocumento = document.getElementById('tituloDocumento').value;
 			descripcionDocumento = document.getElementById('cuerpo').value;
 
@@ -447,7 +592,8 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				'esFinal': esFinalDocumento,
 				'estimulo': $scope.selectedEstimulo.id,
 				'usuario': userDataFromLocalStorage.idUser,
-				'ministerio': idMinisterio
+				'ministerio': idMinisterio,
+				'rol': idRol
 			};
 
 			var req = {
@@ -468,7 +614,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 				}).catch(function (error) {
 
-					console.error('Error al registrar el documento:', error);
+
 					swal("Error", "Hubo un problema al registrar el documento.", "error");
 				});
 		}
@@ -480,18 +626,18 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				if (resp.status === 200) {
 					return resp.data;
 				} else {
-					console.log(req);
+
 					return $req.reject("Error en la respuesta");
 				}
 			},
 			function (respErr) {
-				console.log(req);
+
 				return $req.reject(respErr);
 			}
 		);
 	}
 
-	$scope.selectedTipoDoc = '';
+	//$scope.selectedTipoDoc = '';
 	$scope.mostrarDiv = false;
 
 	$scope.cambiarVisibilidadDiv = function () {
@@ -513,6 +659,36 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.totalNoticias = 0;
 
 	$scope.verDocumentos = function (i) {
+		$scope.tituloModalDocumentos = "INFORMACIÓN DEL ESTIMULO: ";
+		var obtenerEst = {
+			method: 'GET',
+			url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/obtenerEstimulo/' + i,
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			},
+		};
+
+		$http(obtenerEst).then(
+			function (resp) {
+				if (resp.status === 200) {
+
+					$scope.Est = resp.data;
+					$scope.tituloModalDocumentos = "INFORMACIÓN DEL ESTIMULO: " + $scope.Est.titulo;
+					document.getElementById("tituloEstimulo2").value = $scope.Est.titulo;
+					document.getElementById("descripcionEstimulo2").value = $scope.Est.descripcion;
+					document.getElementById("fechaInicio2").value = $scope.Est.fechaInicio !== null ? $scope.formatFecha($scope.Est.fechaInicio) : "";
+					document.getElementById("fechaFin2").value = $scope.Est.fechaFin !== null ? $scope.formatFecha($scope.Est.fechaFin) : "";
+					document.getElementById("fechaEstimadaFin2").value = $scope.formatFecha($scope.getFechaEstimadaFin($scope.Est));
+				} else {
+
+				}
+			},
+			function (respErr) {
+
+
+			}
+		);
 
 
 		$('#documentos').modal('show');
@@ -524,7 +700,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var reqDocs = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/list/' + i,
+			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/list/' + i + "/" + userDataFromLocalStorage.idUser,
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -560,11 +736,30 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	}
 
+	$scope.formatFecha = function (fecha) {
+		const date = new Date(fecha);
+		const day = date.getUTCDate().toString().padStart(2, '0');       // Día
+		const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');  // Mes (los meses comienzan desde 0)
+		const year = date.getUTCFullYear();                             // Año
+		const hours = date.getUTCHours().toString().padStart(2, '0');   // Horas
+		const minutes = date.getUTCMinutes().toString().padStart(2, '0'); // Minutos
+
+		// Formatear la fecha como dd/mm/aaaa hh:mm
+		return `${day}/${month}/${year} ${hours}:${minutes}`;
+	}
+
 	$scope.getMinisterio = function (ministerioId) {
 		var ministerio = $scope.Ministerios.find(function (m) {
 			return m.id === ministerioId;
 		});
 		return ministerio ? ministerio.nombre : '';
+	};
+
+	$scope.getRol = function (rolId) {
+		var rol = $scope.RolesTot.find(function (m) {
+			return m.id === rolId;
+		});
+		return rol ? rol.descripcion : '';
 	};
 
 	$scope.getFechaEstimadaFin = function (estimulo) {
@@ -702,7 +897,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var req = {
 			method: 'PUT',
-			url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/cambiarEstado/' + i,
+			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/cambiarEstado/' + id + "/2",
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -711,14 +906,16 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		$scope.Ejecutar(req).
 			then(function (resp) {
+
 				req = {
 					method: 'PUT',
-					url: 'https://iuatesis.chickenkiller.com/api/final/documentos/cambiarEstado/' + id + "/2",
+					url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/cambiarEstado/' + i,
 					headers: {
 						'Content-Type': 'application/json',
 						'xauthtoken': userDataFromLocalStorage.authtoken
 					}
 				};
+
 				$scope.Ejecutar(req).
 					then(function (resp) {
 						$scope.cargarEstimulos();
@@ -731,7 +928,6 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 			}).catch(function (error) {
 
-				console.error('Error al cerrar el estímulo:', error);
 				swal("Error", "Hubo un problema al cerrar el estímulo.", "error");
 			});
 
@@ -741,7 +937,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var req = {
 			method: 'PUT',
-			url: 'https://iuatesis.chickenkiller.com/api/final/notificaciones/leida/' + id,
+			url: 'https://iuatesis.chickenkiller.com/api/final/notificaciones/notificacionesUsuario/' + id + "/" + userDataFromLocalStorage.idUser,
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -751,14 +947,13 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.Ejecutar(req).
 			then(function (resp) {
 				$scope.cargarNotificaciones();
-						swal("¡Notificacion leída exitosamente!", "", "success");
-						$('#modalNotif').modal('show');
-						
+				swal("¡Notificacion leída exitosamente!", "", "success");
+				$('#modalNotif').modal('show');
+
 
 
 			}).catch(function (error) {
 
-				console.error('Error al cerrar el estímulo:', error);
 				swal("Error", "Hubo un problema al cerrar el estímulo.", "error");
 			});
 
@@ -796,7 +991,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			return "";
 
 	}
-	console.log(userDataFromLocalStorage.token);
+
 
 	$scope.noticias = function () {
 		var reqNoticias = {
@@ -902,7 +1097,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				$('#modalEstimulos').modal('show');
 			}).catch(function (error) {
 
-				console.error('Error al rechazar el documento:', error);
+
 				swal("Error", "Hubo un problema al rechazar el documento.", "error");
 			});
 
@@ -954,7 +1149,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 				}).catch(function (error) {
 
-					console.error('Error al registrar el documento:', error);
+
 					swal("Error", "Hubo un problema al registrar el documento.", "error");
 				});
 		}
@@ -1001,4 +1196,235 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			}
 		});
 	};
+
+
+	$scope.verNotif = function (n) {
+
+
+		$scope.tituloModalDocumentos = "INFORMACIÓN DEL ESTIMULO: ";
+		document.getElementById("tituloEstimulo2").value = "";
+		document.getElementById("descripcionEstimulo2").value = "";
+		document.getElementById("fechaInicio2").value = "";
+		document.getElementById("fechaFin2").value = "";
+		document.getElementById("fechaEstimadaFin2").value = "";
+		$scope.Documentos = [];
+		$scope.FiltroNotificaciones = { valor: '' };
+		$scope.totalDocs = 0;
+		$scope.Noticias = [];
+		$scope.totalNoticias = 0;
+		if (n.tipo === 1 || n.tipo === 2) {
+			$('#documentos').modal('show');
+			$('#modalEstimulos').modal('hide');
+			var obtenerEst = {
+				method: 'GET',
+				url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/obtenerEstimulo/' + n.idAsoc,
+				headers: {
+					'Content-Type': 'application/json',
+					'xauthtoken': userDataFromLocalStorage.authtoken
+				},
+			};
+
+			$http(obtenerEst).then(
+				function (resp) {
+					if (resp.status === 200) {
+
+						$scope.Est = resp.data;
+						$scope.tituloModalDocumentos = "INFORMACIÓN DEL ESTIMULO: " + $scope.Est.titulo;
+						document.getElementById("tituloEstimulo2").value = $scope.Est.titulo;
+						document.getElementById("descripcionEstimulo2").value = $scope.Est.descripcion;
+						document.getElementById("fechaInicio2").value = $scope.Est.fechaInicio !== null ? $scope.formatFecha($scope.Est.fechaInicio) : "";
+						document.getElementById("fechaFin2").value = $scope.Est.fechaFin !== null ? $scope.formatFecha($scope.Est.fechaFin) : "";
+						document.getElementById("fechaEstimadaFin2").value = $scope.formatFecha($scope.getFechaEstimadaFin($scope.Est));
+						$scope.estimuloSelec = $scope.Est.id;
+
+						$scope.Documentos = [];
+						$scope.FiltroNotificaciones = { valor: '' };
+
+						var reqDocs = {
+							method: 'GET',
+							url: 'https://iuatesis.chickenkiller.com/api/final/documentos/list/' + n.idAsoc + "/" + userDataFromLocalStorage.idUser,
+							headers: {
+								'Content-Type': 'application/json',
+								'xauthtoken': userDataFromLocalStorage.authtoken
+							},
+						};
+
+						$http(reqDocs).then(
+							function (resp) {
+								if (resp.status === 200) {
+
+									$scope.Documentos = resp.data;
+									$scope.totalDocs = $scope.Documentos.length;
+									$scope.$watch('FiltroDocumentos.valor', function (newVal) {
+
+										if (newVal == '') {
+											$scope.filteredDocumentos = $scope.Documentos;
+											$scope.totalDocs = $scope.Documentos.length;
+										}
+										else {
+											$scope.filteredDocumentos = $filter('filter')($scope.Documentos, newVal);
+											$scope.totalDocs = $scope.filteredDocumentos.length;
+										}
+										$scope.currentPageDoc = 0;
+									});
+								} else {
+
+								}
+							},
+							function (respErr) {
+
+
+							}
+						);
+
+					} else {
+
+					}
+				},
+				function (respErr) {
+
+
+				}
+			);
+
+
+			$('#documentos').modal('show');
+			$('#modalNotif').modal('hide');
+
+
+		}
+		else {
+			$('#modalNotif').modal('hide');
+			$scope.noticias();
+			$('#modalNoticias').modal('show');
+		}
+
+	}
+
+	$scope.llenarMinisterio = function () {
+
+		var reqDocs = {
+			method: 'GET',
+			url: 'https://iuatesis.chickenkiller.com/api/final/permisos/get/' + $scope.selectedDestinatario.id,
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			},
+		};
+
+		$http(reqDocs).then(
+			function (resp) {
+				if (resp.status === 200) {
+
+					$scope.Permiso = resp;
+					if ($scope.Permiso.data.hasMinisterios)
+						document.getElementById('ministerio').disabled = false;
+					else
+						document.getElementById('ministerio').disabled = true;
+				} else {
+					document.getElementById('ministerio').disabled = true;
+				}
+			},
+			function (respErr) {
+
+
+			}
+		);
+
+	};
+
+
+	$scope.verUltEstimulo = function () {
+
+		$scope.tituloModalDocumentos = "ÚLTIMO ESTIMULO ABIERTO: ";
+		document.getElementById("tituloEstimulo2").value = "";
+		document.getElementById("descripcionEstimulo2").value = "";
+		document.getElementById("fechaInicio2").value = "";
+		document.getElementById("fechaFin2").value = "";
+		document.getElementById("fechaEstimadaFin2").value = "";
+		$scope.Documentos = [];
+		$scope.FiltroNotificaciones = { valor: '' };
+		$scope.totalDocs = 0;
+		$('#documentos').modal('show');
+
+
+		var obtenerEst = {
+			method: 'GET',
+			url: 'https://iuatesis.chickenkiller.com/api/final/estimulosSimpleAccess/load',
+			headers: {
+				'Content-Type': 'application/json',
+				'xauthtoken': userDataFromLocalStorage.authtoken
+			},
+		};
+
+		$http(obtenerEst).then(
+			function (resp) {
+				if (resp.status === 200) {
+
+					$scope.Est = resp.data;
+					$scope.tituloModalDocumentos = "ÚLTIMO ESTIMULO ABIERTO: " + $scope.Est.titulo;
+					document.getElementById("tituloEstimulo2").value = $scope.Est.titulo;
+					document.getElementById("descripcionEstimulo2").value = $scope.Est.descripcion;
+					document.getElementById("fechaInicio2").value = $scope.Est.fechaInicio !== null ? $scope.formatFecha($scope.Est.fechaInicio) : "";
+					document.getElementById("fechaFin2").value = $scope.Est.fechaFin !== null ? $scope.formatFecha($scope.Est.fechaFin) : "";
+					document.getElementById("fechaEstimadaFin2").value = $scope.formatFecha($scope.getFechaEstimadaFin($scope.Est));
+					$scope.estimuloSelec = $scope.Est.idEstimulo;
+
+					$scope.Documentos = [];
+					$scope.FiltroNotificaciones = { valor: '' };
+
+					var reqDocs = {
+						method: 'GET',
+						url: 'https://iuatesis.chickenkiller.com/api/final/documentos/list/' + $scope.Est.idEstimulo + "/" + userDataFromLocalStorage.idUser,
+						headers: {
+							'Content-Type': 'application/json',
+							'xauthtoken': userDataFromLocalStorage.authtoken
+						},
+					};
+
+					$http(reqDocs).then(
+						function (resp) {
+							if (resp.status === 200) {
+
+								$scope.Documentos = resp.data;
+								$scope.totalDocs = $scope.Documentos.length;
+								$scope.$watch('FiltroDocumentos.valor', function (newVal) {
+
+									if (newVal == '') {
+										$scope.filteredDocumentos = $scope.Documentos;
+										$scope.totalDocs = $scope.Documentos.length;
+									}
+									else {
+										$scope.filteredDocumentos = $filter('filter')($scope.Documentos, newVal);
+										$scope.totalDocs = $scope.filteredDocumentos.length;
+									}
+									$scope.currentPageDoc = 0;
+								});
+							} else {
+
+							}
+						},
+						function (respErr) {
+
+
+						}
+					);
+
+
+				} else {
+
+				}
+			},
+			function (respErr) {
+
+
+			}
+		);
+
+
+
+
+
+	}
+
 });

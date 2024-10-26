@@ -13,10 +13,10 @@ import ar.edu.iua.model.Estimulo;
 @Repository
 public interface EstimuloRepository extends JpaRepository<Estimulo, Integer>{
 	
-	@Query(value = "SELECT * FROM estimulo WHERE ESTADO=1 ORDER BY fecha_inicio", nativeQuery = true)
+	@Query(value = "SELECT * FROM estimulo WHERE ESTADO=1 ORDER BY fecha_inicio desc", nativeQuery = true)
 	public List<Estimulo> findByEstado();
 	
-	@Query(value = "SELECT * FROM estimulo WHERE ESTADO=2 ORDER BY fecha_fin", nativeQuery = true)
+	@Query(value = "SELECT * FROM estimulo WHERE ESTADO=2 ORDER BY fecha_fin desc", nativeQuery = true)
 	public List<Estimulo> findCerradas();
 	
 	@Query(value = "UPDATE estimulo SET ESTADO='2' WHERE ID=?1", nativeQuery = true)

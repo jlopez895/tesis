@@ -17,7 +17,9 @@ import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Documento;
 import ar.edu.iua.model.Estimulo;
+import ar.edu.iua.model.Ministerio;
 import ar.edu.iua.model.Notificacion;
+import ar.edu.iua.model.NotificacionUsuario;
 import ar.edu.iua.model.Rol;
 import ar.edu.iua.model.User;
 import ar.edu.iua.model.dto.EstadisticaDTO;
@@ -25,6 +27,7 @@ import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 import ar.edu.iua.model.persistence.DocumentoRepository;
 import ar.edu.iua.model.persistence.EstimuloRepository;
+import ar.edu.iua.model.persistence.MinisterioRepository;
 import ar.edu.iua.model.persistence.RolRepository;
 
 @Service
@@ -47,6 +50,12 @@ public class DocumentoBusiness implements IDocumentoBusiness {
 
 	@Autowired
 	private RolRepository rolDAO;
+	
+	@Autowired
+	private MinisterioRepository ministerioDAO;
+
+	@Autowired
+	private INotificacionUsuarioBusiness notificacionUsuarioService;
 
 	@Override
 	public RespuestaGenerica<Documento> nuevoDocumento(Documento documento)
@@ -65,7 +74,7 @@ public class DocumentoBusiness implements IDocumentoBusiness {
 		}
 
 		try {
-			System.out.println("estoy aca");
+			
 			documento.setDescripcion(documento.getDescripcion());
 			documento.setEsFinal(documento.isEsFinal());
 			documento.setEstimulo(documento.getEstimulo());
@@ -75,18 +84,68 @@ public class DocumentoBusiness implements IDocumentoBusiness {
 			documento.setEstado(1);
 			documento.setUsuario(documento.getUsuario());
 			documento.setTitulo(documento.getTitulo());
-
+			documento.setRol(documento.getRol());
 			documentoDAO.save(documento);
-
+			// Obtener el ID generado automáticamente
+		    Integer idGenerado = documento.getId();  // Asumiendo que el ID está en un campo "id"
 			// creando notificacion
 			Notificacion not = new Notificacion();
 			not.setDescripcion("Se ha creado un nuevo documento para el estímulo " + estimulo.getId() + ": '"
 					+ estimulo.getTitulo() + "'");
 			not.setFecha(new Date());
-			List<Rol> rol = rolService.findByMinisterio(documento.getMinisterio());
-			Set<Rol> setRoles = new HashSet<>(rol);
-			not.setRoles(setRoles);
+			not.setTipo(2);
+			not.setIdAsoc(documento.getEstimulo());
 			notificacionService.nuevaNotificacion(not);
+			//obtenemos la lista de usuarios que contienen la combinacion de rol - ministerio
+			String ministerio="";
+			if(documento.getMinisterio()!=0)
+				ministerio=String.valueOf(documento.getMinisterio());
+			else 
+				ministerio="";
+				
+			List<User> listaUsers=userService.findByRol(documento.getRol(), ministerio);
+			NotificacionUsuario n=new NotificacionUsuario();
+			if(listaUsers!=null)
+			{
+				for(User us:listaUsers)
+				{
+					n.setLeido(false);
+					n.setIdNotificacion(not.getId());
+					n.setIdUsuario(us.getId());
+					notificacionUsuarioService.nuevaNot(n);
+					n=new NotificacionUsuario();
+					
+				}
+			}
+			
+			User user=userService.load(documento.getUsuario());
+			ministerio="";
+			if(user.getMinisterioPrincipal()!=null)
+				ministerio=user.getMinisterioPrincipal().getId().toString();
+			listaUsers=userService.findByRol(documento.getRol(), ministerio);
+			
+			if(listaUsers!=null)
+			{
+				for(User us:listaUsers)
+				{
+					n.setLeido(false);
+					n.setIdNotificacion(not.getId());
+					n.setIdUsuario(us.getId());
+					notificacionUsuarioService.nuevaNot(n);
+					n=new NotificacionUsuario();
+				}
+			}
+			
+			List<User> u=userService.getAdmins();
+			for(User us:u)
+			{
+				n.setLeido(false);
+				n.setIdNotificacion(not.getId());
+				n.setIdUsuario(us.getId());
+				notificacionUsuarioService.nuevaNot(n);
+				n=new NotificacionUsuario();
+			}
+			
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
@@ -95,11 +154,17 @@ public class DocumentoBusiness implements IDocumentoBusiness {
 	}
 
 	@Override
-	public List<Documento> list(int idEstimulo) throws BusinessException {
+	public List<Documento> list(int idEstimulo, int idUser) throws BusinessException {
 		List<Documento> list = null;
 		try {
-
-			list = documentoDAO.findByIdEstimulo(idEstimulo);
+			boolean esAdmin=false;
+			User u=userService.load(idUser);
+			String ministerio="";
+			if(u.getMinisterioPrincipal()!=null)
+				ministerio=u.getMinisterioPrincipal().getId().toString();
+			if(u.getRolPrincipal().getId()==1)
+				esAdmin=true;
+			list = documentoDAO.findByIdEstimulo(idEstimulo,u.getRolPrincipal().getId(),ministerio,esAdmin);
 
 		} catch (Exception e) {
 			throw new BusinessException(e);
@@ -140,6 +205,7 @@ public class DocumentoBusiness implements IDocumentoBusiness {
 
 					documentoDAO.save(documentoNew);
 
+					Estimulo est=estimuloService.load(documentoNew.getEstimulo());
 					// creando notificacion
 					Notificacion not = new Notificacion();
 					String aux = "";
@@ -147,13 +213,56 @@ public class DocumentoBusiness implements IDocumentoBusiness {
 						aux = "aceptado";
 					else
 						aux = "rechazado";
-					not.setDescripcion("El doumento " + idDocumentos + " ha sido " + aux);
+					not.setDescripcion("El documento '" + documentoNew.getTitulo() + "' del estímulo '"+est.getTitulo()+"' ha sido " + aux);
 					not.setFecha(new Date());
-					List<Rol> listaRoles = rolDAO.findByMinisterio(documentoNew.getMinisterio());
-					Set<Rol> setRoles = new HashSet<>(listaRoles);
-					not.setRoles(setRoles);
+					not.setTipo(2);
+					not.setIdAsoc(documentoNew.getEstimulo());
 					notificacionService.nuevaNotificacion(not);
 
+					//obtenemos la lista de usuarios que contienen la combinacion de rol - ministerio
+					String ministerio="";
+					if(documentoNew.getMinisterio()!=0)
+						ministerio=String.valueOf(documentoNew.getMinisterio());
+					else 
+						ministerio="";
+						
+					List<User> listaUsers=userService.findByRol(documentoNew.getRol(), ministerio);
+					NotificacionUsuario n=new NotificacionUsuario();
+					
+					for(User us:listaUsers)
+					{
+						n.setLeido(false);
+						n.setIdNotificacion(not.getId());
+						n.setIdUsuario(us.getId());
+						notificacionUsuarioService.nuevaNot(n);
+						
+					}
+					User user=userService.load(documentoNew.getUsuario());
+					ministerio="";
+					if(user.getMinisterioPrincipal()!=null)
+						ministerio=user.getMinisterioPrincipal().getId().toString();
+					listaUsers=userService.findByRol(documentoNew.getRol(), ministerio);
+					
+					if(listaUsers!=null)
+					{
+						for(User us:listaUsers)
+						{
+							n.setLeido(false);
+							n.setIdNotificacion(not.getId());
+							n.setIdUsuario(us.getId());
+							notificacionUsuarioService.nuevaNot(n);
+							
+						}
+					}
+					List<User> u=userService.getAdmins();
+					for(User us:u)
+					{
+						n.setLeido(false);
+						n.setIdNotificacion(not.getId());
+						n.setIdUsuario(us.getId());
+						notificacionUsuarioService.nuevaNot(n);
+						
+					}
 					return documento.get();
 				} catch (Exception e) {
 					throw new BusinessException(e);

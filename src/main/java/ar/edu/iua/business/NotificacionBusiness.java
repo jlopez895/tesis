@@ -65,25 +65,11 @@ public class NotificacionBusiness implements INotificacionBusiness{
 			e.printStackTrace();
 		}
 	}
+	
 	@Override
-	public Notificacion leida(int id) throws BusinessException, NotFoundException {
-		Optional<Notificacion> notificacion = null;
+	public Notificacion get(int id) throws BusinessException {
 		try {
-
-			notificacion = notificacionDAO.findById(id);
-			if (notificacion != null) {
-				try {
-					Notificacion notificacionNew=notificacion.get();
-					notificacionNew.setLeida(1);
-					notificacionDAO.save(notificacionNew);
-					return notificacion.get();
-				} catch (Exception e) {
-					throw new BusinessException(e);
-				}
-			}
-			else
-				throw new NotFoundException("La notificacion no se encuentra en la BD");
-
+			return notificacionDAO.obtenerPorId(id);
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}

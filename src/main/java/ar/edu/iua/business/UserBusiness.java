@@ -86,5 +86,23 @@ public class UserBusiness implements IUserBusiness {
 	        }
 	    }
 
+	@Override
+	public List<User> findByRol(int idRol, String idMinisterio) throws BusinessException {
+		try {
+			return userDAO.findByRol(idRol,idMinisterio);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	}
+
+	@Override
+	public List<User> getAdmins() throws BusinessException {
+		try {
+			return userDAO.getAdmins();
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	}
+
 
 }

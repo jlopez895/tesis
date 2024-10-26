@@ -45,5 +45,23 @@ public class PermisoRestController {
 			return new ResponseEntity<List<Permiso>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	@ApiOperation(value = "Obtener un permiso por id rol", response = Permiso.class)
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 500, message = "Error interno del servidor") })
+
+	@GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Permiso> get(@ApiParam(value = "El id del rol") @PathVariable("id") int id) {
+		try {
+
+			return new ResponseEntity<Permiso>(permisoBusiness.get(id), HttpStatus.OK);
+
+		} catch (BusinessException e) {
+			return new ResponseEntity<Permiso>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 
 }

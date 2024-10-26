@@ -7,5 +7,9 @@ import ar.edu.iua.model.Estimulo;
 import ar.edu.iua.model.Permiso;
 
 public interface IPermisoBusiness {
-	public List<Permiso> list(int idUser) throws BusinessException;
+	public List<Permiso> list(int id) throws BusinessException;
+
+	public Permiso get(int id) throws BusinessException;
+
+
 }

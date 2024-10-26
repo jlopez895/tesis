@@ -56,6 +56,10 @@ public class User implements Serializable, UserDetails {
     @ManyToOne
     @JoinColumn(name = "id_rol_principal")
     private Rol rolPrincipal;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_ministerio_principal",nullable = true)
+    private Ministerio ministerioPrincipal;
 
     @Column(columnDefinition = "tinyint default 1")
     private boolean accountNonExpired = true;
@@ -76,7 +80,7 @@ public class User implements Serializable, UserDetails {
     private int sessionTimeout;
 
     // Constructor
-    public User(int id, String nombre, String apellido, String email, String password, Rol rolPrincipal, boolean enabled,
+    public User(int id, String nombre, String apellido, String email, String password, Rol rolPrincipal,Ministerio ministerioPrincipal, boolean enabled,
             String legajo, String username) {
         super();
         this.id = id;
@@ -86,6 +90,7 @@ public class User implements Serializable, UserDetails {
         this.password = password;
         this.username = username;
         this.rolPrincipal = rolPrincipal;
+        this.ministerioPrincipal=ministerioPrincipal;
         this.enabled = enabled;
         this.legajo = legajo;
     }
@@ -238,4 +243,14 @@ public class User implements Serializable, UserDetails {
     public void setSessionTimeout(int sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
     }
+
+	public Ministerio getMinisterioPrincipal() {
+		return ministerioPrincipal;
+	}
+
+	public void setMinisterioPrincipal(Ministerio ministerioPrincipal) {
+		this.ministerioPrincipal = ministerioPrincipal;
+	}
+    
+    
 }

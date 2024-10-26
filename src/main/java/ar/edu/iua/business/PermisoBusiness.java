@@ -22,5 +22,14 @@ public class PermisoBusiness implements IPermisoBusiness{
 			throw new BusinessException(e);
 		}
 	}
+	@Override
+	public Permiso get(int id) throws BusinessException {
+		try {
+			return permisoDao.findByRol(id);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	}
+
 
 }

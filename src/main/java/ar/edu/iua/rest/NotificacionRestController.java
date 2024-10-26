@@ -50,22 +50,21 @@ public class NotificacionRestController {
 		}
 	}
 	
-	@ApiOperation(value = "cambiar estado", response = Estimulo.class)
-
+	@ApiOperation(value = "Obtener una notificacion", response = Notificacion.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
-			@ApiResponse(code = 201, message = "estimulo cerrado"),
-			@ApiResponse(code = 400, message = "El servidor no procesará la solicitud porque no puede o no debe debido  a un error del usuario "),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
-	@PutMapping(value = "/leida/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Notificacion> leida(@ApiParam(value = "El id de la notificacion") @PathVariable("id") int id) {
 
+	@GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Notificacion> get(@ApiParam(value = "El rol del usuario") @PathVariable("id") int id) {
 		try {
-			return new ResponseEntity<Notificacion>(notificacionBusiness.leida(id), HttpStatus.OK);
+
+			return new ResponseEntity<Notificacion>(notificacionBusiness.get(id), HttpStatus.OK);
+
 		} catch (BusinessException e) {
 			return new ResponseEntity<Notificacion>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (NotFoundException e) {
-			return new ResponseEntity<Notificacion>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
 
 }

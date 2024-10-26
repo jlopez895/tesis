@@ -30,5 +30,13 @@ public class RolBusiness implements IRolBusiness{
 			throw new BusinessException(e);
 		}
 	}
+	@Override
+	public List<Rol> listRol(int id) throws BusinessException {
+		try {
+			return rolDAO.findByRol(id);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	}
 
 }

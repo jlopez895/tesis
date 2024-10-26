@@ -18,6 +18,8 @@ public interface INotificacionBusiness {
 
 	void pushOrderData();
 
-	public Notificacion leida(int id) throws BusinessException, NotFoundException;;
+	//public Notificacion leida(int id) throws BusinessException, NotFoundException;
+
+	public Notificacion get(int id) throws BusinessException;
 
 }

@@ -70,11 +70,12 @@ public class DocumentoRestController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Operación exitosa"),
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
-	@GetMapping(value = "/list/{idEstimulo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Documento>> list(@ApiParam(value = "El numero del estimulo") @PathVariable("idEstimulo") int idEstimulo) {
+	@GetMapping(value = "/list/{idEstimulo}/{idUser}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Documento>> list(@ApiParam(value = "El numero del estimulo") @PathVariable("idEstimulo") int idEstimulo,
+			@ApiParam(value = "El id del usuario") @PathVariable("idUser") int idUser) {
 		try {
 
-			return new ResponseEntity<List<Documento>>(documentoBusiness.list(idEstimulo), HttpStatus.OK);
+			return new ResponseEntity<List<Documento>>(documentoBusiness.list(idEstimulo,idUser), HttpStatus.OK);
 
 		} catch (BusinessException e) {
 			return new ResponseEntity<List<Documento>>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -19,6 +19,10 @@ public interface IUserBusiness {
 	public User load(String legajo) throws NotFoundException, BusinessException;
 	
 	public User loadUserName(String userName) throws NotFoundException, BusinessException;
+	
+	public List<User> findByRol(int idRol,String idMinisterio) throws BusinessException;
+	
+	public List<User> getAdmins() throws BusinessException;
 
 
 

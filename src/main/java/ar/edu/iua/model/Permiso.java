@@ -18,6 +18,12 @@ public class Permiso {
 
     @Column(length = 250, nullable = true)
     private String descripcion;
+    
+    @Column()
+    private Integer idRolAsoc;
+    
+    @Column()
+    private boolean hasMinisterios;
 
 	public Integer getId() {
 		return id;
@@ -50,5 +56,26 @@ public class Permiso {
 		this.descripcion = descripcion;
 	}
     
+	   // Constructors
+    public Permiso() {
+        super();
+    }
+
+	public Integer getIdRolAsoc() {
+		return idRolAsoc;
+	}
+
+	public void setIdRolAsoc(Integer idRolAsoc) {
+		this.idRolAsoc = idRolAsoc;
+	}
+
+	public boolean isHasMinisterios() {
+		return hasMinisterios;
+	}
+
+	public void setHasMinisterios(boolean hasMinisterios) {
+		this.hasMinisterios = hasMinisterios;
+	}
+
     
 }

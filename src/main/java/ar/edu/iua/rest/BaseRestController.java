@@ -1,5 +1,7 @@
 package ar.edu.iua.rest;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -15,8 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ar.edu.iua.authtoken.AuthToken;
 import ar.edu.iua.authtoken.IAuthTokenBusiness;
 import ar.edu.iua.business.exception.BusinessException;
+import ar.edu.iua.model.Permiso;
 import ar.edu.iua.model.RolPrincipalHolder;
 import ar.edu.iua.model.User;
+import ar.edu.iua.model.persistence.PermisoRepository;
 
 public class BaseRestController {
 
@@ -29,6 +33,9 @@ public class BaseRestController {
 	private IAuthTokenBusiness authTokenBusiness;
 	@Autowired
 	private HttpSession session;
+	
+	@Autowired
+	private PermisoRepository perm;
 	
 	protected User getUserLogged() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -56,6 +63,17 @@ public class BaseRestController {
 		o.put("email", u.getEmail());
 		o.put("rolPrinc",u.getRolPrincipal().getId());
 		o.put("rolPrincDesc",u.getRolPrincipal().getDescripcion());
+		o.put("ministerioPrinc",u.getMinisterioPrincipal()==null?"":u.getMinisterioPrincipal().getId());
+		List<Permiso> permisos=perm.obtenerTodosRol(u.getRolPrincipal().getId());
+		JSONArray pe = new JSONArray();
+		if(permisos!=null)
+		{
+			for(Permiso p:permisos)
+			{
+				pe.put(p.getPermiso());
+			}
+			o.put("permisos", pe);
+		}
 		JSONArray r = new JSONArray();
 		for (GrantedAuthority g : u.getAuthorities()) {
 			r.put(g.getAuthority());

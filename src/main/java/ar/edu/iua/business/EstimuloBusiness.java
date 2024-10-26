@@ -1,5 +1,6 @@
 package ar.edu.iua.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,13 +17,16 @@ import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Estimulo;
 import ar.edu.iua.model.Notificacion;
+import ar.edu.iua.model.NotificacionUsuario;
 import ar.edu.iua.model.Rol;
+import ar.edu.iua.model.User;
 import ar.edu.iua.model.dto.Estadistica2DTO;
 import ar.edu.iua.model.dto.EstadisticaDTO;
 import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
 import ar.edu.iua.model.persistence.EstimuloRepository;
 import ar.edu.iua.model.persistence.RolRepository;
+import ar.edu.iua.model.persistence.UserRepository;
 
 @Service
 public class EstimuloBusiness implements IEstimuloBusiness {
@@ -38,6 +42,14 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 	
 	@Autowired
 	private INotificacionBusiness notificacionService;
+	
+	@Autowired
+	private IEstimuloSimpleAccessBusiness estimuloSimpleAccessService;
+	
+	@Autowired
+	private INotificacionUsuarioBusiness notificacionUsuarioService;
+	@Autowired
+	private UserRepository userDAO;
 
 	@Override
 	public RespuestaGenerica<Estimulo> nuevoEstimulo(Estimulo estimulo) throws BusinessException {
@@ -60,15 +72,33 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 			estimulo.setFechaInicio(new Date());
 			estimulo.setUsuarioCreador(estimulo.getUsuarioCreador());
 			estimuloDAO.save(estimulo);
+			Integer idGenerado = estimulo.getId(); 
 			
+			//guardando estimulo en tabla de acceso rapido
+			estimuloSimpleAccessService.nuevoEstimulo(estimulo);
 			//creando notificacion
 			Notificacion not=new Notificacion();
 			not.setDescripcion("Se ha creado un nuevo estímulo");
 			not.setFecha(new Date());
-			List<Rol> listaRoles = rolDAO.findAll();
-			Set<Rol> setRoles = new HashSet<>(listaRoles);
-			not.setRoles(setRoles);
+			not.setTipo(1);
+			not.setIdAsoc(idGenerado);
 			notificacionService.nuevaNotificacion(not);
+
+			NotificacionUsuario n=new NotificacionUsuario();
+			
+			List<User> listaUsers = userDAO.findAll();
+			for(User us:listaUsers)
+			{
+				
+				n.setLeido(false);
+				n.setIdNotificacion(not.getId());
+				n.setIdUsuario(us.getId());
+				notificacionUsuarioService.nuevaNot(n);
+				n=new NotificacionUsuario();
+				
+			}
+			
+			
 			
 		} catch (Exception e) {
 			throw new BusinessException(e);
@@ -122,15 +152,34 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 					estimuloNew.setEstado(2);
 					estimuloNew.setFechaFin(new Date());
 					estimuloDAO.save(estimuloNew);
-					
+					//creando nuevo acceso rapido
+					List<Estimulo> e=estimuloDAO.findByEstado();
+					if(e.size()>0)
+						estimuloSimpleAccessService.nuevoEstimulo(e.get(0));
+					else
+						estimuloSimpleAccessService.delete();
 					//creando notificacion
 					Notificacion not=new Notificacion();
 					not.setDescripcion("El estímulo "+id+" ha sido cerrado.");
+					not.setTipo(1);
+					not.setIdAsoc(id);
 					not.setFecha(new Date());
-					List<Rol> listaRoles = rolDAO.findAll();
-					Set<Rol> setRoles = new HashSet<>(listaRoles);
-					not.setRoles(setRoles);
+					
 					notificacionService.nuevaNotificacion(not);
+					
+					List<NotificacionUsuario> nu=new ArrayList<>();
+					NotificacionUsuario n=new NotificacionUsuario();
+					
+					List<User> listaUsers = userDAO.findAll();
+					for(User us:listaUsers)
+					{
+						n.setLeido(false);
+						n.setIdNotificacion(not.getId());
+						n.setIdUsuario(us.getId());
+						nu.add(n);
+						notificacionUsuarioService.nuevaNot(n);
+						n=new NotificacionUsuario();
+					}
 					
 					return estimulo.get();
 				} catch (Exception e) {

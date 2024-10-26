@@ -11,4 +11,6 @@ public interface IRolBusiness {
 	
 	public List<Rol> findByMinisterio(int ministerio) throws BusinessException;
 
+	public List<Rol> listRol(int id) throws BusinessException;
+
 }
