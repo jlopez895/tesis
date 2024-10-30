@@ -212,6 +212,8 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 					if ($scope.totalNotificaciones < $scope.Notificaciones.length) {
 						swal("Tiene nuevas notificaciones", "", "warning");
+						const audio = new Audio('/ui/notificacion.wav');
+    					audio.play();
 					}
 					$scope.totalNotificaciones = $scope.Notificaciones.length;
 
