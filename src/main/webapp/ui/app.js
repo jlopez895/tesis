@@ -1,8 +1,8 @@
 let app = angular.module('iw3', ['ngStomp'])
 
 
-	.constant('URL_API_BASE', 'https://iuatesis.chickenkiller.com/api/final/')
-	.constant('URL_BASE', 'https://iuatesis.chickenkiller.com/')
+	.constant('URL_API_BASE', 'http://iuatesis.chickenkiller.com/api/final/')
+	.constant('URL_BASE', 'http://iuatesis.chickenkiller.com/')
 	.constant('URL_WS', '/api/final/ws');
 
 $(window).on('load', function () {
@@ -104,7 +104,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	var reqEstimulos = {
 		method: 'GET',
-		url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/list',
+		url: 'http://iuatesis.chickenkiller.com/api/final/estimulos/list',
 		headers: {
 			'Content-Type': 'application/json',
 			'xauthtoken': userDataFromLocalStorage.authtoken
@@ -191,7 +191,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 	var reqNotificaciones = {
 		method: 'GET',
-		url: 'https://iuatesis.chickenkiller.com/api/final/notificaciones/list/' + userDataFromLocalStorage.idUser,
+		url: 'http://iuatesis.chickenkiller.com/api/final/notificaciones/list/' + userDataFromLocalStorage.idUser,
 		headers: {
 			'Content-Type': 'application/json',
 			'xauthtoken': userDataFromLocalStorage.authtoken
@@ -254,7 +254,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	var reqMinisterios = {
 		method: 'GET',
-		url: 'https://iuatesis.chickenkiller.com/api/final/ministerios/list',
+		url: 'http://iuatesis.chickenkiller.com/api/final/ministerios/list',
 		headers: {
 			'Content-Type': 'application/json',
 			'xauthtoken': userDataFromLocalStorage.authtoken
@@ -287,7 +287,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	var reqRoles = {
 		method: 'GET',
-		url: 'https://iuatesis.chickenkiller.com/api/final/roles/listRol/' + $scope.userData.rol,
+		url: 'http://iuatesis.chickenkiller.com/api/final/roles/listRol/' + $scope.userData.rol,
 		headers: {
 			'Content-Type': 'application/json',
 			'xauthtoken': userDataFromLocalStorage.authtoken
@@ -320,7 +320,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	var reqRolesTot = {
 		method: 'GET',
-		url: 'https://iuatesis.chickenkiller.com/api/final/roles/list',
+		url: 'http://iuatesis.chickenkiller.com/api/final/roles/list',
 		headers: {
 			'Content-Type': 'application/json',
 			'xauthtoken': userDataFromLocalStorage.authtoken
@@ -496,7 +496,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var req = {
 			method: 'POST',
-			url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/nuevoEstimulo',
+			url: 'http://iuatesis.chickenkiller.com/api/final/estimulos/nuevoEstimulo',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -602,7 +602,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 			var req = {
 				method: 'POST',
-				url: 'https://iuatesis.chickenkiller.com/api/final/documentos/nuevoDocumento',
+				url: 'http://iuatesis.chickenkiller.com/api/final/documentos/nuevoDocumento',
 				headers: {
 					'Content-Type': 'application/json',
 					'xauthtoken': userDataFromLocalStorage.authtoken
@@ -666,7 +666,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.tituloModalDocumentos = "INFORMACIÓN DEL ESTIMULO: ";
 		var obtenerEst = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/obtenerEstimulo/' + i,
+			url: 'http://iuatesis.chickenkiller.com/api/final/estimulos/obtenerEstimulo/' + i,
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -704,7 +704,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var reqDocs = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/list/' + i + "/" + userDataFromLocalStorage.idUser,
+			url: 'http://iuatesis.chickenkiller.com/api/final/documentos/list/' + i + "/" + userDataFromLocalStorage.idUser,
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -901,7 +901,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var req = {
 			method: 'PUT',
-			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/cambiarEstado/' + id + "/2",
+			url: 'http://iuatesis.chickenkiller.com/api/final/documentos/cambiarEstado/' + id + "/2",
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -913,7 +913,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 				req = {
 					method: 'PUT',
-					url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/cambiarEstado/' + i,
+					url: 'http://iuatesis.chickenkiller.com/api/final/estimulos/cambiarEstado/' + i,
 					headers: {
 						'Content-Type': 'application/json',
 						'xauthtoken': userDataFromLocalStorage.authtoken
@@ -941,7 +941,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var req = {
 			method: 'PUT',
-			url: 'https://iuatesis.chickenkiller.com/api/final/notificacionesUsuario/leida/' + id + "/" + userDataFromLocalStorage.idUser,
+			url: 'http://iuatesis.chickenkiller.com/api/final/notificacionesUsuario/leida/' + id + "/" + userDataFromLocalStorage.idUser,
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1000,7 +1000,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.noticias = function () {
 		var reqNoticias = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/noticias/list',
+			url: 'http://iuatesis.chickenkiller.com/api/final/noticias/list',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1044,7 +1044,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var reqEstimulosOld = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/list/old2',
+			url: 'http://iuatesis.chickenkiller.com/api/final/estimulos/list/old2',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1085,7 +1085,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		req = {
 			method: 'PUT',
-			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/cambiarEstado/' + id + "/3",
+			url: 'http://iuatesis.chickenkiller.com/api/final/documentos/cambiarEstado/' + id + "/3",
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1151,7 +1151,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 			var req = {
 				method: 'POST',
-				url: 'https://iuatesis.chickenkiller.com/api/final/noticias/nuevaNoticia',
+				url: 'http://iuatesis.chickenkiller.com/api/final/noticias/nuevaNoticia',
 				headers: {
 					'Content-Type': 'application/json',
 					'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1237,7 +1237,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			$('#modalEstimulos').modal('hide');
 			var obtenerEst = {
 				method: 'GET',
-				url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/obtenerEstimulo/' + n.idAsoc,
+				url: 'http://iuatesis.chickenkiller.com/api/final/estimulos/obtenerEstimulo/' + n.idAsoc,
 				headers: {
 					'Content-Type': 'application/json',
 					'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1262,7 +1262,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 						var reqDocs = {
 							method: 'GET',
-							url: 'https://iuatesis.chickenkiller.com/api/final/documentos/list/' + n.idAsoc + "/" + userDataFromLocalStorage.idUser,
+							url: 'http://iuatesis.chickenkiller.com/api/final/documentos/list/' + n.idAsoc + "/" + userDataFromLocalStorage.idUser,
 							headers: {
 								'Content-Type': 'application/json',
 								'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1325,7 +1325,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var reqDocs = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/permisos/get/' + $scope.selectedDestinatario.id,
+			url: 'http://iuatesis.chickenkiller.com/api/final/permisos/get/' + $scope.selectedDestinatario.id,
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1370,7 +1370,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var obtenerEst = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/estimulosSimpleAccess/load',
+			url: 'http://iuatesis.chickenkiller.com/api/final/estimulosSimpleAccess/load',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1395,7 +1395,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 					var reqDocs = {
 						method: 'GET',
-						url: 'https://iuatesis.chickenkiller.com/api/final/documentos/list/' + $scope.Est.idEstimulo + "/" + userDataFromLocalStorage.idUser,
+						url: 'http://iuatesis.chickenkiller.com/api/final/documentos/list/' + $scope.Est.idEstimulo + "/" + userDataFromLocalStorage.idUser,
 						headers: {
 							'Content-Type': 'application/json',
 							'xauthtoken': userDataFromLocalStorage.authtoken

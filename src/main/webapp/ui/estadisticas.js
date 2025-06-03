@@ -1,8 +1,8 @@
 let app = angular.module('iw3', ['ngStomp'])
 
 
-	.constant('URL_API_BASE', 'https://iuatesis.chickenkiller.com/api/final/')
-	.constant('URL_BASE', 'https://iuatesis.chickenkiller.com/')
+	.constant('URL_API_BASE', 'http://iuatesis.chickenkiller.com/api/final/')
+	.constant('URL_BASE', 'http://iuatesis.chickenkiller.com/')
 	.constant('URL_WS', '/api/final/ws');
 
 $(window).on('load', function () {
@@ -47,7 +47,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		
 		var reqNotificaciones = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/estadisticasPorRol',
+			url: 'http://iuatesis.chickenkiller.com/api/final/documentos/estadisticasPorRol',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -124,7 +124,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.init2 = function () {
 		var reqNotificaciones = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/documentos/estadisticasPorMinisterio',
+			url: 'http://iuatesis.chickenkiller.com/api/final/documentos/estadisticasPorMinisterio',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -202,7 +202,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.init3 = function () {
 		var reqNotificaciones = {
 			method: 'GET',
-			url: 'https://iuatesis.chickenkiller.com/api/final/estimulos/estadisticasPorEstimulo',
+			url: 'http://iuatesis.chickenkiller.com/api/final/estimulos/estadisticasPorEstimulo',
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
