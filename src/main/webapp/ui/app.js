@@ -191,7 +191,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	}
 	var reqNotificaciones = {
 		method: 'GET',
-		url: 'https://iuatesis.chickenkiller.com/api/final/notificaciones/list/' + userDataFromLocalStorage.rolPrinc,
+		url: 'https://iuatesis.chickenkiller.com/api/final/notificaciones/list/' + userDataFromLocalStorage.idUser,
 		headers: {
 			'Content-Type': 'application/json',
 			'xauthtoken': userDataFromLocalStorage.authtoken
@@ -204,7 +204,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	$scope.totalNotificaciones = 0;
 	$scope.currentPageNot = 0;
 	$scope.cargarNotificaciones = function () {
-
+		
 		$http(reqNotificaciones).then(
 			function (resp) {
 				if (resp.status === 200) {
@@ -231,11 +231,13 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	// Ejecutar la función cargarNotificaciones cada 5 segundos
 	const intervalo = 5000; // 5 segundos (5000 ms)
 	setInterval(function () {
-		$scope.cargarNotificaciones();
+		if($scope.modalNotifVisible)
+			$scope.cargarNotificaciones();
 	}, intervalo);
 
 	// Llamar inmediatamente la primera vez al cargar la página
-	$scope.cargarNotificaciones();
+	if($scope.modalNotifVisible)
+		$scope.cargarNotificaciones();
 
 	// $stomp.connect(URL_WS + "?xauthtoken=" + localStorage.getItem("token")).then(function (frame) {
 	// 	console.log('WebSocket connected:', frame);
@@ -939,7 +941,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 		var req = {
 			method: 'PUT',
-			url: 'https://iuatesis.chickenkiller.com/api/final/notificaciones/notificacionesUsuario/' + id + "/" + userDataFromLocalStorage.idUser,
+			url: 'https://iuatesis.chickenkiller.com/api/final/notificacionesUsuario/leida/' + id + "/" + userDataFromLocalStorage.idUser,
 			headers: {
 				'Content-Type': 'application/json',
 				'xauthtoken': userDataFromLocalStorage.authtoken
@@ -949,14 +951,14 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.Ejecutar(req).
 			then(function (resp) {
 				$scope.cargarNotificaciones();
-				swal("¡Notificacion leída exitosamente!", "", "success");
+				swal("¡Notificación leída exitosamente!", "", "success");
 				$('#modalNotif').modal('show');
 
 
 
 			}).catch(function (error) {
 
-				swal("Error", "Hubo un problema al cerrar el estímulo.", "error");
+				swal("Error", "Hubo un problema al leer la notificación.", "error");
 			});
 
 	}
@@ -1105,14 +1107,29 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 	}
 	$scope.crearNoticia = function () {
+		const selectElement = document.getElementById("estimuloNoticia");
+		const options = selectElement.options;
+		for (let i = options.length - 1; i >= 0; i--) {
+			if (options[i].label === "") {
+				selectElement.remove(i);
+			}
+		}
+		document.getElementById('nuevaNoticiaForm').reset();
+		$scope.cargarEstimulos();
 		$('#modalNuevaNoticia').modal('show');
 		$('#modalNoticias').modal('hide');
 	}
 
 	$scope.nuevaNoticia = function () {
 
-		const form = document.getElementById('descripcionNoticia');
-		if (!form.checkValidity()) {
+		var selectElement = document.getElementById('estimuloNoticia');
+		var indiceSeleccionado = selectElement.selectedIndex - 1;
+		if (indiceSeleccionado < 0) {
+			swal("Error", "Todos los campos son obligatorios.", "error");
+			return;
+		}
+		const form = document.getElementById('descripcionNoticia').value;
+		if (form=="") {
 			swal("Error", "Por favor, rellena todos los campos requeridos.", "error");
 
 			return false;
@@ -1120,7 +1137,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		else {
 
 			var descripcion = document.getElementById('descripcionNoticia').value;
-
+			var idEstimulo = $scope.selectedEstimuloNoticia.id;
 			//FechaHoraInicio
 			let fechaHoraActual = new Date();
 
@@ -1129,6 +1146,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			var data = {
 				'descripcion': descripcion,
 				'fecha': fechaDocumentoSQL,
+				'estimulo':idEstimulo
 			};
 
 			var req = {

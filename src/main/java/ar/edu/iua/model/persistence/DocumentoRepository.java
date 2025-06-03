@@ -16,7 +16,7 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer>{
 	
 	@Query(value = "SELECT d.id, m.nombre as destinatario, tipo, titulo, descripcion, es_final, estimulo, estado, "
             + "fecha, usuario, ministerio, rol FROM "
-            + "documento as d LEFT JOIN ministerio as m ON d.ministerio = m.id "
+            + "documento as d LEFT JOIN ministerio as m ON d.ministerio = m.id where d.estimulo=?1 "
             + "ORDER BY fecha DESC", nativeQuery = true)
 	public List<Documento> findByIdEstimuloAdmin(int idEstimulo);
 	

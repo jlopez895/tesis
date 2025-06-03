@@ -12,7 +12,7 @@ import ar.edu.iua.model.NotificacionUsuario;
 @Repository
 public interface NotificacionUsuarioRepository extends JpaRepository<NotificacionUsuario, Integer>{
 
-	@Query(value = "select * from notificaciones_usuarios where id_notificacion=?1 and id_usuario=?2", nativeQuery = true)
+	@Query(value = "select * from notificaciones_usuarios where id=?1 and id_usuario=?2", nativeQuery = true)
 	Optional<NotificacionUsuario> findByIdNotUser(int idNot, int idUser);
 
 }

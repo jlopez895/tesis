@@ -12,7 +12,7 @@ import ar.edu.iua.model.dto.RespuestaGenerica;
 
 public interface INoticiaBusiness {
 	
-	public List<Noticia> list() throws BusinessException;
+	public List<Object> list() throws BusinessException;
 
 	public RespuestaGenerica<Noticia> nuevaNoticia(Noticia noticia) throws BusinessException;
 	

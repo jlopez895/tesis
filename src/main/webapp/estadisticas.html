@@ -219,18 +219,19 @@
 	<div class="navbar">
 		<img src="ui/logo.png" style="margin-bottom: 10px;" alt="Logo" />
 
-		<div class="user-initials" style="margin-bottom:  20px;" onclick="toggleUserPopup()">{{ userData.iniciales }}
+		<div class="user-initials" style="margin-bottom:  20px;" onclick="toggleUserPopup()">{{ userData.iniciales|uppercase }}
 		</div>
 		<div class="user-popup" id="userPopup">
 			<ul>
-				<li class="user-info">{{ userData.fullname }}</li>
-				<li class="user-info">{{ userData.email }}</li>
-				<li class="user-info">Rol: {{ userData.rolDesc }}</li>
-				<li>
-					<hr>
-				</li>
-				<li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a>
-				</li>
+			                    <li class="user-info">{{ userData.fullname|uppercase }}</li>
+			                    <li class="user-info">{{ userData.email|uppercase }}</li>
+			                    <li class="user-info">Rol: {{ userData.rolDesc|uppercase }}</li>
+			                    <li class="user-info">Ministerio: {{ getMinisterio(userData.ministerio)|uppercase }} </li>
+			                    <li>
+			                        <hr>
+			                    </li>
+			                    <li><a href="#" ng-click='cerrarSesion()'>Cerrar sesión <i class="bi bi-box-arrow-right"></i></a>
+			                    </li>
 			</ul>
 		</div>
 

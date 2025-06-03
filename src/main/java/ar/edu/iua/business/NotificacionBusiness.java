@@ -41,7 +41,7 @@ public class NotificacionBusiness implements INotificacionBusiness{
 		}
 	}
 	@Override
-	public List<Notificacion> list(int idRol) throws BusinessException {
+	public List<Object> list(int idRol) throws BusinessException {
 		try {
 			return notificacionDAO.findByUser(idRol);
 		} catch (Exception e) {

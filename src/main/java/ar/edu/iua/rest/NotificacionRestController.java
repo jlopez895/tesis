@@ -40,13 +40,13 @@ public class NotificacionRestController {
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
 	@GetMapping(value = "/list/{idRol}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Notificacion>> list(@ApiParam(value = "El rol del usuario") @PathVariable("idRol") int idRol) {
+	public ResponseEntity<List<Object>> list(@ApiParam(value = "El rol del usuario") @PathVariable("idRol") int idRol) {
 		try {
 
-			return new ResponseEntity<List<Notificacion>>(notificacionBusiness.list(idRol), HttpStatus.OK);
+			return new ResponseEntity<List<Object>>(notificacionBusiness.list(idRol), HttpStatus.OK);
 
 		} catch (BusinessException e) {
-			return new ResponseEntity<List<Notificacion>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

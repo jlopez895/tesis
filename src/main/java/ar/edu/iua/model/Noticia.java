@@ -23,6 +23,9 @@ public class Noticia {
 	
 	@Column()
 	private Date fecha;
+	
+	@Column()
+	private int estimulo;
 
 	public Integer getId() {
 		return id;
@@ -46,6 +49,16 @@ public class Noticia {
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+	
+	
+
+	public int getEstimulo() {
+		return estimulo;
+	}
+
+	public void setEstimulo(int estimulo) {
+		this.estimulo = estimulo;
 	}
 
 	public Noticia(Integer id, String descripcion, Date fecha) {

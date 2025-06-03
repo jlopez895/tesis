@@ -14,7 +14,7 @@ public interface INotificacionBusiness {
 	
 	public void nuevaNotificacion(Notificacion not)throws BusinessException ;
 	
-	public List<Notificacion> list(int idUser) throws BusinessException;
+	public List<Object> list(int idUser) throws BusinessException;
 
 	void pushOrderData();
 

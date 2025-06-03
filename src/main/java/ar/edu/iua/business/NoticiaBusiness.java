@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.model.Documento;
+import ar.edu.iua.model.Estimulo;
 import ar.edu.iua.model.Noticia;
 import ar.edu.iua.model.Notificacion;
 import ar.edu.iua.model.NotificacionUsuario;
@@ -18,6 +21,7 @@ import ar.edu.iua.model.Rol;
 import ar.edu.iua.model.User;
 import ar.edu.iua.model.dto.MensajeRespuesta;
 import ar.edu.iua.model.dto.RespuestaGenerica;
+import ar.edu.iua.model.persistence.EstimuloRepository;
 import ar.edu.iua.model.persistence.NoticiaRepository;
 import ar.edu.iua.model.persistence.NotificacionRepository;
 import ar.edu.iua.model.persistence.RolRepository;
@@ -33,11 +37,14 @@ public class NoticiaBusiness implements INoticiaBusiness{
 	private INotificacionBusiness notificacionService;
 	@Autowired
 	private UserRepository userDAO;
+	@Autowired
+	private EstimuloRepository estimuloDAO;
 	
 	@Override
-	public List<Noticia> list() throws BusinessException {
+	public List<Object> list() throws BusinessException {
 		try {
-			return noticiaDAO.findAll();
+	
+			return noticiaDAO.obtenerTodas();
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
@@ -54,7 +61,8 @@ public class NoticiaBusiness implements INoticiaBusiness{
 			Integer idGenerado = noti.getId(); 
 			//creando notificacion
 			Notificacion not=new Notificacion();
-			not.setDescripcion("Se ha creado una nueva noticia");
+			Optional<Estimulo> est=estimuloDAO.findById(noti.getEstimulo());
+			not.setDescripcion("Se ha creado una nueva noticia vinculada al estímulo "+est.get().getTitulo());
 			not.setTipo(3);
 			not.setIdAsoc(idGenerado);
 			not.setFecha(new Date());

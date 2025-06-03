@@ -674,10 +674,10 @@
                                 <tbody>
                                     <tr ng-repeat='n in Notificaciones| limitTo: itemsPerPageNot : startingItemNot()'>
                                         <td>
-                                            {{ n.descripcion }}
+                                            {{ n[0] }}
                                         </td>
                                         <td>
-                                            {{n.fecha| date:'dd/MM/yyyy HH:mm'}}
+                                            {{n[1]| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
                                         <td>
                                             <button class="btn btn-link" ng-click="verNotif(n);"
@@ -685,8 +685,8 @@
 
                                         </td>
                                         <td style="text-align: center;">
-                                            <button ng-show="n.leida==0" title="Marcar como leída"
-                                                class="btn btn-success" ng-click="leida(n.id);" style="font-size: 12px;"
+                                            <button ng-show="n[4]==false" title="Marcar como leída"
+                                                class="btn btn-success" ng-click="leida(n[5]);" style="font-size: 12px;"
                                                 id="leida">✓</button>
                                         </td>
                                     </tr>
@@ -904,6 +904,11 @@
                                         </th>
                                         <th scope="col">
 
+                                            Estímulo asociado
+
+                                        </th>
+                                        <th scope="col">
+
                                             Fecha
 
                                         </th>
@@ -914,10 +919,13 @@
                                     <tr
                                         ng-repeat='n in Noticias| limitTo: itemsPerPageNoticias : startingItemNoticias()'>
                                         <td>
-                                            {{ n.descripcion }}
+                                            {{ n[1] }}
                                         </td>
                                         <td>
-                                            {{n.fecha| date:'dd/MM/yyyy HH:mm'}}
+                                            {{n[2] }}
+                                        </td>
+                                        <td>
+                                            {{n[3]| date:'dd/MM/yyyy HH:mm'}}
                                         </td>
 
                                     </tr>
@@ -956,9 +964,19 @@
                         </svg></button>
                 </div>
                 <div class="modal-body" style="background-color: #cbe7ff; font-size: small;">
-                    <form>
+                    <form id="nuevaNoticiaForm">
                         <div class="container-fluid">
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col l4">
+                                    <label for="estimulo" class="form-label">Estímulo asociado</label>
 
+                                    <select id="estimuloNoticia" ng-model="selectedEstimuloNoticia"
+                                        ng-options="estimulo.titulo for estimulo in Estimulos" class="form-control"
+                                        aria-label="Default select example" >
+                                        <option value="" disabled selected>Selecciona un estimulo</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col l12">
 
@@ -970,15 +988,13 @@
 
                         </div>
                     </form>
+					<br />
+					               <div class="mb-3 form-check">
+					                   <button class="btn btn-primary" ng-click='nuevaNoticia()' id="estado1">Enviar</button>
+					
+					               </div>
                 </div>
-                <br />
-                <div class="mb-3 form-check">
-                    <button class="btn btn-primary" ng-click='nuevaNoticia()' id="estado1">Enviar</button>
-
-                </div>
-
-
-                </form>
+  
             </div>
 
         </div>

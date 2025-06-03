@@ -40,13 +40,13 @@ public class NoticiaRestController {
 			@ApiResponse(code = 500, message = "Error interno del servidor") })
 
 	@GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Noticia>> list() {
+	public ResponseEntity<List<Object>> list() {
 		try {
 
-			return new ResponseEntity<List<Noticia>>(noticiaBusiness.list(), HttpStatus.OK);
+			return new ResponseEntity<List<Object>>(noticiaBusiness.list(), HttpStatus.OK);
 
 		} catch (BusinessException e) {
-			return new ResponseEntity<List<Noticia>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
