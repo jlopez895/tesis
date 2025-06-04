@@ -17,7 +17,7 @@ public class ScheduledEvents {
 	@Scheduled(fixedDelay = 5000, initialDelay = 1000)
 	public void enviarDatos() {
 	       
-		notificacion.pushOrderData();
+		//notificacion.pushOrderData();
 	}
 
 }
