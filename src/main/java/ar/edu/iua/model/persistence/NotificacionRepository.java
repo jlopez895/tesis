@@ -12,7 +12,7 @@ import ar.edu.iua.model.Permiso;
 @Repository
 public interface NotificacionRepository extends JpaRepository<Notificacion, Integer>{
 	
-	@Query(value = "SELECT descripcion,fecha,tipo, id_asoc,leida,nu.id as id FROM tesis.notificaciones as n inner join notificaciones_usuarios nu on n.id=nu.id_notificacion "
+	@Query(value = "SELECT descripcion,fecha,tipo, id_asoc,leida,nu.id as id FROM railway.notificaciones as n inner join notificaciones_usuarios nu on n.id=nu.id_notificacion "
 			+ "and nu.id_usuario=?1 and nu.leida=0 ORDER BY FECHA DESC", nativeQuery = true)
 	public List<Object> findByUser(int idUser);
 	

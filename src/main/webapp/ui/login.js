@@ -1,8 +1,8 @@
 let moduloLogin=angular.module('iw3',['ngStorage'])
 
 
-    .constant('URL_API_BASE', 'http://iuatesis.chickenkiller.com/api/final/')
-    .constant('URL_BASE', 'http://iuatesis.chickenkiller.com/')
+    .constant('URL_API_BASE', 'https://tesis-rn6b.onrender.com/api/final/')
+    .constant('URL_BASE', 'https://tesis-rn6b.onrender.com/')
     .constant('URL_WS', '/api/final/ws')
 
 moduloLogin.controller('loginController', function($scope, $localStorage, $http){
@@ -18,7 +18,7 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
 
          let req = {
               method: 'POST',
-              url: 'http://iuatesis.chickenkiller.com/login-user?legajo='+user.legajo+'&password='+user.password,
+              url: 'https://tesis-rn6b.onrender.com/login-user?legajo='+user.legajo+'&password='+user.password,
               headers : { 'Content-Type': 'form-data' }
           };
 
@@ -30,7 +30,7 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
                           $localStorage.userdata=resp.data;
                           localStorage.setItem("logged","true");
                           localStorage.setItem("token",resp.data.authtoken);
-                          window.location.replace("http://iuatesis.chickenkiller.com");
+                          window.location.replace("https://tesis-rn6b.onrender.com");
                       }else{
                         swal("Error", "Los datos ingresados son incorrectos.", "error");
                     

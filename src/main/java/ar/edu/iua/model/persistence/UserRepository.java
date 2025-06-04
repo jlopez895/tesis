@@ -33,6 +33,6 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	    }
 	}
 	
-	@Query(value = "SELECT u.* FROM tesis.users as u inner join roles as r on u.id_rol_principal=r.id where r.rol='ROLE_MESA_CONTROL'", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM railway.users as u inner join roles as r on u.id_rol_principal=r.id where r.rol='ROLE_MESA_CONTROL'", nativeQuery = true)
 	public List<User> getAdmins();
 }
