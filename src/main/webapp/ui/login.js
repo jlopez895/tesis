@@ -30,7 +30,7 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
                           $localStorage.userdata=resp.data;
                           localStorage.setItem("logged","true");
                           localStorage.setItem("token",resp.data.authtoken);
-                          window.location.replace("https://tesis-rn6b.onrender.com");
+                          window.location.replace("https://tesis-rn6b.onrender.com/index.html");
                       }else{
                         swal("Error", "Los datos ingresados son incorrectos.", "error");
                     
