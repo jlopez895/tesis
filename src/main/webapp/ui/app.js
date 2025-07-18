@@ -13,7 +13,7 @@ $(window).on('load', function () {
 });
 
 // Función para llenar un textarea con el contenido de un archivo de texto
-fetch('ui/random.txt')
+fetch('/ui/random.txt')
 	.then(response => response.text())
 	.then(data => {
 		document.getElementById('descripcionProblematica').value = data;
@@ -122,13 +122,14 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 
 	$scope.cargarEstimulos = function () {
+		$scope.loading = true;
 		$http(reqEstimulos).then(
 			function (resp) {
 				if (resp.status === 200) {
 					$scope.Estimulos = resp.data;
 					$scope.total = $scope.Estimulos.length;
 					$scope.totalEstimulos = $scope.Estimulos.length;
-
+					$scope.loading = false;
 					$scope.$watch('FiltroEstimulos.valor', function (newVal) {
 
 						if (newVal == '') {
@@ -143,12 +144,12 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 					});
 
 				} else {
-
+					$scope.loading = false;
 				}
 			},
 			function (respErr) {
 
-
+				$scope.loading = false;
 			}
 		);
 
@@ -209,7 +210,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			function (resp) {
 				if (resp.status === 200) {
 					$scope.Notificaciones = resp.data;
-
+					
 					if ($scope.totalNotificaciones < $scope.Notificaciones.length) {
 						swal("Tiene nuevas notificaciones", "", "warning");
 						const audio = new Audio('/ui/notificacion.wav');
@@ -223,7 +224,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 			},
 			function (respErr) {
 
-
+				
 			}
 		);
 	}
@@ -672,7 +673,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				'xauthtoken': userDataFromLocalStorage.authtoken
 			},
 		};
-
+		$scope.loading = true;
 		$http(obtenerEst).then(
 			function (resp) {
 				if (resp.status === 200) {
@@ -716,6 +717,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				if (resp.status === 200) {
 					$scope.Documentos = resp.data;
 					$scope.totalDocs = $scope.Documentos.length;
+					$scope.loading = false;
 					$scope.$watch('FiltroDocumentos.valor', function (newVal) {
 
 						if (newVal == '') {
@@ -729,12 +731,11 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 						$scope.currentPageDoc = 0;
 					});
 				} else {
-
+					$scope.loading = false;
 				}
 			},
 			function (respErr) {
-
-
+				$scope.loading = false;
 			}
 		);
 
@@ -893,8 +894,10 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 	////////////////////////
 
 	$scope.cerrarModalDocumentos = function () {
+		
 		$('#documentos').modal('hide');
 		$('#modalEstimulos').modal('show');
+		$scope.estimulos();
 	}
 
 	$scope.aprobar = function (i, id) {
@@ -907,7 +910,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				'xauthtoken': userDataFromLocalStorage.authtoken
 			}
 		};
-
+		$scope.loading = true;
 		$scope.Ejecutar(req).
 			then(function (resp) {
 
@@ -923,6 +926,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				$scope.Ejecutar(req).
 					then(function (resp) {
 						$scope.cargarEstimulos();
+						$scope.loading = false;
 						swal("¡Estímulo cerrado exitosamente!", "", "success");
 						$('#documentos').modal('hide');
 						$('#modalEstimulos').modal('show');
@@ -931,7 +935,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 
 			}).catch(function (error) {
-
+				$scope.loading = false;
 				swal("Error", "Hubo un problema al cerrar el estímulo.", "error");
 			});
 
@@ -947,23 +951,25 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				'xauthtoken': userDataFromLocalStorage.authtoken
 			}
 		};
-
+		$scope.loading = true;
 		$scope.Ejecutar(req).
 			then(function (resp) {
 				$scope.cargarNotificaciones();
+				$scope.loading = false;
 				swal("¡Notificación leída exitosamente!", "", "success");
 				$('#modalNotif').modal('show');
 
 
 
 			}).catch(function (error) {
-
+				$scope.loading = false;
 				swal("Error", "Hubo un problema al leer la notificación.", "error");
 			});
 
 	}
 
 	$scope.estimulos = function () {
+		
 		const selectElement = document.getElementById("estimulo");
 		const options = selectElement.options;
 		for (let i = options.length - 1; i >= 0; i--) {
@@ -975,6 +981,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.titulo = "ESTIMULOS ABIERTOS";
 		$scope.esHistorico = false;
 		$scope.cargarEstimulos();
+		
 	}
 
 	$scope.pintar = function (estimulo) {
@@ -1006,9 +1013,11 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				'xauthtoken': userDataFromLocalStorage.authtoken
 			},
 		};
+		$scope.loading = true;
 		$http(reqNoticias).then(
 			function (resp) {
 				if (resp.status === 200) {
+					
 					$scope.Noticias = resp.data;
 
 					$scope.totalNoticias = $scope.Noticias.length;
@@ -1025,7 +1034,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 						}
 						$scope.currentPageNoticias = 0;
 					});
-
+					$scope.loading = false;
 				}
 			},
 			function (respErr) {
@@ -1033,6 +1042,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				$scope.Noticias = null;
 				$scope.total = 0;
 				$scope.totalNoticias = 0;
+				$scope.loading = false;
 			}
 		);
 	}
@@ -1041,7 +1051,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.titulo = "ESTIMULOS CERRADOS";
 		$scope.esHistorico = true;
 		$('#modalEstimulos').modal('show');
-
+		$scope.loading = true;
 		var reqEstimulosOld = {
 			method: 'GET',
 			url: 'https://tesis-rn6b.onrender.com/api/final/estimulos/list/old2',
@@ -1056,7 +1066,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 					$scope.Estimulos = resp.data;
 					$scope.total = $scope.Estimulos.length;
 					$scope.totalEstimulos = $scope.Estimulos.length;
-
+					$scope.loading = false;
 					$scope.$watch('FiltroEstimulos.valor', function (newVal) {
 
 						if (newVal == '') {
@@ -1077,6 +1087,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				$scope.Estimulos = null;
 				$scope.total = 0;
 				$scope.totalEstimulos = 0;
+				$scope.loading = false;
 			}
 		);
 	}
@@ -1091,16 +1102,17 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				'xauthtoken': userDataFromLocalStorage.authtoken
 			}
 		};
-
+		$scope.loading = true;
 		$scope.Ejecutar(req).
 			then(function (resp) {
 
 				$scope.cargarEstimulos();
+				$scope.loading = false;
 				swal("Documento rechazado exitosamente!", "", "success");
 				$('#documentos').modal('hide');
 				$('#modalEstimulos').modal('show');
 			}).catch(function (error) {
-
+				$scope.loading = false;
 
 				swal("Error", "Hubo un problema al rechazar el documento.", "error");
 			});
@@ -1158,7 +1170,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				},
 				data: data
 			};
-
+			$scope.loading = true;
 			$scope.Ejecutar(req).
 				then(function (resp) {
 					document.getElementById('descripcionNoticia').value = '';
@@ -1168,9 +1180,9 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 					$('#modalNoticias').modal('show');
 
 				}).catch(function (error) {
+					$scope.loading = false;
 
-
-					swal("Error", "Hubo un problema al registrar el documento.", "error");
+					swal("Error", "Hubo un problema al registrar la noticia.", "error");
 				});
 		}
 	}
@@ -1232,18 +1244,18 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 		$scope.totalDocs = 0;
 		$scope.Noticias = [];
 		$scope.totalNoticias = 0;
-		if (n.tipo === 1 || n.tipo === 2) {
+		if (n[2] === 1 || n[2] === 2) {
 			$('#documentos').modal('show');
 			$('#modalEstimulos').modal('hide');
 			var obtenerEst = {
 				method: 'GET',
-				url: 'https://tesis-rn6b.onrender.com/api/final/estimulos/obtenerEstimulo/' + n.idAsoc,
+				url: 'https://tesis-rn6b.onrender.com/api/final/estimulos/obtenerEstimulo/' + n[3],
 				headers: {
 					'Content-Type': 'application/json',
 					'xauthtoken': userDataFromLocalStorage.authtoken
 				},
 			};
-
+			//$scope.loading = true;
 			$http(obtenerEst).then(
 				function (resp) {
 					if (resp.status === 200) {
@@ -1259,10 +1271,10 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 						$scope.Documentos = [];
 						$scope.FiltroNotificaciones = { valor: '' };
-
+						
 						var reqDocs = {
 							method: 'GET',
-							url: 'https://tesis-rn6b.onrender.com/api/final/documentos/list/' + n.idAsoc + "/" + userDataFromLocalStorage.idUser,
+							url: 'https://tesis-rn6b.onrender.com/api/final/documentos/list/' + n[3] + "/" + userDataFromLocalStorage.idUser,
 							headers: {
 								'Content-Type': 'application/json',
 								'xauthtoken': userDataFromLocalStorage.authtoken
@@ -1275,6 +1287,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 									$scope.Documentos = resp.data;
 									$scope.totalDocs = $scope.Documentos.length;
+									//$scope.loading = false;
 									$scope.$watch('FiltroDocumentos.valor', function (newVal) {
 
 										if (newVal == '') {
@@ -1288,21 +1301,21 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 										$scope.currentPageDoc = 0;
 									});
 								} else {
-
+									//$scope.loading = false;
 								}
 							},
 							function (respErr) {
 
-
+								//$scope.loading = false;
 							}
 						);
 
 					} else {
-
+						//$scope.loading = false;
 					}
 				},
 				function (respErr) {
-
+					//$scope.loading = false;
 
 				}
 			);
@@ -1376,7 +1389,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 				'xauthtoken': userDataFromLocalStorage.authtoken
 			},
 		};
-
+		$scope.loading = true;
 		$http(obtenerEst).then(
 			function (resp) {
 				if (resp.status === 200) {
@@ -1392,7 +1405,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 
 					$scope.Documentos = [];
 					$scope.FiltroNotificaciones = { valor: '' };
-
+					
 					var reqDocs = {
 						method: 'GET',
 						url: 'https://tesis-rn6b.onrender.com/api/final/documentos/list/' + $scope.Est.idEstimulo + "/" + userDataFromLocalStorage.idUser,
@@ -1409,7 +1422,7 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 								$scope.Documentos = resp.data;
 								$scope.totalDocs = $scope.Documentos.length;
 								$scope.$watch('FiltroDocumentos.valor', function (newVal) {
-
+								$scope.loading = false;
 									if (newVal == '') {
 										$scope.filteredDocumentos = $scope.Documentos;
 										$scope.totalDocs = $scope.Documentos.length;
@@ -1421,23 +1434,24 @@ app.controller('controllerPedidos', function ($scope, $filter, $http, $rootScope
 									$scope.currentPageDoc = 0;
 								});
 							} else {
+								$scope.loading = false;
 
 							}
 						},
 						function (respErr) {
-
+							$scope.loading = false;
 
 						}
 					);
 
 
 				} else {
-
+					$scope.loading = false;
 				}
 			},
 			function (respErr) {
 
-
+				$scope.loading = false;
 			}
 		);
 

@@ -21,22 +21,25 @@ moduloLogin.controller('loginController', function($scope, $localStorage, $http)
               url: 'https://tesis-rn6b.onrender.com/login-user?legajo='+user.legajo+'&password='+user.password,
               headers : { 'Content-Type': 'form-data' }
           };
-
+		// Activar spinner
+		    $scope.loading = true;
           let login = function () {
               $http(req).then(
                   function(resp){
                       if(resp.status===200) {
-                
+                 $scope.loading = false; // Desactivar spinner
                           $localStorage.userdata=resp.data;
                           localStorage.setItem("logged","true");
                           localStorage.setItem("token",resp.data.authtoken);
                           window.location.replace("https://tesis-rn6b.onrender.com/index.html");
                       }else{
+						 $scope.loading = false; // Desactivar spinner
                         swal("Error", "Los datos ingresados son incorrectos.", "error");
                     
                       }
                   },
                   function(respErr){
+					 $scope.loading = false; // Desactivar spinner
                     swal("Error", "Los datos ingresados son incorrectos.", "error");
                     
                   }
