@@ -222,8 +222,8 @@ public class EstimuloBusiness implements IEstimuloBusiness {
 			    .collect(Collectors.toList());
 		if (dtos != null) {
 			for (Estadistica2DTO d : dtos) {
-				response.put("TIEMPO > AL ESTIMADO", d.getLabel());
-				response.put("TIEMPO < AL ESTIMADO", d.getValue());
+				response.put("TIEMPO < AL ESTIMADO", d.getLabel());
+				response.put("TIEMPO > AL ESTIMADO", d.getValue());
 			}
 		}
 		return response;
